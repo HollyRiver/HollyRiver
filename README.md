@@ -15,7 +15,7 @@ Here are some ideas to get you started:
 - ⚡ Fun fact: ...
 -->
 
-<a href="https://hollyriver.github.io/RiverFlow/" target="_blank"><img src="https://img.shields.io/badge/GitHub_pages-ECD53F?style=for-the-badge&logo=github&logoColor=white"></a>  <a href="https://blog.naver.com/hc_ssk2800" target="_blank"><img src="https://img.shields.io/badge/NAVER_blog-79857a?style=for-the-badge&logo=Naver&logoColor=white"></a>
+<a href="https://hollyriver.github.io/RiverFlow/" target="_blank"><img src="https://img.shields.io/badge/GitHub_pages-ECD53F?style=for-the-badge&logo=github&logoColor=white"></a>  <a href="https://blog.naver.com/hc_ssk2800" target="_blank"><img src="https://img.shields.io/badge/NAVER_blog-1dde30?style=for-the-badge&logo=Naver&logoColor=white"></a>
 
 
 
