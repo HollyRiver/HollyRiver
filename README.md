@@ -15,6 +15,6 @@ Here are some ideas to get you started:
 - ⚡ Fun fact: ...
 -->
 
-<a href="https://hollyriver.github.io/RiverFlow/" target="_blank"><img src="https://img.shields.io/badge/githubpages-222222?style=for-the-badge&logo=github&logoColor=white"></a>
+<a href="https://hollyriver.github.io/RiverFlow/" target="_blank"><img src="https://img.shields.io/badge/github_pages-222222?style=for-the-badge&logo=github&logoColor=white"></a>
 
 https://simpleicons.org/icons/discord.svg
