@@ -1,5 +1,7 @@
 ### **Status**
 
+<img src="https://capsule-render.vercel.app/api?type=wave&color=auto&height=300&animation=twinkling&section=header&text=capsule%20render&fontSize=90" />
+
 **강신성(Shinsung Kang)**
 > 전북대학교에서 경제학 전공 및 통계학 부전공 중
 >
