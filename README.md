@@ -1,6 +1,6 @@
 ### **Status**
 
-<img src="https://capsule-render.vercel.app/api?type=Rect&height=100&color=0:7d7087,60:613585,98:613585,100:fff9bf&animation=twinkling&section=header&text=Hello,%20There!&fontSize=50&desc=Show%20my%20works%20below!&descSize=15&descAlign=63&descAlignY=80" />
+<img src="https://capsule-render.vercel.app/api?type=Rect&height=100&color=0:7d7087,60:613585,90:613585,100:ff5e7c&animation=twinkling&section=header&text=Hello,%20There!&fontSize=50&desc=Show%20my%20works%20below!&descSize=15&descAlign=63&descAlignY=80" />
 
 **강신성(Shinsung Kang)**
 > 전북대학교에서 경제학 전공 및 통계학 부전공 중
