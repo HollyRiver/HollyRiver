@@ -7,8 +7,9 @@
 >
 > ...
 
-더 많은 정보를 확인하고 싶다면 아래의 뱃지를 통해 해당하는 링크로 접속하세요.
-If you want to see more information, please click badge below.
+*더 많은 정보를 확인하고 싶다면 아래의 뱃지를 통해 해당하는 링크로 접속하세요.*
+
+*If you want to see more information, please click badge below.*
 
 <!--
 **HollyRiver/HollyRiver** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
