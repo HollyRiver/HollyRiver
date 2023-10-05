@@ -5,9 +5,15 @@
 **강신성(Shinsung Kang)**
 > 전북대학교에서 경제학 전공 및 통계학 부전공 중
 >
+> *Majoring in Economics and Minoring in Statistics at Jeonbuk-National-University*
+> 
 > 문피아에서 글을 쓰는 중
 >
+> *Write some novels in Munpia*
+>
 > ...
+>
+> *e.t.c.*
 
 *더 많은 정보를 확인하고 싶다면 아래의 뱃지를 통해 해당하는 링크로 접속하세요.*
 
