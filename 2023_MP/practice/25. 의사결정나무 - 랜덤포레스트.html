@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="강신성">
+<meta name="dcterms.date" content="2023-12-01">
+
+<title>RiverFlow - RandomForest | 의사결정나무</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">RiverFlow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_MP.html" rel="" target="">
+ <span class="menu-text">2023 MP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_DV.html" rel="" target="">
+ <span class="menu-text">2023 DV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HollyRiver?tab=repositories" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://blog.naver.com/hc_ssk2800" rel="" target=""><i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><code>RandomForest</code> | 의사결정나무</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">RandomForest</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>강신성 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 1, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p>랜덤포레스트를 이용해 적합을 해보자!</p>
+</blockquote>
+<section id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다." class="level6">
+<h6 class="anchored" data-anchor-id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다.">해당 포스트는 전북대학교 통계학과 최규빈 교수님의 강의내용을 토대로 재구성되었음을 알립니다.</h6>
+</section>
+<section id="라이브러리-imports" class="level2">
+<h2 class="anchored" data-anchor-id="라이브러리-imports">1. 라이브러리 imports</h2>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.tree</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.ensemble</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#---#</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="사용할-데이터" class="level2">
+<h2 class="anchored" data-anchor-id="사용할-데이터">2. 사용할 데이터</h2>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/MP2023/main/posts/insurance.csv'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">bmi</th>
+<th data-quarto-table-cell-role="th">children</th>
+<th data-quarto-table-cell-role="th">smoker</th>
+<th data-quarto-table-cell-role="th">region</th>
+<th data-quarto-table-cell-role="th">charges</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>19</td>
+<td>female</td>
+<td>27.900</td>
+<td>0</td>
+<td>yes</td>
+<td>southwest</td>
+<td>16884.92400</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>18</td>
+<td>male</td>
+<td>33.770</td>
+<td>1</td>
+<td>no</td>
+<td>southeast</td>
+<td>1725.55230</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>28</td>
+<td>male</td>
+<td>33.000</td>
+<td>3</td>
+<td>no</td>
+<td>southeast</td>
+<td>4449.46200</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>33</td>
+<td>male</td>
+<td>22.705</td>
+<td>0</td>
+<td>no</td>
+<td>northwest</td>
+<td>21984.47061</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>32</td>
+<td>male</td>
+<td>28.880</td>
+<td>0</td>
+<td>no</td>
+<td>northwest</td>
+<td>3866.85520</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1333</td>
+<td>50</td>
+<td>male</td>
+<td>30.970</td>
+<td>3</td>
+<td>no</td>
+<td>northwest</td>
+<td>10600.54830</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1334</td>
+<td>18</td>
+<td>female</td>
+<td>31.920</td>
+<td>0</td>
+<td>no</td>
+<td>northeast</td>
+<td>2205.98080</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1335</td>
+<td>18</td>
+<td>female</td>
+<td>36.850</td>
+<td>0</td>
+<td>no</td>
+<td>southeast</td>
+<td>1629.83350</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1336</td>
+<td>21</td>
+<td>female</td>
+<td>25.800</td>
+<td>0</td>
+<td>no</td>
+<td>southwest</td>
+<td>2007.94500</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1337</td>
+<td>61</td>
+<td>female</td>
+<td>29.070</td>
+<td>0</td>
+<td>yes</td>
+<td>northwest</td>
+<td>29141.36030</td>
+</tr>
+</tbody>
+</table>
+
+<p>1338 rows × 7 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="bagging의-단점" class="level2">
+<h2 class="anchored" data-anchor-id="bagging의-단점">3. <code>Bagging</code>의 단점</h2>
+<section id="a.-일단-bagging으로-적합" class="level3">
+<h3 class="anchored" data-anchor-id="a.-일단-bagging으로-적합"><strong>A. 일단 <code>Bagging</code>으로 적합</strong></h3>
+<hr>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step 1</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.get_dummies(df_train.drop(<span class="st">'charges'</span>, axis <span class="op">=</span> <span class="dv">1</span>), drop_first <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.charges</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">## step 2</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.ensemble.BaggingRegressor()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">## step 3</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<style>#sk-container-id-1 {color: black;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>BaggingRegressor()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked=""><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">BaggingRegressor</label><div class="sk-toggleable__content"><pre>BaggingRegressor()</pre></div></div></div></div></div>
+</div>
+</div>
+</section>
+</section>
+<section id="b.-결과-시각화" class="level2">
+<h2 class="anchored" data-anchor-id="b.-결과-시각화">### <strong>B. 결과 시각화</strong></h2>
+<p><code>-</code> 관찰 : 트리들이 다양하지 않다.</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    predictr.estimators_[<span class="dv">4</span>],  <span class="co">## 4번째 tree</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    feature_names <span class="op">=</span> X.columns.to_list(),  <span class="co">## 설명변수 이름</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    max_depth <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.gcf()</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>fig.set_dpi(<span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="25. 의사결정나무 - 랜덤포레스트_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>리샘플링을 하더라도, 개별 노드의 피쳐는 바뀌지 않을 것임.</p>
+</blockquote>
+<p><strong>트리가 다양하지 않은 게 약점이다.</strong> (왜?)</p>
+<section id="c.-우수성-vs-다양성" class="level3">
+<h3 class="anchored" data-anchor-id="c.-우수성-vs-다양성"><strong>C. 우수성 vs 다양성</strong></h3>
+<hr>
+<p><code>-</code> 다양성이 없는게 왜 문제인가?</p>
+<ul>
+<li>기존의 의사결정나무 : 데이터에 최적화된 <strong>똑똑한 하나</strong>의 트리만 발견</li>
+<li>Bagging : “데이터의 최적화”를 희생하고 “다양성”을 확보. 즉, <strong>똑똑한 하나</strong>의 트리(원자료를 전부 사용한 트리)대신에 <strong>모자란 여러 개</strong>의 트리를 생성하고 힘을 합침.</li>
+</ul>
+<p><code>-</code> <span style="background-color:yellow;color:black"><strong>비슷한 생각을 가진 10명의 천재</strong></span> vs <span style="background-color:blue;color:black"><strong>다양한 의견을 가진 10명의 범재</strong></span></p>
+<ul>
+<li>뭐가 좋을까요?~(솔직히 전자가 더 좋은 것 같긴 한ㄷ)~</li>
+</ul>
+<p><a href="https://biz.heraldcorp.com/view.php?ud=20170802000434">ref:김용대 교수님</a></p>
+<blockquote class="blockquote">
+<p>앙상블 : 같은 데이터를 여러 개의 기계학습 알고리즘들이 분석하여 각자 지식을 습득한 후 이를 결합하여 새롭고 유용한 지식을 창출하는 방법이다.</p>
+<p>앙상블의 성능을 높이기 위해서는 개별 알고리즘들의 성능보다는 알고리즘들의 다양성이 훨씬 중요하다. 즉, 주어진 문제에 대해서 <strong>모두 비슷한 답을 주는 성능이 우수한 10개의 알고리즘</strong>보다는 성능은 좀 떨어지지만 <strong>다양한 답을 제공하는 10개의 알고리즘</strong>이 앙상블에는 더 효율적이다.</p>
+</blockquote>
+<p><code>-</code> 요약</p>
+<ul>
+<li>통찰 : <code>Bagging</code>은 의사결정나무보다 다양성을 추구하는 알고리즘이다.</li>
+<li>문제점 : 하지만 <span class="math inline">\(\textbf{X}\)</span>가 고차원인 상황에서 배깅만으로는 그렇게 다양한 트리가 나오지 않는다.(모든 트리가 일괄적으로 흡연여부가 보험료에 미치는 영향을 우선적으로 연구함…)</li>
+<li>소망 : 흡연여부만 연구하지 않고 다른 변수들을 최우선적으로 연구하는 사람이 있었으면 좋겠을 텐데…(그러면 트리가 더 다양해질 텐데…)</li>
+</ul>
+</section>
+</section>
+<section id="랜덤포레스트" class="level2">
+<h2 class="anchored" data-anchor-id="랜덤포레스트">5. 랜덤포레스트</h2>
+</section>
+<section id="a.-개념" class="level2">
+<h2 class="anchored" data-anchor-id="a.-개념">### <strong>A. 개념</strong></h2>
+<p><code>-</code> <code>RandomForest</code> = <code>Bagging</code> + <code>max_feafure = int</code></p>
+<blockquote class="blockquote">
+<p>요런 느낌…(강제로 안해본 것들에 대해서도 적합하도록 만듦)</p>
+</blockquote>
+<p><code>-</code> 알고리즘의 비교</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Bagging</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>trees <span class="op">=</span> []</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>) :</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    tree <span class="op">=</span> sklearn.tree.DecisionTreeRegressor()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    X_sample, y_sample <span class="op">=</span> boostrap(X, y)  <span class="co">## 실제론 없는 코드임, 함수지정 해줘야함... 아마도.</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    tree.fit(X_sample, y_sample)  <span class="co">## 붓스트랩 된 샘플로만 적합</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    trees.append(tree)  <span class="co">## 학습한 나무를 저장</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> ensemble(trees)  <span class="co">## 이것도 실제론 없는 코드임... 그냥 종합한다고. 여러 개의 나무를 종합하여 하나의 예측값 산출</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">## RandomForest</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>forest <span class="op">=</span> []</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>) :</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    tree <span class="op">=</span> sklearn.tree.DecisionTreeRegressor(max_features <span class="op">=</span> <span class="dv">1</span>)  <span class="co">## 매순간 설명변수가 바뀜</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    X_sample, y_sample <span class="op">=</span> bootstrap(X, y)  <span class="co">## 동일하게 매순간 샘플 바낌</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    tree.fit(X_sample, y_sample)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    forest.append(tree)  <span class="co">## 학습한 나무를 숲에 저장</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> ensemble(forest)  <span class="co">## 배깅과 동일하게 평균으로 종합하여 하나의 예측값으로 산출</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="b.-일단-적합" class="level3">
+<h3 class="anchored" data-anchor-id="b.-일단-적합"><strong>B. 일단 적합</strong></h3>
+<hr>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step 1 -- 이미 함</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">## step 2</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.ensemble.RandomForestRegressor(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    max_depth <span class="op">=</span> <span class="dv">1</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    max_features <span class="op">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>  <span class="co">## parameter를 float으로 지정해줄 경우 비율로 지정됨</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">## step 3</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<style>#sk-container-id-2 {color: black;}#sk-container-id-2 pre{padding: 0;}#sk-container-id-2 div.sk-toggleable {background-color: white;}#sk-container-id-2 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-2 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-2 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-2 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-2 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-2 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-2 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-2 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-2 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-2 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-2 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-2 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-2 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-2 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-2 div.sk-item {position: relative;z-index: 1;}#sk-container-id-2 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-2 div.sk-item::before, #sk-container-id-2 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-2 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-2 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-2 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-2 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-2 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-2 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-2 div.sk-label-container {text-align: center;}#sk-container-id-2 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-2 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-2" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>RandomForestRegressor(max_depth=1, max_features=0.3333333333333333)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" checked=""><label for="sk-estimator-id-2" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestRegressor</label><div class="sk-toggleable__content"><pre>RandomForestRegressor(max_depth=1, max_features=0.3333333333333333)</pre></div></div></div></div></div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>주의1 : <code>max_feature = 1</code>은 1개의 <code>feature</code>를 고려한다는 의미리고, <code>max_feature = 1.0</code>(default)은 100% <code>feature</code>를 고려한다는 의미이다.</p>
+<p>주의2 : <code>max_features = 1.0</code>이면 “RandomForest = Bagging”이다.(물론 적합하는 수가 랜덤포레스트는 100개긴 함… 아무튼 따라서 반드시 따로 지정해줄 것.)</p>
+</blockquote>
+</section>
+</section>
+<section id="c.-시각화" class="level2">
+<h2 class="anchored" data-anchor-id="c.-시각화">### <strong>C. 시각화</strong></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    predictr.estimators_[<span class="dv">5</span>],</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    feature_names <span class="op">=</span> X.columns.to_list()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="25. 의사결정나무 - 랜덤포레스트_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="랜덤포레스트-재현" class="level2">
+<h2 class="anchored" data-anchor-id="랜덤포레스트-재현">5. 랜덤포레스트 재현</h2>
+<section id="a.-random_state-추출" class="level3">
+<h3 class="anchored" data-anchor-id="a.-random_state-추출"><strong>A. <code>random_state</code> 추출</strong></h3>
+<hr>
+<div class="cell" data-editable="true" data-slideshow="{&quot;slide_type&quot;:&quot;&quot;}" data-tags="[]" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>predictr.estimators_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>[DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1031990468),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1429725713),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=350207566),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1100997744),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=510567808),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1755990883),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1996922071),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=674517068),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=595230725),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1012915459),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1428147165),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1395867295),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=169573435),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=127953600),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1926193238),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1376984195),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=2082790252),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=2057838983),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1053173062),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1578708662),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=472956975),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1333396687),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1821740983),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=783319209),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=36941881),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=799253070),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=635449342),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=132352020),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1264208795),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=350471677),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1095074218),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1593268467),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1404619332),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1608943847),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1236305187),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=961677438),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1166412997),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=650745900),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=2052279443),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=117113583),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1527210463),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1678776161),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1988471961),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1217358045),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=2088952586),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1865914230),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1078690409),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=982590624),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1057491803),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1673372238),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1270235607),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1796340065),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=901389640),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1043083946),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=769852308),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1182321155),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1842203459),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1880960863),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=898421758),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=934179744),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=452818797),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1305469509),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1213378674),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1961139761),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1891314091),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=367224874),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1959981631),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=369686042),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1645132117),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1253064599),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1639414708),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=543064642),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1822056120),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1524730351),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1968911770),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=164462170),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1247270882),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=2146910087),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1747823265),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1367209261),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=2035701061),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=158299833),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=263663306),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=636743074),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1080424218),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1350662801),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1024104977),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=387973769),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1853942881),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=78023758),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=479660592),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=475053108),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=307992757),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=175199539),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1958141260),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1358125826),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1050156658),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=793812352),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=27296515),
+ DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                       random_state=1256409330)]</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>트리 오브젝트 각자 고유의 <code>random_state</code>를 가지고 있다.</p>
+</blockquote>
+<p><code>-</code> 첫번째 트리 : <code>random_state</code>확인</p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>predictr.estimators_[<span class="dv">0</span>].random_state</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>1031990468</code></pre>
+</div>
+</div>
+<p><code>-</code> 각 나무들의 <code>random_state</code> 추출</p>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rs <span class="op">=</span> [tree.random_state <span class="cf">for</span> tree <span class="kw">in</span> predictr.estimators_]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="b.-forest-생성" class="level2">
+<h2 class="anchored" data-anchor-id="b.-forest-생성">### <strong>B. forest 생성</strong></h2>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sklearn.tree.DecisionTreeRegressor(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    max_depth <span class="op">=</span> <span class="dv">1</span>, max_features <span class="op">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    random_state <span class="op">=</span> predictr.estimators_[<span class="dv">0</span>].random_state</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<style>#sk-container-id-3 {color: black;}#sk-container-id-3 pre{padding: 0;}#sk-container-id-3 div.sk-toggleable {background-color: white;}#sk-container-id-3 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-3 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-3 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-3 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-3 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-3 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-3 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-3 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-3 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-3 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-3 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-3 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-3 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-3 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-3 div.sk-item {position: relative;z-index: 1;}#sk-container-id-3 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-3 div.sk-item::before, #sk-container-id-3 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-3 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-3 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-3 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-3 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-3 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-3 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-3 div.sk-label-container {text-align: center;}#sk-container-id-3 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-3 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-3" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                      random_state=1031990468)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-3" type="checkbox" checked=""><label for="sk-estimator-id-3" class="sk-toggleable__label sk-toggleable__label-arrow">DecisionTreeRegressor</label><div class="sk-toggleable__content"><pre>DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                      random_state=1031990468)</pre></div></div></div></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>my_forest <span class="op">=</span> [sklearn.tree.DecisionTreeRegressor(max_depth <span class="op">=</span> <span class="dv">1</span>, max_features <span class="op">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, random_state <span class="op">=</span> r) <span class="cf">for</span> r <span class="kw">in</span> rs]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">##한번에</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">##my_forest = [sklearn.tree.DecisionTreeRegressor(max_depth = 1, max_features = 1/3, random_state = tree.random_state) for tree in predictr.estimators_]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>my_forest[<span class="op">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<style>#sk-container-id-4 {color: black;}#sk-container-id-4 pre{padding: 0;}#sk-container-id-4 div.sk-toggleable {background-color: white;}#sk-container-id-4 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-4 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-4 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-4 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-4 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-4 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-4 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-4 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-4 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-4 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-4 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-4 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-4 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-4 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-4 div.sk-item {position: relative;z-index: 1;}#sk-container-id-4 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-4 div.sk-item::before, #sk-container-id-4 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-4 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-4 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-4 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-4 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-4 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-4 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-4 div.sk-label-container {text-align: center;}#sk-container-id-4 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-4 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-4" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                      random_state=1256409330)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-4" type="checkbox" checked=""><label for="sk-estimator-id-4" class="sk-toggleable__label sk-toggleable__label-arrow">DecisionTreeRegressor</label><div class="sk-toggleable__content"><pre>DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                      random_state=1256409330)</pre></div></div></div></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>predictr.estimators_[<span class="op">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<style>#sk-container-id-5 {color: black;}#sk-container-id-5 pre{padding: 0;}#sk-container-id-5 div.sk-toggleable {background-color: white;}#sk-container-id-5 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-5 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-5 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-5 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-5 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-5 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-5 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-5 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-5 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-5 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-5 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-5 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-5 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-5 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-5 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-5 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-5 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-5 div.sk-item {position: relative;z-index: 1;}#sk-container-id-5 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-5 div.sk-item::before, #sk-container-id-5 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-5 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-5 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-5 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-5 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-5 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-5 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-5 div.sk-label-container {text-align: center;}#sk-container-id-5 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-5 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-5" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                      random_state=1256409330)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-5" type="checkbox" checked=""><label for="sk-estimator-id-5" class="sk-toggleable__label sk-toggleable__label-arrow">DecisionTreeRegressor</label><div class="sk-toggleable__content"><pre>DecisionTreeRegressor(max_depth=1, max_features=0.3333333333333333,
+                      random_state=1256409330)</pre></div></div></div></div></div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>똑같은 개체임니당.</p>
+</blockquote>
+<section id="c.-붓스트랩-샘플-생성" class="level3">
+<h3 class="anchored" data-anchor-id="c.-붓스트랩-샘플-생성"><strong>C. 붓스트랩 샘플 생성</strong></h3>
+<hr>
+<p><code>-</code> 저장된 부스트랩 샘플을 확보하자.</p>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>predictr.estimators_samples_  <span class="co">## Bagging에서 썼던 코드...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>AttributeError: 'RandomForestRegressor' object has no attribute 'estimators_samples_'</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>샘플들을 재현하기 귀찮게 되어있다…(그런 메소드는 없다네요…)</p>
+</blockquote>
+<p><code>-</code> 그냥 새로 만들어보자!(코드 뜯기)</p>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sklearn.ensemble._forest._generate_sample_indices?</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg ansi-bold">Signature:</span>
+sklearn<span class="ansi-yellow-fg ansi-bold">.</span>ensemble<span class="ansi-yellow-fg ansi-bold">.</span>_forest<span class="ansi-yellow-fg ansi-bold">.</span>_generate_sample_indices<span class="ansi-yellow-fg ansi-bold">(</span><span class="ansi-yellow-fg ansi-bold">
+</span>    random_state<span class="ansi-yellow-fg ansi-bold">,</span><span class="ansi-yellow-fg ansi-bold">
+</span>    n_samples<span class="ansi-yellow-fg ansi-bold">,</span><span class="ansi-yellow-fg ansi-bold">
+</span>    n_samples_bootstrap<span class="ansi-yellow-fg ansi-bold">,</span><span class="ansi-yellow-fg ansi-bold">
+</span><span class="ansi-yellow-fg ansi-bold">)</span>
+<span class="ansi-red-fg ansi-bold">Docstring:</span> Private function used to _parallel_build_trees function.
+<span class="ansi-red-fg ansi-bold">File:</span>      c:\users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\ensemble\_forest.py
+<span class="ansi-red-fg ansi-bold">Type:</span>      function</pre>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>트리에 사용할 샘플을 만드는 코드.</p>
+</blockquote>
+<p><code>random_state</code>와 샘플의 크기, 붓스트랩 할 샘플의 크기를 지정하면 샘플의 인덱스를 내놓는 코드.</p>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> sklearn.ensemble._forest._generate_sample_indices</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sample(<span class="dv">1</span>,<span class="dv">10</span>,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>array([5, 8, 9, 5, 0, 0, 1, 7, 6, 9])</code></pre>
+</div>
+</div>
+<p><code>-</code> 원자료</p>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df_train.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>(1338, 7)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>my_index <span class="op">=</span> [sample(random_state <span class="op">=</span> r, n_samples <span class="op">=</span> <span class="dv">1338</span>, n_samples_bootstrap <span class="op">=</span> <span class="dv">1338</span>) <span class="cf">for</span> r <span class="kw">in</span> rs]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>샘플을 뽑는 <code>random_state</code>가 <code>r</code>인 인덱스가 나온다.</p>
+</blockquote>
+</section>
+</section>
+<section id="d.-적합" class="level2">
+<h2 class="anchored" data-anchor-id="d.-적합">### <strong>D. 적합</strong></h2>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, tree <span class="kw">in</span> <span class="bu">zip</span>(my_index, my_forest) :</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    X_sample, y_sample <span class="op">=</span> X.loc[idx], y.loc[idx]</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">## or np.array(X)[idx], np.array(y)[idx]</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    tree.fit(X_sample, y_sample)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">## or</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">#for i in range(len(my_index)):</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    X_sample, y_sample = X.loc[my_index[i]], y.loc[my_index[i]]</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    my_forest[i].fit(X_sample, y_sample)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="e.-앙상블" class="level3">
+<h3 class="anchored" data-anchor-id="e.-앙상블"><strong>E. 앙상블</strong></h3>
+<hr>
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>np.array([tree.predict(X) <span class="cf">for</span> tree <span class="kw">in</span> my_forest]).mean(axis <span class="op">=</span> <span class="dv">0</span>).shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+<pre><code>(1338,)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ensemble(forest) :</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.stack([tree.predict(X) <span class="cf">for</span> tree <span class="kw">in</span> my_forest]).mean(axis <span class="op">=</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>ensemble(my_forest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="47">
+<pre><code>array([16637.15797026, 11985.8217605 , 12109.06436558, ...,
+       11966.44532935, 10499.17514846, 18168.48871085])</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>predictr.predict(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="48">
+<pre><code>array([16637.15797026, 11985.8217605 , 12109.06436558, ...,
+       11966.44532935, 10499.17514846, 18168.48871085])</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>최종 결과가 나온다.</p>
+</blockquote>
+</section>
+</section>
+<section id="f.-주의" class="level2">
+<h2 class="anchored" data-anchor-id="f.-주의">### <strong>F. 주의</strong></h2>
+<p><code>-</code> <code>max_depth</code>를 1로 제한한 이유</p>
+<blockquote class="blockquote">
+<p><code>max_depth</code>가 깊을 경우 두 결과가 일치하지 않을 수 있다.</p>
+</blockquote>
+<ul>
+<li>실제 돌아가는 코드와의 괴리</li>
+</ul>
+<div class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(predictr.estimators_[<span class="dv">0</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="25. 의사결정나무 - 랜덤포레스트_files/figure-html/cell-27-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(my_forest[<span class="dv">0</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="25. 의사결정나무 - 랜덤포레스트_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><code>samples</code>의 값이 다름. 배깅도 그렇고, 랜덤포레스트도 그렇고 적합 중 가중치(<code>predictr.fit(sample_weight = [...]</code>)를 취하는 방식으로 적합하기 때문.</p>
+</blockquote>
+<p><code>max_depth</code>가 깊을 경우 샘플이 하나여서 더이상 노드를 나누지 못할 수 있음. 가중치를 지정해줄 수도 있지만, 그건 너무 과잉투자인 것 같아 이정도만 설명하고 넘어갑니당…</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

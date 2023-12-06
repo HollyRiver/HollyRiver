@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="강신성">
+<meta name="dcterms.date" content="2023-10-05">
+
+<title>RiverFlow - Plot | 꺾은선, 산점도, 객체지향화</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">RiverFlow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_MP.html" rel="" target="">
+ <span class="menu-text">2023 MP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_DV.html" rel="" target="">
+ <span class="menu-text">2023 DV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HollyRiver?tab=repositories" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://blog.naver.com/hc_ssk2800" rel="" target=""><i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Plot | 꺾은선, 산점도, 객체지향화</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">matplotlib</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>강신성 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-10-05</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p><code>matplotlib</code>를 이용하여 그래프를 그려보자!</p>
+</blockquote>
+<section id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다." class="level6">
+<h6 class="anchored" data-anchor-id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다.">해당 포스트는 전북대학교 통계학과 최규빈 교수님의 강의내용을 토대로 재구성되었음을 알립니다.</h6>
+</section>
+<section id="사전작업" class="level2">
+<h2 class="anchored" data-anchor-id="사전작업">1. 사전작업</h2>
+<ul>
+<li>라이브러리 import</li>
+</ul>
+<div class="cell" data-tags="[]" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>matplotlib.rcParams[<span class="st">'figure.figsize'</span>] <span class="op">=</span> (<span class="dv">3</span>, <span class="dv">2</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>matplotlib.rcParams[<span class="st">'figure.dpi'</span>] <span class="op">=</span> <span class="dv">150</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="간단한-꺾은선-그래프" class="level2">
+<h2 class="anchored" data-anchor-id="간단한-꺾은선-그래프">2. 간단한 꺾은선 그래프</h2>
+<p><code>plt.plot()</code>을 사용하여 간단하게 그래프를 그릴 수 있다.</p>
+<ul>
+<li>y값만 지정한 경우</li>
+</ul>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:451,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693983820501,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="c1254836-4187-4e68-d036-e3f45988e74e" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>])</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-3-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>x값과 y값 같이 지정한 경우</li>
+</ul>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:886,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693983842284,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="a4a883e6-069a-4463-8f5d-d75c40fa291b" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>x값과 y값에 변수를 지정하여 넣어주는 경우</li>
+</ul>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:480,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693983870502,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="312d9089-31c8-4f84-9fdf-203b70cf8bfe" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>- 이외에도 다양한 옵션을 사용하여 그래프를 다채롭게 그릴 수 있는데, 지금부터 그것들을 알아보도록 하자.</p>
+<section id="plt.plot의-옵션" class="level3">
+<h3 class="anchored" data-anchor-id="plt.plot의-옵션"><strong><code>plt.plot</code>의 옵션</strong></h3>
+<p><code>plt.plot()</code>에서 괄호 안에 문자열을 넣음으로서 세 가지 옵션을 간단하게 적용할 수 있다.</p>
+<pre><code>plt.plot(x,y,'--')  ## 파선 그래프
+plt.plot(x,y,':')   ## 점선 그래프
+plt.plot(x,y,'r')   ## 선의 색상이 빨간색
+plt.plot(x,y,'r--') ## 빨간색의 파선 그래프
+...</code></pre>
+<p><strong>- 게다가 세 옵션을 순서 상관없이 집어넣어 적용 가능하다!</strong></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Line Styles</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Colors</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Markers</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">character</th>
+<th style="text-align: center;">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">‘-’</td>
+<td style="text-align: center;">solid line style</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘–’</td>
+<td style="text-align: center;">dashed line style</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘-.’</td>
+<td style="text-align: center;">dash-dot line style</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘:’</td>
+<td style="text-align: center;">dotted line style</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">character</th>
+<th style="text-align: center;">color</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">‘b’</td>
+<td style="text-align: center;">blue</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘g’</td>
+<td style="text-align: center;">green</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘r’</td>
+<td style="text-align: center;">red</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘c’</td>
+<td style="text-align: center;">cyan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘m’</td>
+<td style="text-align: center;">magenta</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘y’</td>
+<td style="text-align: center;">yellow</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘k’</td>
+<td style="text-align: center;">black</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘w’</td>
+<td style="text-align: center;">white</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">character</th>
+<th style="text-align: center;">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">‘.’</td>
+<td style="text-align: center;">point marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘,’</td>
+<td style="text-align: center;">pixel marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘o’</td>
+<td style="text-align: center;">circle marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘v’</td>
+<td style="text-align: center;">triangle_down marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘^’</td>
+<td style="text-align: center;">triangle_up marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘&lt;’</td>
+<td style="text-align: center;">triangle_left marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘&gt;’</td>
+<td style="text-align: center;">triangle_right marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘1’</td>
+<td style="text-align: center;">tri_down marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘2’</td>
+<td style="text-align: center;">tri_up marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘3’</td>
+<td style="text-align: center;">tri_left marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘4’</td>
+<td style="text-align: center;">tri_right marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘8’</td>
+<td style="text-align: center;">octagon marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘s’</td>
+<td style="text-align: center;">square marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘p’</td>
+<td style="text-align: center;">pentagon marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘P’</td>
+<td style="text-align: center;">plus (filled) marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">’*’</td>
+<td style="text-align: center;">star marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘h’</td>
+<td style="text-align: center;">hexagon1 marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘H’</td>
+<td style="text-align: center;">hexagon2 marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘+’</td>
+<td style="text-align: center;">plus marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘x’</td>
+<td style="text-align: center;">x marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘X’</td>
+<td style="text-align: center;">x (filled) marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘D’</td>
+<td style="text-align: center;">diamond marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">‘d’</td>
+<td style="text-align: center;">thin_diamond marker</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">‘|’</td>
+<td style="text-align: center;">vline marker</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">’_’</td>
+<td style="text-align: center;">hline marker</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>그 외에 다른 옵션을 보고 싶다면 아래를 참조하라.</p>
+<blockquote class="blockquote">
+<p><strong>other options or colors</strong></p>
+<p>https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html</p>
+<p>https://matplotlib.org/2.0.2/examples/color/named_colors.html</p>
+<p><strong>hex code</strong></p>
+<p>https://htmlcolorcodes.com/</p>
+<p><strong>other linestyles</strong></p>
+<p>https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html</p>
+</blockquote>
+<p>- preset에 있는 색상 외 다른 색상을 적용</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:710,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693984363519,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="d2bd7ef6-85fc-44e5-bf5f-be45f862cf1d">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y,<span class="st">'--'</span>,color <span class="op">=</span> <span class="st">'lime'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>using color name</p>
+</blockquote>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1021,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693984450702,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="99bbc1dd-74ba-463d-8abc-a98cdceefc1b">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y,color <span class="op">=</span> <span class="st">'#751F9B'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>using hex code</p>
+</blockquote>
+<p>- 선의 형태를 다양하게 변경</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y,linestyle <span class="op">=</span> <span class="st">'dashed'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>문자열로 직접 지정</p>
+</blockquote>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:518,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693984625841,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="474f5364-110a-4ba9-bed7-0a07aea9e78a" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y,linestyle <span class="op">=</span> (<span class="dv">0</span>, (<span class="dv">1</span>,<span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>파선의 길이를 직접 지정</p>
+</blockquote>
+</section>
+<section id="plt.plot에서-scatter-plot을-생성" class="level3">
+<h3 class="anchored" data-anchor-id="plt.plot에서-scatter-plot을-생성"><strong>plt.plot()에서 scatter plot을 생성</strong></h3>
+<p><code>marker</code> 옵션을 변경하여 <code>scatter plot</code>을 손쉽게 그릴 수도 있다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:305,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693984736342,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="8dd12422-b772-4181-9bad-8b460618d12a" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y,<span class="st">'db'</span>)  <span class="co">## diamonds, blue</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="dot-connected-plot" class="level3">
+<h3 class="anchored" data-anchor-id="dot-connected-plot"><strong>dot connected plot</strong></h3>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1155,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693984935581,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="8a9f06d2-594b-4bbf-940b-7346aa5e532f" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y,<span class="st">':or'</span>)  <span class="co">## dotline(:), circle(o), red</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="pile-up" class="level3">
+<h3 class="anchored" data-anchor-id="pile-up"><strong>pile up</strong></h3>
+<p><code>plt.show()</code>를 입력하기 전 계속해서 그래프를 그리면 중첩된다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1238,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693985158395,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="ec6d126e-0ee5-4d0e-8b3b-ab46b7fbc045" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>], <span class="st">'--o'</span>, color <span class="op">=</span> <span class="st">'orange'</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">4</span>], <span class="st">'--o'</span>, color <span class="op">=</span> <span class="st">'skyblue'</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">1</span>], <span class="st">'--o'</span>, color <span class="op">=</span> <span class="st">'cyan'</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-12-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:492,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693985230725,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="5206ebc3-fe3d-4bc1-89a0-48812268269e">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>], <span class="st">'--o'</span>, color <span class="op">=</span> <span class="st">'C1'</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">4</span>], <span class="st">'--o'</span>, color <span class="op">=</span> <span class="st">'C0'</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>위와 같은 경우에는 color를 지정하지 않을 경우 먼저 입력한 그래프에 C0가 지정된다.</p>
+</blockquote>
+</section>
+<section id="응용-scatter-plot-and-line-plot" class="level3">
+<h3 class="anchored" data-anchor-id="응용-scatter-plot-and-line-plot"><strong>응용 : scatter plot and line plot</strong></h3>
+<p>- 유사 단순선형회귀</p>
+<p>설명변수와 오차, 반응변수를 지정해주자.</p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>,<span class="fl">0.1</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> np.random.randn(<span class="dv">100</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>x <span class="op">+</span> eps <span class="co">## 벗어나도록 겹치게</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:594,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693985410846,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="d21cbba1-5e9b-4b94-b1a0-bc2505361b35" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y,<span class="st">'.b'</span>)     <span class="co">## 실제 데이터</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.plot(x,<span class="dv">2</span><span class="op">*</span>x,<span class="st">'--r'</span>)  <span class="co">## 회귀선</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="적합한-그래프를-그릴-때" class="level3">
+<h3 class="anchored" data-anchor-id="적합한-그래프를-그릴-때"><strong>적합한 그래프를 그릴 때</strong></h3>
+<p><code>-</code> summary: boxplot, histogram, lineplot, scatterplot</p>
+<ul>
+<li>라인플랏: 추세</li>
+<li>☆★☆ 스캐터플랏: 두 변수의 관계</li>
+<li>박스플랏: 분포(일상용어)의 비교, 이상치</li>
+<li>히스토그램: 분포(통계용어)파악</li>
+<li>바플랏: 크기비교</li>
+</ul>
+</section>
+</section>
+<section id="객체지향적-시각화" class="level2">
+<h2 class="anchored" data-anchor-id="객체지향적-시각화">3. 객체지향적 시각화</h2>
+<section id="a.-배경지식" class="level3">
+<h3 class="anchored" data-anchor-id="a.-배경지식"><strong>A. 배경지식</strong></h3>
+<p>- 그림을 저장해둔 뒤 나중에 꺼내보고 싶다면? | <code>plt.gcf()</code> : Get Current Figure.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:469,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693985764492,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="84482539-74ef-451d-bec8-2cbee8b035c8" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>],<span class="st">'--o'</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.gcf() <span class="co">## plt.show()를 하기 전, 현재 표기되는 figure를 얻는다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-16-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:3,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1693985775055,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="cda24c0e-9bba-4e45-8512-3eb831370871">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="56">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>위와 같이 변수에 저장된 것을 알 수 있다.</p>
+</blockquote>
+</section>
+<section id="b.-fig의-해체" class="level3">
+<h3 class="anchored" data-anchor-id="b.-fig의-해체"><strong>B. <code>fig</code>의 해체</strong></h3>
+<pre><code>fig
+fig.axes
+
+ax = fig.axes[0]
+ax.yaxis
+ax.xaxis
+
+lines = ax.get_lines()[0]
+lines[0]</code></pre>
+<ul>
+<li>fig &gt; 그래프 그 자체</li>
+<li>axes &gt; 그래프의 구역</li>
+<li>axis &gt; x축, y축</li>
+<li>line &gt; 직선형 그래프</li>
+</ul>
+<p>등등등…</p>
+<p>아무튼 여러 개체가 나뉘어있다.</p>
+<blockquote class="blockquote">
+<p>개념(비유) : * Figure(fig) : 도화지 * Axes(ax) : 도화지에 존재하는 그림틀 * Axis, Lines : 그림틀 위에 올려지는 물체(object)</p>
+</blockquote>
+</section>
+<section id="c.-plt.plot없이-그래프-그리기" class="level3">
+<h3 class="anchored" data-anchor-id="c.-plt.plot없이-그래프-그리기"><strong>C. <code>plt.plot()</code>없이 그래프 그리기</strong></h3>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>], <span class="st">'--o'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-18-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>위와 같은 그래프를 <code>plt.plot()</code>없이 만들어보자!</p>
+<p>- 아래의 코드를 하나하나 뜯어보자.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:458,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694415453312,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="f3b7def8-86c1-4874-b1e4-fd00eaacec38" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.Figure()</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> fig.add_axes([<span class="fl">0.125</span>,<span class="fl">0.11</span>,<span class="fl">0.775</span>,<span class="fl">0.77</span>])</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="op">-</span><span class="fl">0.15</span>, <span class="fl">3.15</span>])  <span class="co"># setting x axis limit</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="fl">0.9</span>, <span class="fl">3.1</span>])     <span class="co"># setting y axis limit</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>line <span class="op">=</span> matplotlib.lines.Line2D(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    xdata <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>],</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    ydata <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>],</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    linestyle <span class="op">=</span> <span class="st">'--'</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    marker <span class="op">=</span> <span class="st">'o'</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>ax.add_line(line)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-19-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p><strong>1. 최상위 하이라이트(<code>figure</code>) 생성</strong></p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:461,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694416273941,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="91e95b51-b540-497e-ff4b-5121a63be4c5" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()<span class="op">;</span> fig   <span class="co">## 최상위 하이라이트인 그림만 만들어냄.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>&lt;Figure size 450x300 with 0 Axes&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;Figure size 450x300 with 0 Axes&gt;</code></pre>
+</div>
+</div>
+<p><strong>2. 그래프가 들어갈 공간(<code>axes</code>) 생성</strong></p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:3,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694416274332,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="33f5a37e-46c0-496d-c8f1-97b8560cd767" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> fig.add_axes([<span class="fl">0.125</span>,<span class="fl">0.11</span>,<span class="fl">0.775</span>,<span class="fl">0.77</span>])<span class="op">;</span> fig  <span class="co">## 가로시작, 세로시작, 종횡비</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-21-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p><strong>3. 직선을 지정 후 추가</strong></p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694416277035,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>line <span class="op">=</span> matplotlib.lines.Line2D(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    xdata <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>],</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    ydata <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>],</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    linestyle <span class="op">=</span> <span class="st">'--'</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    marker <span class="op">=</span> <span class="st">'o'</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p><code>matplotlib</code>에서 라인을 만드는 함수가 따로 있었다.</p>
+</blockquote>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694416280360,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="af05edad-27a3-4029-d792-fb71e2e07355" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ax.add_line(line)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<pre><code>&lt;matplotlib.lines.Line2D at 0x1c3c591e380&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:349,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694416282398,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="61974879-1c31-4dc7-d0f8-0ba5eb2e171a" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p><strong>4. 직선이 제대로 표기되지 않는 것 같으니 x축과 y축의 한계를 설정</strong></p>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="op">-</span><span class="fl">0.15</span>, <span class="fl">3.15</span>])</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="fl">0.9</span>, <span class="fl">3.1</span>])</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="d.-또-코드의-대체" class="level3">
+<h3 class="anchored" data-anchor-id="d.-또-코드의-대체"><strong>D. 또 코드의 대체</strong></h3>
+<p><strong>1. <code>line2D</code> 오브젝트를 쓰지 않는 방법</strong></p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:894,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694416545703,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="5c9ef80a-543b-46d8-c105-697263d5c623" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">## genarally</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.Figure()</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> fig.add_axes([<span class="fl">0.125</span>, <span class="fl">0.11</span>, <span class="fl">0.775</span>, <span class="fl">0.77</span>])</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>ax.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>], <span class="st">'--o'</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="51">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><code>ax.plot()</code>을 사용</p>
+</blockquote>
+<p><strong>2. add_axes()를 쓰지 않는 방법<span style="background-color:yellow">(중요!)</span></strong></p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:985,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694416643480,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="d0e566d4-a8ba-4d1a-cc81-c8f6095bc90d" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.Figure()</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> fig.subplots(<span class="dv">1</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>ax.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>], <span class="st">'--o'</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-27-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><code>ax = fig.subplots()</code>을 사용</p>
+</blockquote>
+<p><strong>3. <code>fig</code>와 <code>ax</code>들을 한번에 지정<span style="background-color:yellow">(중요!)</span></strong></p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:847,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694416807548,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="86b9be71-3157-45f5-f9e7-e8d623dcbb5b" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>) <span class="co">## 중요함</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>ax.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>], <span class="st">'--o'</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="e.-정리-starstarstar" class="level3">
+<h3 class="anchored" data-anchor-id="e.-정리-starstarstar"><strong>E. 정리 (<span class="math inline">\(\star\star\star\)</span>)</strong></h3>
+<p>아래의 코드는 모두 같은 애들이었다.</p>
+<blockquote class="blockquote">
+<pre><code>plt.plot([1,2,3,2], '--o')</code></pre>
+</blockquote>
+<blockquote class="blockquote">
+<pre><code>fig, ax = plt.subplots()
+ax.plot([1,2,3,2], '--o')</code></pre>
+</blockquote>
+<blockquote class="blockquote">
+<pre><code>fig = plt.Figure()
+ax = fig.subplots()
+ax.plot([1,2,3,2], '--o')
+fig</code></pre>
+</blockquote>
+<blockquote class="blockquote">
+<pre><code>fig = plt.Figure()
+ax = fig.add_axes([0.125, 0.11, 0.775, 0.77])
+ax.plot([1,2,3,2], '--o')
+fig</code></pre>
+</blockquote>
+<p><code>plt.subplots()</code>과 <code>ax.plot()</code>의 경우 상당히 유용한 코드이니 꼭 숙지할 것!</p>
+</section>
+</section>
+<section id="미니맵과-서브플롯" class="level2">
+<h2 class="anchored" data-anchor-id="미니맵과-서브플롯">4. 미니맵과 서브플롯</h2>
+<section id="a.-미니맵" class="level3">
+<h3 class="anchored" data-anchor-id="a.-미니맵"><strong>A. 미니맵</strong></h3>
+<p><code>fig.add_axes()</code>를 사용한다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:449,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694417508452,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="37305908-9b69-41b9-ff33-cf332d10c7a4" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.Figure()</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> fig.add_axes([<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">2</span>])<span class="op">;</span> fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="63">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:2,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694417509616,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="490c90e4-293b-498c-b981-1dedcb706078" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>ax_mini <span class="op">=</span> fig.add_axes([<span class="fl">1.4</span>,<span class="fl">0.2</span>,<span class="fl">0.5</span>,<span class="fl">0.5</span>])  <span class="co">## 가로 세로 위치(중심위치), 종횡비</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>ax.plot([<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">4</span>], <span class="st">'--o'</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>ax_mini.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">1</span>], <span class="st">'--or'</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="64">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-30-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>생성된 fig에 axes를 하나 더 추가하여 만들어냈다.</p>
+</blockquote>
+</section>
+<section id="b.-서브플롯" class="level3">
+<h3 class="anchored" data-anchor-id="b.-서브플롯"><strong>B. 서브플롯</strong></h3>
+<p><code>plt.subplots()</code>, <code>fig.subplots()</code>을 이용해보자.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1338,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694417608081,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="ceecaebb-b2ec-4a90-994b-b136941282a7" data-execution_count="77">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>)  <span class="co">## 2행</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-31-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="78">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>axs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="78">
+<pre><code>array([&lt;AxesSubplot:&gt;, &lt;AxesSubplot:&gt;], dtype=object)</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><code>axs</code>에 <code>ax</code>들이 <code>array</code>형태로 저장되어 있다.</p>
+</blockquote>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:285,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694417692964,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="5f38423b-d168-468b-8a27-0a386a22a613" data-execution_count="79">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>], <span class="st">'--r'</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>], <span class="st">'--o'</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="79">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-33-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>뭔가 레이아웃이 가려져있고 이상하다.</p>
+</blockquote>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:334,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694417708577,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()<span class="op">;</span> fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="80">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>왠만해선 <code>fig.tight_layout()</code>을 해주도록 하자.</p>
+</blockquote>
+<ul>
+<li>차피 axs가 array 형태로 저장되므로 그것을 따로 지정해주고 싶다면 아래와 같이 사용하는 것을 권장한다.</li>
+</ul>
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:true}" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">2</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>ax1.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>], <span class="st">'--r'</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>ax2.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>], <span class="st">'--o'</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-35-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="c.-서브플롯-스케일-조정-및-다중화" class="level3">
+<h3 class="anchored" data-anchor-id="c.-서브플롯-스케일-조정-및-다중화"><strong>C. 서브플롯 스케일 조정 및 다중화</strong></h3>
+<p>- 스케일 변경</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1028,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694417976924,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="532bd934-2405-4bb1-d4b6-761b7f51e6fb" data-execution_count="88">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">2</span>, figsize <span class="op">=</span> (<span class="dv">3</span>,<span class="dv">3</span>))  <span class="co">## 종횡비</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>ax1.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>], <span class="st">'--r'</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>ax2.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>], <span class="st">'--o'</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-36-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>미리 설정해줬던 dpi에 의거하여 종횡비가 배수로 적용된다.</p>
+</blockquote>
+<p>- 더 많은 서브플롯 생성</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:868,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694418119144,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="1fb76c90-a932-4d37-b960-c97b29e84ea1" data-execution_count="90">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fig, ((ax1, ax2),(ax3,ax4)) <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">2</span>, figsize <span class="op">=</span> (<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>ax1.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>], <span class="st">'o'</span>, color <span class="op">=</span> <span class="st">'C0'</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>ax2.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>], <span class="st">'o'</span>, color <span class="op">=</span> <span class="st">'C1'</span>)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>ax3.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>], <span class="st">'o'</span>, color <span class="op">=</span> <span class="st">'C2'</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>ax4.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>], <span class="st">'o'</span>, color <span class="op">=</span> <span class="st">'C3'</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-37-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p><strong>- 사용자 정의 서브플롯 생성</strong></p>
+<p><code>plt.subplot()</code> ## s가 없는 <code>subplot()</code>, 즉, 하나만 만들어진다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1284,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694418389293,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="ac2dfdc2-fe41-401a-910f-39966745fe8e" data-tags="[]" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>)  <span class="co">## 2×2의 1</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>],<span class="st">'o'</span>, color<span class="op">=</span><span class="st">'C0'</span>)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>],<span class="st">'o'</span>, color<span class="op">=</span><span class="st">'C1'</span>)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">3</span>)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">3</span>],<span class="st">'o'</span>, color<span class="op">=</span><span class="st">'C2'</span>)</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.gcf()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-38-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>이미 생성된 figure의 크기를 조정</li>
+</ul>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:905,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694418432369,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="b66db6c7-cf2b-4007-e4ed-a20d3d7f4f8d" data-tags="[]" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(<span class="dv">2</span>,<span class="dv">2</span>)<span class="op">;</span> fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-39-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="title" class="level2">
+<h2 class="anchored" data-anchor-id="title">5. title</h2>
+<blockquote class="blockquote">
+<p>title을 만드는 함수는 어떤 오브젝트에 소속되는 게 좋을까? 1. plt -&gt; subplot의 제목을 설정 가능 2. fig -&gt; 전체제목(super title)을 설정할 수 있음 3. ax -&gt; subplot들의 제목을 설정할 수 있음</p>
+</blockquote>
+<section id="a.-plt.title" class="level3">
+<h3 class="anchored" data-anchor-id="a.-plt.title"><strong>A. <code>plt.title()</code></strong></h3>
+<p>figure를 생성하지 않은 기본적인 환경에서 타이틀을 달아준다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:686,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694418769889,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="5da13b6d-f518-4255-c29d-6c2794307e4c" data-tags="[]" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 가장 평범한 플롯</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>])</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'asdf'</span>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-40-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="b.-ax.set_title" class="level3">
+<h3 class="anchored" data-anchor-id="b.-ax.set_title"><strong>B. <code>ax.set_title()</code></strong></h3>
+<p>figure와 axes를 생성했을 경우, 각 <code>ax</code>마다 타이틀을 달아줄 수 있다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:526,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694418833866,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="1f20899e-8879-4033-d737-bec0b2ea8f2e" data-tags="[]" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">## title이 axes에 존재</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'asdf'</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>ax.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>])</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-41-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="c.-fig.suptitle-권장하지-않는-방법" class="level3">
+<h3 class="anchored" data-anchor-id="c.-fig.suptitle-권장하지-않는-방법"><strong>C. <code>fig.suptitle()</code></strong> | 권장하지 않는 방법</h3>
+<p>원래 figure 자체에 타이틀을 붙이는 것은 불가능하다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:894,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694418905819,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="5fa9aae7-642f-4ca0-b8fa-2d7fd84187b3" data-tags="[]" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">##--------fig : 원래는 불가능--------</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>])</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.gcf()</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">'asdf'</span>)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-42-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="d.-응용" class="level3">
+<h3 class="anchored" data-anchor-id="d.-응용"><strong>D. 응용</strong></h3>
+<ul>
+<li><code>plt.subplots()</code>과 <code>set_title()</code>을 이용</li>
+</ul>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1396,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694419036044,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="4d8621d2-bff7-4948-e541-05cda7a7159f" data-tags="[]" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize <span class="op">=</span> (<span class="dv">4</span>,<span class="dv">2</span>))</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'asdf'</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'1234'</span>)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>ax1.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>])</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>ax2.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>])</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-43-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>figure를 생성하지 않고 <code>plt.subplot()</code>과 <code>plt.title()</code>을 이용하여 손수 지정</li>
+</ul>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:907,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694419134723,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="fa9b230f-f1c1-4b1f-eb65-f5c02734a04e" data-tags="[]" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>])</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'asdf'</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>])</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'1234'</span>)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-44-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li><code>fig.suptitle()</code>을 이용한 방법</li>
+</ul>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1939,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694419205482,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="83ec2608-0584-4977-aa98-f12a8f3632a1" data-tags="[]" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'asdf'</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'1234'</span>)</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">'asdf1234'</span>)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-45-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="e.-plt.gca" class="level3">
+<h3 class="anchored" data-anchor-id="e.-plt.gca"><strong>E. <code>plt.gca()</code></strong></h3>
+<p><code>plt.gca()</code>를 통해 <code>ax</code>개체를 다룰 수도 있다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:983,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694419916507,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="bad1733f-c811-4486-d004-47ecd952b966" data-tags="[]" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>])</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'asdf'</span>)  <span class="co">## 현재의 axis에 바로 타이틀을 설정해준다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<pre><code>Text(0.5, 1.0, 'asdf')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-46-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="산점도의-응용-표본상관계수" class="level2">
+<h2 class="anchored" data-anchor-id="산점도의-응용-표본상관계수">6. 산점도의 응용 | 표본상관계수</h2>
+<section id="a.-산점도와-표본상관계수" class="level3">
+<h3 class="anchored" data-anchor-id="a.-산점도와-표본상관계수"><strong>A. 산점도와 표본상관계수</strong></h3>
+<p>아래처럼 두 연속형 자료가 주어질 경우 산점도로 나타낼 수 있다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:915,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694420207521,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="61166eee-37b1-4123-b2bf-2baace959c62" data-tags="[]" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>weight <span class="op">=</span> [<span class="dv">44</span>,<span class="dv">48</span>,<span class="dv">49</span>,<span class="dv">58</span>,<span class="dv">62</span>,<span class="dv">68</span>,<span class="dv">69</span>,<span class="dv">70</span>,<span class="dv">76</span>,<span class="dv">79</span>]</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> [<span class="dv">159</span>,<span class="dv">160</span>,<span class="dv">162</span>,<span class="dv">165</span>,<span class="dv">167</span>,<span class="dv">162</span>,<span class="dv">165</span>,<span class="dv">175</span>,<span class="dv">165</span>,<span class="dv">172</span>]</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>plt.plot(weight,height,<span class="st">'.'</span>)  <span class="co">## option : '.' marker가 .인 산점도 산출</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-47-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>아래 표본상관계수의 정의에 따라 데이터에서의 표본상관계수를 구해보자.</p>
+<p><code>-</code> (표본)상관계수의 정의</p>
+<p><span class="math display">\[r=\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y}) }{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2\sum_{i=1}^{n}(y_i-\bar{y})^2 }}=\sum_{i=1}^{n}\tilde{x}_i\tilde{y}_i \]</span></p>
+<p><span class="math display">\[단,~\tilde{x}_i=\frac{(x_i-\bar{x})}{\sqrt{\sum_{i=1}^n(x_i-\bar{x})^2}},~ \tilde{y}_i=\frac{(y_i-\bar{y})}{\sqrt{\sum_{i=1}^n(y_i-\bar{y})^2}}\]</span></p>
+<blockquote class="blockquote">
+<p>위 식에서 <span class="math inline">\(\tilde{x}_i\)</span>와 <span class="math inline">\(\tilde{y}_i\)</span>는 <span class="math inline">\(x_i\)</span>와 <span class="math inline">\(y_i\)</span>를 표준화한 것이다.</p>
+</blockquote>
+<p>(데이터를 불러오자)</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:316,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694420505874,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-tags="[]" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>[<span class="dv">44</span>,<span class="dv">48</span>,<span class="dv">49</span>,<span class="dv">58</span>,<span class="dv">62</span>,<span class="dv">68</span>,<span class="dv">69</span>,<span class="dv">70</span>,<span class="dv">76</span>,<span class="dv">79</span>]</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>y<span class="op">=</span>[<span class="dv">159</span>,<span class="dv">160</span>,<span class="dv">162</span>,<span class="dv">165</span>,<span class="dv">167</span>,<span class="dv">162</span>,<span class="dv">165</span>,<span class="dv">175</span>,<span class="dv">165</span>,<span class="dv">172</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>(평균을 0으로)</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694420506207,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="da05741d-35bd-4f62-9a82-3f4835b96737" data-tags="[]" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> x <span class="op">-</span> np.mean(x)<span class="op">;</span> <span class="bu">print</span>(xx)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> y <span class="op">-</span> np.mean(y)<span class="op">;</span> <span class="bu">print</span>(yy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[-18.3 -14.3 -13.3  -4.3  -0.3   5.7   6.7   7.7  13.7  16.7]
+[-6.2 -5.2 -3.2 -0.2  1.8 -3.2 -0.2  9.8 -0.2  6.8]</code></pre>
+</div>
+</div>
+<p>(퍼진 정도를 표준화)</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694420648257,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-tags="[]" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>x_standard <span class="op">=</span> xx<span class="op">/</span>np.sqrt(np.<span class="bu">sum</span>(xx<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>y_standard <span class="op">=</span> yy<span class="op">/</span>np.sqrt(np.<span class="bu">sum</span>(yy<span class="op">**</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>(표본상관계수 산출)</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:2,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694420671514,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="d7f18e49-c311-45b4-9786-ed57ea0a2b84" data-tags="[]" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(x_standard<span class="op">*</span>y_standard)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<pre><code>0.7138620583559141</code></pre>
+</div>
+</div>
+<ul>
+<li>이미 정의된 코드를 통해 해당 결과가 맞는지 확인해보자.</li>
+</ul>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:2,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694420686148,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="1279b72d-8497-4622-faad-4fc23df049f3" data-tags="[]" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>np.corrcoef(x,y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="47">
+<pre><code>array([[1.        , 0.71386206],
+       [0.71386206, 1.        ]])</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="b.-산점도를-보고-상관계수의-부호를-해석" class="level2">
+<h2 class="anchored" data-anchor-id="b.-산점도를-보고-상관계수의-부호를-해석">### <strong>B. 산점도를 보고 상관계수의 부호를 해석</strong></h2>
+<p>- 아래의 그림은 상관계수 r의 값이 양수인가 음수인가?</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>[<span class="dv">44</span>,<span class="dv">48</span>,<span class="dv">49</span>,<span class="dv">58</span>,<span class="dv">62</span>,<span class="dv">68</span>,<span class="dv">69</span>,<span class="dv">70</span>,<span class="dv">76</span>,<span class="dv">79</span>]</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>y<span class="op">=</span>[<span class="dv">159</span>,<span class="dv">160</span>,<span class="dv">162</span>,<span class="dv">165</span>,<span class="dv">167</span>,<span class="dv">162</span>,<span class="dv">165</span>,<span class="dv">175</span>,<span class="dv">165</span>,<span class="dv">172</span>]</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, <span class="st">'o'</span>)</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-53-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> x<span class="op">-</span>np.mean(x)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> y<span class="op">-</span>np.mean(y) </span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>xxx <span class="op">=</span> xx<span class="op">/</span>np.sqrt(np.<span class="bu">sum</span>(xx<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>yyy <span class="op">=</span> yy<span class="op">/</span>np.sqrt(np.<span class="bu">sum</span>(yy<span class="op">**</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1137,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694421045396,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="6105651f-34d5-4a1b-eb7e-8145d6497886" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2, ax3) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">3</span>, figsize <span class="op">=</span> (<span class="dv">10</span>,<span class="dv">3</span>))</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>ax1.plot(x,y, <span class="st">'o'</span>)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="vs">r'$(x_i,y_i)$'</span>)</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>ax2.plot(xx,yy,<span class="st">'o'</span>) <span class="co">## mean to 0</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="vs">r'$(x_i-\bar</span><span class="sc">{x}</span><span class="vs">, y_i-\bar</span><span class="sc">{y}</span><span class="vs">)$'</span>)</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>ax3.plot(xxx,yyy,<span class="st">'o'</span>) <span class="co">## standarized</span></span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>ax3.set_title(<span class="vs">r'$(\tilde</span><span class="sc">{x}</span><span class="vs">_i,\tilde</span><span class="sc">{y}</span><span class="vs">_i)$'</span>)</span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-55-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>마지막 <span class="math inline">\(\tilde{x}_i\)</span>, <span class="math inline">\(\tilde{y}_i\)</span>를 곱한 값이 양수인 것과 음수인 것을 체크해보자.</li>
+</ul>
+<blockquote class="blockquote">
+<p>1,3사분면에 점들이 많으므로 상관계수의 부호는 양수일 것이다.</p>
+</blockquote>
+</section>
+<section id="d.-산점도를-보고-상관계수의-절대값을-해석" class="level2">
+<h2 class="anchored" data-anchor-id="d.-산점도를-보고-상관계수의-절대값을-해석">### <strong>D. 산점도를 보고 상관계수의 절대값을 해석</strong></h2>
+<p>- 기울기가 동일하지만 직선 근처의 퍼짐이 다른 두 개의 자료</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:452,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694421202518,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>np.arange(<span class="dv">0</span>,<span class="dv">10</span>,<span class="fl">0.1</span>)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>y1<span class="op">=</span>x<span class="op">+</span>np.random.normal(loc<span class="op">=</span><span class="dv">0</span>,scale<span class="op">=</span><span class="fl">1.0</span>,size<span class="op">=</span><span class="bu">len</span>(x))  <span class="co">## N(0,1)</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>y2<span class="op">=</span>x<span class="op">+</span>np.random.normal(loc<span class="op">=</span><span class="dv">0</span>,scale<span class="op">=</span><span class="fl">7.0</span>,size<span class="op">=</span><span class="bu">len</span>(x))  <span class="co">## N(0,7)</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y1,<span class="st">'.'</span>)</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y2,<span class="st">'x'</span>)</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-56-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>표준화하는 함수 <code>tilde()</code> 정의</li>
+</ul>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:298,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694421311306,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tilde(x):</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>    xx <span class="op">=</span> x<span class="op">-</span>np.mean(x)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    xxx <span class="op">=</span> xx <span class="op">/</span> np.sqrt(np.<span class="bu">sum</span>(xx<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> xxx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1456,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694421476032,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="71ab6744-5508-4685-e806-a291f9d00051" data-execution_count="126">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize <span class="op">=</span> (<span class="dv">4</span>,<span class="dv">2</span>))</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>ax1.plot(x,y1,<span class="st">'.'</span>)<span class="op">;</span> ax1.plot(x,y2,<span class="st">'x'</span>)<span class="op">;</span> ax1.set_title(<span class="vs">r'$(x_i,y_i)$'</span>)</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>ax2.plot(tilde(x), tilde(y1),<span class="st">'.'</span>)<span class="op">;</span> ax2.plot(tilde(x), tilde(y2), <span class="st">'x'</span>)<span class="op">;</span> ax2.set_title(<span class="vs">r'$(\tilde</span><span class="sc">{x}</span><span class="vs">_i,\tilde</span><span class="sc">{y}</span><span class="vs">_i)$'</span>)</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-58-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>- 직선 근처의 퍼짐은 동일하지만, 직선의 기울기가 다른 경우</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:332,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694421535175,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>np.arange(<span class="dv">0</span>,<span class="dv">10</span>,<span class="fl">0.1</span>)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>y1<span class="op">=</span>x<span class="op">+</span>np.random.normal(loc<span class="op">=</span><span class="dv">0</span>,scale<span class="op">=</span><span class="fl">1.0</span>,size<span class="op">=</span><span class="bu">len</span>(x))  <span class="co">## 기울기가 1</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>y2<span class="op">=</span><span class="fl">0.2</span><span class="op">*</span>x<span class="op">+</span>np.random.normal(loc<span class="op">=</span><span class="dv">0</span>,scale<span class="op">=</span><span class="fl">1.0</span>,size<span class="op">=</span><span class="bu">len</span>(x))  <span class="co">## 기울기가 0.2</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y1,<span class="st">'.'</span>)</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x,y2,<span class="st">'x'</span>)</span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-59-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1677,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694421544408,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="865a7ae7-f0e4-4100-9423-ff540a2de35c" data-execution_count="129">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1,ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>,figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">2</span>))</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>ax1.plot(x,y1,<span class="st">'.'</span>)<span class="op">;</span> ax1.plot(x,y2,<span class="st">'x'</span>)<span class="op">;</span> ax1.set_title(<span class="vs">r'$(x_i,y_i)$'</span>)</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>ax2.plot(tilde(x),tilde(y1),<span class="st">'.'</span>)<span class="op">;</span> ax2.plot(tilde(x),tilde(y2),<span class="st">'x'</span>)<span class="op">;</span> ax2.set_title(<span class="vs">r'$(\tilde</span><span class="sc">{x}</span><span class="vs">_i,\tilde</span><span class="sc">{y}</span><span class="vs">_i)$'</span>)</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-60-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>기울기가 클수록, 퍼짐 정도가 작을수록 상관계수의 절댓값이 높다.</p>
+</section>
+<section id="산점도-응용예제2---앤스콤의-4분할" class="level2">
+<h2 class="anchored" data-anchor-id="산점도-응용예제2---앤스콤의-4분할">7. 산점도 응용예제2 - 앤스콤의 4분할</h2>
+<p>- 표본상관계수가 모두 동일한 네 자료를 보라.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:471,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694421639863,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="op">=</span> [<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">13</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">14</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">12</span>, <span class="dv">7</span>, <span class="dv">5</span>]</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>y1 <span class="op">=</span> [<span class="fl">8.04</span>, <span class="fl">6.95</span>, <span class="fl">7.58</span>, <span class="fl">8.81</span>, <span class="fl">8.33</span>, <span class="fl">9.96</span>, <span class="fl">7.24</span>, <span class="fl">4.26</span>, <span class="fl">10.84</span>, <span class="fl">4.82</span>, <span class="fl">5.68</span>]</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>x2 <span class="op">=</span> x1</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>y2 <span class="op">=</span> [<span class="fl">9.14</span>, <span class="fl">8.14</span>, <span class="fl">8.74</span>, <span class="fl">8.77</span>, <span class="fl">9.26</span>, <span class="fl">8.10</span>, <span class="fl">6.13</span>, <span class="fl">3.10</span>, <span class="fl">9.13</span>, <span class="fl">7.26</span>, <span class="fl">4.74</span>]</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>x3 <span class="op">=</span> x1</span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>y3 <span class="op">=</span> [<span class="fl">7.46</span>, <span class="fl">6.77</span>, <span class="fl">12.74</span>, <span class="fl">7.11</span>, <span class="fl">7.81</span>, <span class="fl">8.84</span>, <span class="fl">6.08</span>, <span class="fl">5.39</span>, <span class="fl">8.15</span>, <span class="fl">6.42</span>, <span class="fl">5.73</span>]</span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a>x4 <span class="op">=</span> [<span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">19</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>]</span>
+<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>y4 <span class="op">=</span> [<span class="fl">6.58</span>, <span class="fl">5.76</span>, <span class="fl">7.71</span>, <span class="fl">8.84</span>, <span class="fl">8.47</span>, <span class="fl">7.04</span>, <span class="fl">5.25</span>, <span class="fl">12.50</span>, <span class="fl">5.56</span>, <span class="fl">7.91</span>, <span class="fl">6.89</span>]</span>
+<span id="cb74-12"><a href="#cb74-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-13"><a href="#cb74-13" aria-hidden="true" tabindex="-1"></a>np.corrcoef(x1,y1),np.corrcoef(x2,y2),np.corrcoef(x3,y3),np.corrcoef(x4,y4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>(array([[1.        , 0.81642052],
+        [0.81642052, 1.        ]]),
+ array([[1.        , 0.81623651],
+        [0.81623651, 1.        ]]),
+ array([[1.        , 0.81628674],
+        [0.81628674, 1.        ]]),
+ array([[1.        , 0.81652144],
+        [0.81652144, 1.        ]]))</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>음, 다 비슷한 자료겠구나… 양의 상관관계를 띄겠네?</p>
+</blockquote>
+<p><span style="background-color:yellow">라고 속단하긴 이르다.</span></p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1701,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1694421641563,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="995c3bde-efff-4646-ac40-9ef29c44a131" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>fig, ((ax1,ax2),(ax3,ax4)) <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">2</span>,figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>))</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>ax1.plot(x1,y1,<span class="st">'o'</span>)<span class="op">;</span> ax1.set_title(<span class="ss">f'corrcoef = </span><span class="sc">{</span>np<span class="sc">.</span>corrcoef(x1,y1)[<span class="dv">0</span>,<span class="dv">1</span>] <span class="sc">: .6f}</span><span class="ss">'</span>)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>ax2.plot(x2,y2,<span class="st">'o'</span>)<span class="op">;</span> ax2.set_title(<span class="ss">f'corrcoef = </span><span class="sc">{</span>np<span class="sc">.</span>corrcoef(x2,y2)[<span class="dv">0</span>,<span class="dv">1</span>] <span class="sc">: .6f}</span><span class="ss">'</span>)</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>ax3.plot(x3,y3,<span class="st">'o'</span>)<span class="op">;</span> ax3.set_title(<span class="ss">f'corrcoef = </span><span class="sc">{</span>np<span class="sc">.</span>corrcoef(x3,y3)[<span class="dv">0</span>,<span class="dv">1</span>] <span class="sc">: .6f}</span><span class="ss">'</span>)</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>ax4.plot(x4,y4,<span class="st">'o'</span>)<span class="op">;</span> ax4.set_title(<span class="ss">f'corrcoef = </span><span class="sc">{</span>np<span class="sc">.</span>corrcoef(x4,y4)[<span class="dv">0</span>,<span class="dv">1</span>] <span class="sc">: .6f}</span><span class="ss">'</span>)</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A1. 꺾은선, 산점도, 객체지향화_files/figure-html/cell-62-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>4개의 그림은 모두 같은 상관계수를 가지나, 그 느낌이 전혀 다르다.</p>
+<p>- 앤스콤플랏의 4개의 그림은 모두 같은 상관계수를 가진다. <strong>하지만,</strong> 4개의 그림은 느낌이 전혀 다르다.</p>
+<p>- 같은 표본상관계수를 가진다고 하여 같은 관계성을 가지는 것은 아니다. 표본상관계수는 x,y의 비례정도를 측정하는데 그 값이 1에 가깝다고 하여 꼭 정비례의 관계가 있음을 의미하는 건 아니다.</p>
+<p><strong><span class="math inline">\((x_i,y_i)\)</span>의 산점도가 선형성을 보일 때만 “표본상관계수가 1에 가까우므로 정비례의 관계에 있다”라는 논리전개가 성립한다.</strong></p>
+<ul>
+<li>앤스콤의 첫번째 플랏 : 산점도가 선형 -&gt; 표본상관계수가 0.816 = 정비례의 관계가 0.816 정도</li>
+<li>앤스콤의 두번째 플랏 : 산점도가 선형이 아님 -&gt; 표본상관계수가 크게 의미없음.</li>
+<li>앤스콤의 세번째 플랏 : 산점도가 선형인듯 보이나 하나의 이상치가 있음 -&gt; 하나의 이상치가 표본상관계수의 값을 무너뜨릴 수 있으므로 표본상관계수 값을 신뢰할 수 없음.</li>
+<li>앤스콤의 네번째 플랏 : 산점도를 그려보니 이상한 그림 -&gt; 표본상관계수를 계산할 수는 있으나, 그게 무슨 의미가 있을까?</li>
+</ul>
+<p>산점도가 선형성을 보일 때만 표본상관계수가 1에 가까우므로 정비례의 관계에 있다라는 논리전개가 성립한다.</p>
+<blockquote class="blockquote">
+<p>1번만 의미가 있음. 3번의 경우 이상치가 존재하여 신뢰할 수 없음.</p>
+</blockquote>
+<section id="교훈" class="level3">
+<h3 class="anchored" data-anchor-id="교훈"><strong>교훈</strong></h3>
+<p>상관계수를 해석하기에 앞서서 산점도가 선형성을 보이는 지 체크할 것! 항상 통계량은 적절한 가정하에서만 말이 된다는 사실을 기억할 것!</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

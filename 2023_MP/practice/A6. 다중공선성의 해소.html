@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="강신성">
+<meta name="dcterms.date" content="2023-10-26">
+
+<title>RiverFlow - 다중공선성의 해소</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">RiverFlow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_MP.html" rel="" target="">
+ <span class="menu-text">2023 MP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_DV.html" rel="" target="">
+ <span class="menu-text">2023 DV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HollyRiver?tab=repositories" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://blog.naver.com/hc_ssk2800" rel="" target=""><i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">다중공선성의 해소</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">linear_model</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>강신성 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-10-26</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p><code>Ridge</code>와 <code>Lasso</code>를 통해 다중공선성을 극복해보자.</p>
+</blockquote>
+<section id="해당-자료는-전북대학교-통계학과-최규빈-교수님의-강의-내용을-토대로-재구성되었음을-밝힙니다." class="level6">
+<h6 class="anchored" data-anchor-id="해당-자료는-전북대학교-통계학과-최규빈-교수님의-강의-내용을-토대로-재구성되었음을-밝힙니다.">해당 자료는 전북대학교 통계학과 최규빈 교수님의 강의 내용을 토대로 재구성되었음을 밝힙니다.</h6>
+</section>
+<section id="라이브러리-imports" class="level2">
+<h2 class="anchored" data-anchor-id="라이브러리-imports">1. 라이브러리 imports</h2>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.linear_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ridge-l2-penalty" class="level2">
+<h2 class="anchored" data-anchor-id="ridge-l2-penalty">2. <code>Ridge</code> : L2-penalty</h2>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"https://raw.githubusercontent.com/guebin/MP2023/main/posts/employment_multicollinearity.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">43052</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'employment_score'</span>] <span class="op">=</span> df.gpa <span class="op">*</span> <span class="fl">1.0</span> <span class="op">+</span> df.toeic<span class="op">*</span> <span class="dv">1</span><span class="op">/</span><span class="dv">100</span> <span class="op">+</span> np.random.randn(<span class="dv">500</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">employment_score</th>
+<th data-quarto-table-cell-role="th">gpa</th>
+<th data-quarto-table-cell-role="th">toeic</th>
+<th data-quarto-table-cell-role="th">toeic0</th>
+<th data-quarto-table-cell-role="th">toeic1</th>
+<th data-quarto-table-cell-role="th">toeic2</th>
+<th data-quarto-table-cell-role="th">toeic3</th>
+<th data-quarto-table-cell-role="th">toeic4</th>
+<th data-quarto-table-cell-role="th">toeic5</th>
+<th data-quarto-table-cell-role="th">toeic6</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">toeic490</th>
+<th data-quarto-table-cell-role="th">toeic491</th>
+<th data-quarto-table-cell-role="th">toeic492</th>
+<th data-quarto-table-cell-role="th">toeic493</th>
+<th data-quarto-table-cell-role="th">toeic494</th>
+<th data-quarto-table-cell-role="th">toeic495</th>
+<th data-quarto-table-cell-role="th">toeic496</th>
+<th data-quarto-table-cell-role="th">toeic497</th>
+<th data-quarto-table-cell-role="th">toeic498</th>
+<th data-quarto-table-cell-role="th">toeic499</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.784955</td>
+<td>0.051535</td>
+<td>135</td>
+<td>129.566309</td>
+<td>133.078481</td>
+<td>121.678398</td>
+<td>113.457366</td>
+<td>133.564200</td>
+<td>136.026566</td>
+<td>141.793547</td>
+<td>...</td>
+<td>132.014696</td>
+<td>140.013265</td>
+<td>135.575816</td>
+<td>143.863346</td>
+<td>152.162740</td>
+<td>132.850033</td>
+<td>115.956496</td>
+<td>131.842126</td>
+<td>125.090801</td>
+<td>143.568527</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>10.789671</td>
+<td>0.355496</td>
+<td>935</td>
+<td>940.563187</td>
+<td>935.723570</td>
+<td>939.190519</td>
+<td>938.995672</td>
+<td>945.376482</td>
+<td>927.469901</td>
+<td>952.424087</td>
+<td>...</td>
+<td>942.251184</td>
+<td>923.241548</td>
+<td>939.924802</td>
+<td>921.912261</td>
+<td>953.250300</td>
+<td>931.743615</td>
+<td>940.205853</td>
+<td>930.575825</td>
+<td>941.530348</td>
+<td>934.221055</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>8.221213</td>
+<td>2.228435</td>
+<td>485</td>
+<td>493.671390</td>
+<td>493.909118</td>
+<td>475.500970</td>
+<td>480.363752</td>
+<td>478.868942</td>
+<td>493.321602</td>
+<td>490.059102</td>
+<td>...</td>
+<td>484.438233</td>
+<td>488.101275</td>
+<td>485.626742</td>
+<td>475.330715</td>
+<td>485.147363</td>
+<td>468.553780</td>
+<td>486.870976</td>
+<td>481.640957</td>
+<td>499.340808</td>
+<td>488.197332</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2.137594</td>
+<td>1.179701</td>
+<td>65</td>
+<td>62.272565</td>
+<td>55.957257</td>
+<td>68.521468</td>
+<td>76.866765</td>
+<td>51.436321</td>
+<td>57.166824</td>
+<td>67.834920</td>
+<td>...</td>
+<td>67.653225</td>
+<td>65.710588</td>
+<td>64.146780</td>
+<td>76.662194</td>
+<td>66.837839</td>
+<td>82.379018</td>
+<td>69.174745</td>
+<td>64.475993</td>
+<td>52.647087</td>
+<td>59.493275</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>8.650144</td>
+<td>3.962356</td>
+<td>445</td>
+<td>449.280637</td>
+<td>438.895582</td>
+<td>433.598274</td>
+<td>444.081141</td>
+<td>437.005100</td>
+<td>434.761142</td>
+<td>443.135269</td>
+<td>...</td>
+<td>455.940348</td>
+<td>435.952854</td>
+<td>441.521145</td>
+<td>443.038886</td>
+<td>433.118847</td>
+<td>466.103355</td>
+<td>430.056944</td>
+<td>423.632873</td>
+<td>446.973484</td>
+<td>442.793633</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">495</td>
+<td>9.057243</td>
+<td>4.288465</td>
+<td>280</td>
+<td>276.680902</td>
+<td>274.502675</td>
+<td>277.868536</td>
+<td>292.283300</td>
+<td>277.476630</td>
+<td>281.671647</td>
+<td>296.307373</td>
+<td>...</td>
+<td>269.541846</td>
+<td>278.220546</td>
+<td>278.484758</td>
+<td>284.901284</td>
+<td>272.451612</td>
+<td>265.784490</td>
+<td>275.795948</td>
+<td>280.465992</td>
+<td>268.528889</td>
+<td>283.638470</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">496</td>
+<td>4.108020</td>
+<td>2.601212</td>
+<td>310</td>
+<td>296.940263</td>
+<td>301.545000</td>
+<td>306.725610</td>
+<td>314.811407</td>
+<td>311.935810</td>
+<td>309.695838</td>
+<td>301.979914</td>
+<td>...</td>
+<td>304.680578</td>
+<td>295.476836</td>
+<td>316.582100</td>
+<td>319.412132</td>
+<td>312.984039</td>
+<td>312.372112</td>
+<td>312.106944</td>
+<td>314.101927</td>
+<td>309.409533</td>
+<td>297.429968</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">497</td>
+<td>2.430590</td>
+<td>0.042323</td>
+<td>225</td>
+<td>206.793217</td>
+<td>228.335345</td>
+<td>222.115146</td>
+<td>216.479498</td>
+<td>227.469560</td>
+<td>238.710310</td>
+<td>233.797065</td>
+<td>...</td>
+<td>233.469238</td>
+<td>235.160919</td>
+<td>228.517306</td>
+<td>228.349646</td>
+<td>224.153606</td>
+<td>230.860484</td>
+<td>218.683195</td>
+<td>232.949484</td>
+<td>236.951938</td>
+<td>227.997629</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">498</td>
+<td>5.343171</td>
+<td>1.041416</td>
+<td>320</td>
+<td>327.461442</td>
+<td>323.019899</td>
+<td>329.589337</td>
+<td>313.312233</td>
+<td>315.645050</td>
+<td>324.448247</td>
+<td>314.271045</td>
+<td>...</td>
+<td>326.297700</td>
+<td>309.893822</td>
+<td>312.873223</td>
+<td>322.356584</td>
+<td>319.332809</td>
+<td>319.405283</td>
+<td>324.021917</td>
+<td>312.363694</td>
+<td>318.493866</td>
+<td>310.973930</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">499</td>
+<td>6.505106</td>
+<td>3.626883</td>
+<td>375</td>
+<td>370.966595</td>
+<td>364.668477</td>
+<td>371.853566</td>
+<td>373.574930</td>
+<td>376.701708</td>
+<td>356.905085</td>
+<td>354.584022</td>
+<td>...</td>
+<td>382.278782</td>
+<td>379.460816</td>
+<td>371.031640</td>
+<td>370.272639</td>
+<td>375.618182</td>
+<td>369.252740</td>
+<td>376.925543</td>
+<td>391.863103</td>
+<td>368.735260</td>
+<td>368.520844</td>
+</tr>
+</tbody>
+</table>
+
+<p>500 rows × 503 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>위와 같은 데이터에서 <code>toeic0~toeic499</code>는 설명변수 간 상관관계가 높은 녀석들이다.</p>
+</blockquote>
+<section id="a.-true-world" class="level3">
+<h3 class="anchored" data-anchor-id="a.-true-world"><strong>A. True World</strong></h3>
+<hr>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1 </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df,test_size<span class="op">=</span><span class="fl">0.3</span>,random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic'</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train[[<span class="st">'employment_score'</span>]]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic'</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test[[<span class="st">'employment_score'</span>]]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">## step2 </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.LinearRegression()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">## step3</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 : pass </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<style>#sk-container-id-1 {color: black;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>LinearRegression()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked=""><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">LinearRegression</label><div class="sk-toggleable__content"><pre>LinearRegression()</pre></div></div></div></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'train_score:</span><span class="ch">\t</span><span class="sc">{</span>predictr<span class="sc">.</span>score(X,y)<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'test_score:</span><span class="ch">\t</span><span class="sc">{</span>predictr<span class="sc">.</span>score(XX,yy)<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>train_score:    0.9133
+test_score: 0.9127</code></pre>
+</div>
+</div>
+<p>- 언더라잉만 잘 적합한 결과, 오차항 때문에 1.0은 나오기 힘듦</p>
+<blockquote class="blockquote">
+<p>이 점수는 현실적으로 달성하기 어려워…</p>
+</blockquote>
+</section>
+</section>
+<section id="b.-무지성" class="level2">
+<h2 class="anchored" data-anchor-id="b.-무지성">### <strong>B. 무지성…</strong></h2>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1 </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df,test_size<span class="op">=</span><span class="fl">0.3</span>,random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.drop([<span class="st">'employment_score'</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train[[<span class="st">'employment_score'</span>]]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.drop([<span class="st">'employment_score'</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test[[<span class="st">'employment_score'</span>]]</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">## step2 </span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.LinearRegression()</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">## step3</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 : pass </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<style>#sk-container-id-2 {color: black;}#sk-container-id-2 pre{padding: 0;}#sk-container-id-2 div.sk-toggleable {background-color: white;}#sk-container-id-2 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-2 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-2 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-2 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-2 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-2 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-2 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-2 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-2 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-2 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-2 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-2 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-2 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-2 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-2 div.sk-item {position: relative;z-index: 1;}#sk-container-id-2 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-2 div.sk-item::before, #sk-container-id-2 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-2 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-2 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-2 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-2 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-2 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-2 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-2 div.sk-label-container {text-align: center;}#sk-container-id-2 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-2 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-2" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>LinearRegression()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" checked=""><label for="sk-estimator-id-2" class="sk-toggleable__label sk-toggleable__label-arrow">LinearRegression</label><div class="sk-toggleable__content"><pre>LinearRegression()</pre></div></div></div></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'train_score: </span><span class="sc">{</span>predictr<span class="sc">.</span>score(X,y)<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'test_score: </span><span class="sc">{</span>predictr<span class="sc">.</span>score(XX,yy)<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>train_score: 1.0000
+test_score: 0.1171</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>명백한 오버피팅…</p>
+</blockquote>
+<section id="c.-ridge" class="level3">
+<h3 class="anchored" data-anchor-id="c.-ridge"><strong>C. Ridge</strong></h3>
+<hr>
+<p>- 통계학자 : 이럴경우 Ridge를 사용하면 됩니다…</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df,test_size<span class="op">=</span><span class="fl">0.3</span>,random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.Ridge()  <span class="co">## 로지스틱의 경우 LogisticRegressionCV(penalty = 'l2')를 사용 가능</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<style>#sk-container-id-3 {color: black;}#sk-container-id-3 pre{padding: 0;}#sk-container-id-3 div.sk-toggleable {background-color: white;}#sk-container-id-3 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-3 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-3 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-3 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-3 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-3 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-3 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-3 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-3 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-3 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-3 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-3 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-3 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-3 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-3 div.sk-item {position: relative;z-index: 1;}#sk-container-id-3 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-3 div.sk-item::before, #sk-container-id-3 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-3 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-3 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-3 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-3 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-3 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-3 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-3 div.sk-label-container {text-align: center;}#sk-container-id-3 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-3 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-3" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Ridge()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-3" type="checkbox" checked=""><label for="sk-estimator-id-3" class="sk-toggleable__label sk-toggleable__label-arrow">Ridge</label><div class="sk-toggleable__content"><pre>Ridge()</pre></div></div></div></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'train_score: </span><span class="sc">{</span>predictr<span class="sc">.</span>score(X,y)<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'test_score: </span><span class="sc">{</span>predictr<span class="sc">.</span>score(XX,yy)<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>train_score: 1.0000
+test_score: 0.1173</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>??? 안되는데요?</p>
+</blockquote>
+<p>- 하이퍼 파라미터를 튜닝하면 됩니다…</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1 --- 다넣음</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df,test_size<span class="op">=</span><span class="fl">0.3</span>,random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.Ridge(alpha<span class="op">=</span><span class="fl">5e8</span>)  <span class="co">## alpha = 500000000.</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#---# </span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'train_score: </span><span class="sc">{</span>predictr<span class="sc">.</span>score(X,y)<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'test_score: </span><span class="sc">{</span>predictr<span class="sc">.</span>score(XX,yy)<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>train_score: 0.7507
+test_score: 0.7438</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>오라클에 비할 바는 아니긴 한데, 공선성이 있는 경우라도 적절한 alpha를 고른다면 망하지는 않음.</p>
+</blockquote>
+</section>
+</section>
+<section id="d.-ridge의-작동원리" class="level2">
+<h2 class="anchored" data-anchor-id="d.-ridge의-작동원리">### <strong>D. Ridge의 작동원리</strong></h2>
+<p>- 정확한 설명…</p>
+<p>SVD를 이용하여 이론적으로 계산하면, <code>sklearn.linear_model.LinearRegression()</code>로 적합한 결과보다 <code>sklearn.linear_model.Ridge()</code>로 적합한 결과를 더 좋게 만드는 가 항상 존재함을 증명할 수 있음…</p>
+<blockquote class="blockquote">
+<p>그렇다네요.</p>
+</blockquote>
+<p>- 직관적 설명(엄밀하지 않은 설명)</p>
+<ol type="1">
+<li>LinearRegression은 왜 망했지???</li>
+</ol>
+<blockquote class="blockquote">
+<p>취업 자료의 예제를 보면 토익 성적의 계수는 실제로 0.01이다. 적당히… * <code>toeic_coef</code>+<code>toeic0_coef</code>+…+<code>toeic499_coef</code> <span class="math inline">\(\approx\)</span> 0.01이라면 대충 맞는 답이다.</p>
+</blockquote>
+<ol start="2" type="1">
+<li>근데 사실 이 0.01이라는 값은 몇 개의 계수만 있어도 만들 순 있을거임… -&gt; 나머지 설명변수가 모두 불필요한 특징이 됨.</li>
+</ol>
+<blockquote class="blockquote">
+<p>그래가지고 불필요한 특징은 다중공선성의 문제 때문에 오버피팅을 유발한다.</p>
+</blockquote>
+<p>그래서 Ridge는 몇 개의 계수만 빼고 나머지들이 쓸모없는 게 되지 않도록, 다 유의미하도록 계수에 패널티를 부여한다.</p>
+<section id="e.-alpha에-따른-계수값-변화" class="level3">
+<h3 class="anchored" data-anchor-id="e.-alpha에-따른-계수값-변화"><strong>E. <span class="math inline">\(\alpha\)</span>에 따른 계수값 변화</strong></h3>
+<hr>
+<p>- 여러 개의 predictor를 alpha의 값을 달리하며 학습</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1 --- toeic, gpa 만 남기고 나머지 변수를 삭제</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df,test_size<span class="op">=</span><span class="fl">0.3</span>,random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>alphas <span class="op">=</span> [<span class="fl">5e2</span>, <span class="fl">5e3</span>, <span class="fl">5e4</span>, <span class="fl">5e5</span>, <span class="fl">5e6</span>, <span class="fl">5e7</span>, <span class="fl">5e8</span>]</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>predictrs <span class="op">=</span> [sklearn.linear_model.Ridge(alpha<span class="op">=</span>alpha) <span class="cf">for</span> alpha <span class="kw">in</span> alphas]</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">## 아래에서 배울 RidgeCV에서 이 값들 중 어느 값이 가장 좋을 지 결정하게 할 수 있음</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> predictr <span class="kw">in</span> predictrs:  <span class="co">## 이건 리스트로 만드는 게 아니니까...</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    predictr.fit(X,y)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.plot(predictrs[<span class="dv">0</span>].coef_[<span class="dv">1</span>:], label <span class="op">=</span> <span class="vs">r'$\alpha$ = </span><span class="sc">{}</span><span class="vs">'</span>.<span class="bu">format</span>(predictrs[<span class="dv">0</span>].alpha))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.plot(predictrs[<span class="dv">2</span>].coef_[<span class="dv">1</span>:], label <span class="op">=</span> <span class="vs">r'$\alpha$ = </span><span class="sc">{}</span><span class="vs">'</span>.<span class="bu">format</span>(predictrs[<span class="dv">2</span>].alpha))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A6. 다중공선성의 해소_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plt.plot(predictrs[<span class="dv">3</span>].coef_[<span class="dv">1</span>:],label<span class="op">=</span><span class="vs">r'$\alpha$=</span><span class="sc">{}</span><span class="vs">'</span>.<span class="bu">format</span>(predictrs[<span class="dv">3</span>].alpha))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>plt.plot(predictrs[<span class="dv">5</span>].coef_[<span class="dv">1</span>:],label<span class="op">=</span><span class="vs">r'$\alpha$=</span><span class="sc">{}</span><span class="vs">'</span>.<span class="bu">format</span>(predictrs[<span class="dv">5</span>].alpha))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A6. 다중공선성의 해소_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>plt.plot(predictrs[<span class="dv">5</span>].coef_[<span class="dv">1</span>:],label<span class="op">=</span><span class="vs">r'$\alpha$=</span><span class="sc">{}</span><span class="vs">'</span>.<span class="bu">format</span>(predictrs[<span class="dv">5</span>].alpha))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>plt.plot(predictrs[<span class="op">-</span><span class="dv">1</span>].coef_[<span class="dv">1</span>:],label<span class="op">=</span><span class="vs">r'$\alpha$=</span><span class="sc">{}</span><span class="vs">'</span>.<span class="bu">format</span>(predictrs[<span class="op">-</span><span class="dv">1</span>].alpha))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A6. 다중공선성의 해소_files/figure-html/cell-14-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>alpha의 값이 작을수록, 그 변동 폭이 줄어듦을 알 수 있다.</p>
+<p>- 마지막 predictor의 계수값을 살펴보면…</p>
+</blockquote>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(predictrs[<span class="op">-</span><span class="dv">1</span>].coef_)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>s.set_axis(X.columns, axis <span class="op">=</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>gpa         0.000001
+toeic       0.000019
+toeic0      0.000018
+toeic1      0.000018
+toeic2      0.000019
+              ...   
+toeic495    0.000018
+toeic496    0.000019
+toeic497    0.000019
+toeic498    0.000019
+toeic499    0.000019
+Length: 502, dtype: float64</code></pre>
+</div>
+</div>
+<ul>
+<li>불필요한 변수가 나올 수 없는 구조가 되어버렸음(한두개로 계수 0.01을 만들 수 없음)</li>
+<li>모든 변수는 대량 2e-5(<span class="math inline">\(\approx\frac{1}{100}\frac{1}{501}\)</span>)정도 똑같이 중요하다고 생각된다.</li>
+<li>살짝 (<span class="math inline">\(\frac{1}{100}\frac{1}{501}\)</span>)보다 전체적으로 값이 작아보이는데, 이는 기분탓이 아니다.</li>
+</ul>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>[predictr.coef_[<span class="dv">1</span>:].<span class="bu">sum</span>() <span class="cf">for</span> predictr <span class="kw">in</span> predictrs]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>[0.010274546089787007,
+ 0.010157633994689774,
+ 0.009948779293105905,
+ 0.009866050921714562,
+ 0.009854882844936588,
+ 0.009820059959693872,
+ 0.00949099901512329]</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>갈수록 합의 크기가 작아짐…</p>
+</blockquote>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="op">/</span><span class="dv">100</span><span class="op">*</span><span class="dv">1</span><span class="op">/</span><span class="dv">501</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>1.9960079840319362e-05</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>게대가 본래 기대될 회귀계수의 값보다 전체적으로 조금씩 낮은 편</p>
+</blockquote>
+</section>
+</section>
+<section id="f.-alpha-정리" class="level2">
+<h2 class="anchored" data-anchor-id="f.-alpha-정리">### <strong>F. <span class="math inline">\(\alpha\)</span> 정리</strong></h2>
+<p>- L2-penalty는 대충 분산같은 것…</p>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.randn(<span class="dv">5</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>L2_penalty <span class="op">=</span> (x<span class="op">**</span><span class="dv">2</span>).<span class="bu">sum</span>()  <span class="co">## 제곱합, 평균에서 멀어진...</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>(L2_penalty, <span class="dv">5</span><span class="op">*</span>(x.var() <span class="op">+</span> (x.mean()<span class="op">**</span><span class="dv">2</span>)))  <span class="co">## 2차 적률인듯. E(X**2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>(10.591975556137934, 10.591975556137934)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> predictr <span class="kw">in</span> predictrs :</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f'alpha=</span><span class="sc">{</span>predictr<span class="sc">.</span>alpha<span class="sc">:.0e}</span><span class="ch">\t</span><span class="ss">'</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f'l2_penalty=</span><span class="sc">{</span>((predictr.coef_)<span class="op">**</span><span class="dv">2</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:.6f}</span><span class="ch">\t</span><span class="ss">'</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f'sum(toeic_coefs)=</span><span class="sc">{</span>((predictr.coef_[<span class="dv">1</span>:]))<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:.4f}</span><span class="ch">\t</span><span class="ss">'</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f'test_score=</span><span class="sc">{</span>predictr<span class="sc">.</span>score(XX,yy)<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>alpha=5e+02 l2_penalty=0.046715 sum(toeic_coefs)=0.0103 test_score=0.2026
+alpha=5e+03 l2_penalty=0.021683 sum(toeic_coefs)=0.0102 test_score=0.4638
+alpha=5e+04 l2_penalty=0.003263 sum(toeic_coefs)=0.0099 test_score=0.6889
+alpha=5e+05 l2_penalty=0.000109 sum(toeic_coefs)=0.0099 test_score=0.7407
+alpha=5e+06 l2_penalty=0.000002 sum(toeic_coefs)=0.0099 test_score=0.7447
+alpha=5e+07 l2_penalty=0.000000 sum(toeic_coefs)=0.0098 test_score=0.7450
+alpha=5e+08 l2_penalty=0.000000 sum(toeic_coefs)=0.0095 test_score=0.7438</code></pre>
+</div>
+</div>
+<ul>
+<li><p>alpha의 값이 늘어날수록, penalty의 값이 규모가 작아진다. 그에따라 계수들의총합도 점점 낮아진다…</p></li>
+<li><p>게다가 test_score도 어느순간부터 낮아지기 시작한다…</p></li>
+</ul>
+</section>
+<section id="ridgecv" class="level2">
+<h2 class="anchored" data-anchor-id="ridgecv">3. <code>RidgeCV</code></h2>
+<p>- 입력한 alpha값들 중에서 가장 적절한 alpha값을 제시해준다.</p>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1 </span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df,test_size<span class="op">=</span><span class="fl">0.3</span>,random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">## step2 </span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.RidgeCV()  <span class="co">## 일단 alpha를 지정해주지 않는 모습...</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">## step3</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y)</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<style>#sk-container-id-1 {color: black;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>RidgeCV()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked=""><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">RidgeCV</label><div class="sk-toggleable__content"><pre>RidgeCV()</pre></div></div></div></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'df_train score : </span><span class="sc">{</span>predictr<span class="sc">.</span>score(X, y)<span class="sc">:.5f}</span><span class="ss">'</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'df_test score : </span><span class="sc">{</span>predictr<span class="sc">.</span>score(XX, yy)<span class="sc">:.5f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>df_train score : 1.00000
+df_test score : 0.11915</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>아직 overfitting된 모습…</p>
+</blockquote>
+<p><strong>왜냐!</strong> alphas의 후보는 0.1, 1.0, 10.0이 디폴트니까…</p>
+<p>- 따라서 이 후보를 직접 넣어주자.</p>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1 </span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df,test_size<span class="op">=</span><span class="fl">0.3</span>,random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic499'</span>]</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test.loc[:,<span class="st">'employment_score'</span>]</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co">## step2 -- 여기서 alpha의 후보들을 alphas에 리스트로 지정해준다.</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.RidgeCV(alphas<span class="op">=</span>[<span class="fl">5e2</span>, <span class="fl">5e3</span>, <span class="fl">5e4</span>, <span class="fl">5e5</span>, <span class="fl">5e6</span>, <span class="fl">5e7</span>, <span class="fl">5e8</span>])</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">## step3</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<style>#sk-container-id-2 {color: black;}#sk-container-id-2 pre{padding: 0;}#sk-container-id-2 div.sk-toggleable {background-color: white;}#sk-container-id-2 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-2 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-2 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-2 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-2 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-2 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-2 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-2 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-2 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-2 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-2 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-2 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-2 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-2 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-2 div.sk-item {position: relative;z-index: 1;}#sk-container-id-2 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-2 div.sk-item::before, #sk-container-id-2 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-2 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-2 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-2 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-2 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-2 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-2 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-2 div.sk-label-container {text-align: center;}#sk-container-id-2 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-2 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-2" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>RidgeCV(alphas=[500.0, 5000.0, 50000.0, 500000.0, 5000000.0, 50000000.0,
+                500000000.0])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" checked=""><label for="sk-estimator-id-2" class="sk-toggleable__label sk-toggleable__label-arrow">RidgeCV</label><div class="sk-toggleable__content"><pre>RidgeCV(alphas=[500.0, 5000.0, 50000.0, 500000.0, 5000000.0, 50000000.0,
+                500000000.0])</pre></div></div></div></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(predictr.score(X, y), predictr.score(XX, yy))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<pre><code>(0.7521268560159359, 0.7450309251010893)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>predictr.alpha_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<pre><code>50000000.0</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>alpha를 5,000,000로 설정했더니 가장 좋은 결과가 나왔다는 것을 알 수 있다.</p>
+</blockquote>
+</section>
+<section id="lasso" class="level2">
+<h2 class="anchored" data-anchor-id="lasso">4. Lasso</h2>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"https://raw.githubusercontent.com/guebin/MP2023/main/posts/employment_multicollinearity.csv"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">43052</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'employment_score'</span>] <span class="op">=</span> df.gpa <span class="op">*</span> <span class="fl">1.0</span> <span class="op">+</span> df.toeic<span class="op">*</span> <span class="dv">1</span><span class="op">/</span><span class="dv">100</span> <span class="op">+</span> np.random.randn(<span class="dv">500</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">employment_score</th>
+<th data-quarto-table-cell-role="th">gpa</th>
+<th data-quarto-table-cell-role="th">toeic</th>
+<th data-quarto-table-cell-role="th">toeic0</th>
+<th data-quarto-table-cell-role="th">toeic1</th>
+<th data-quarto-table-cell-role="th">toeic2</th>
+<th data-quarto-table-cell-role="th">toeic3</th>
+<th data-quarto-table-cell-role="th">toeic4</th>
+<th data-quarto-table-cell-role="th">toeic5</th>
+<th data-quarto-table-cell-role="th">toeic6</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">toeic490</th>
+<th data-quarto-table-cell-role="th">toeic491</th>
+<th data-quarto-table-cell-role="th">toeic492</th>
+<th data-quarto-table-cell-role="th">toeic493</th>
+<th data-quarto-table-cell-role="th">toeic494</th>
+<th data-quarto-table-cell-role="th">toeic495</th>
+<th data-quarto-table-cell-role="th">toeic496</th>
+<th data-quarto-table-cell-role="th">toeic497</th>
+<th data-quarto-table-cell-role="th">toeic498</th>
+<th data-quarto-table-cell-role="th">toeic499</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.784955</td>
+<td>0.051535</td>
+<td>135</td>
+<td>129.566309</td>
+<td>133.078481</td>
+<td>121.678398</td>
+<td>113.457366</td>
+<td>133.564200</td>
+<td>136.026566</td>
+<td>141.793547</td>
+<td>...</td>
+<td>132.014696</td>
+<td>140.013265</td>
+<td>135.575816</td>
+<td>143.863346</td>
+<td>152.162740</td>
+<td>132.850033</td>
+<td>115.956496</td>
+<td>131.842126</td>
+<td>125.090801</td>
+<td>143.568527</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>10.789671</td>
+<td>0.355496</td>
+<td>935</td>
+<td>940.563187</td>
+<td>935.723570</td>
+<td>939.190519</td>
+<td>938.995672</td>
+<td>945.376482</td>
+<td>927.469901</td>
+<td>952.424087</td>
+<td>...</td>
+<td>942.251184</td>
+<td>923.241548</td>
+<td>939.924802</td>
+<td>921.912261</td>
+<td>953.250300</td>
+<td>931.743615</td>
+<td>940.205853</td>
+<td>930.575825</td>
+<td>941.530348</td>
+<td>934.221055</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>8.221213</td>
+<td>2.228435</td>
+<td>485</td>
+<td>493.671390</td>
+<td>493.909118</td>
+<td>475.500970</td>
+<td>480.363752</td>
+<td>478.868942</td>
+<td>493.321602</td>
+<td>490.059102</td>
+<td>...</td>
+<td>484.438233</td>
+<td>488.101275</td>
+<td>485.626742</td>
+<td>475.330715</td>
+<td>485.147363</td>
+<td>468.553780</td>
+<td>486.870976</td>
+<td>481.640957</td>
+<td>499.340808</td>
+<td>488.197332</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2.137594</td>
+<td>1.179701</td>
+<td>65</td>
+<td>62.272565</td>
+<td>55.957257</td>
+<td>68.521468</td>
+<td>76.866765</td>
+<td>51.436321</td>
+<td>57.166824</td>
+<td>67.834920</td>
+<td>...</td>
+<td>67.653225</td>
+<td>65.710588</td>
+<td>64.146780</td>
+<td>76.662194</td>
+<td>66.837839</td>
+<td>82.379018</td>
+<td>69.174745</td>
+<td>64.475993</td>
+<td>52.647087</td>
+<td>59.493275</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>8.650144</td>
+<td>3.962356</td>
+<td>445</td>
+<td>449.280637</td>
+<td>438.895582</td>
+<td>433.598274</td>
+<td>444.081141</td>
+<td>437.005100</td>
+<td>434.761142</td>
+<td>443.135269</td>
+<td>...</td>
+<td>455.940348</td>
+<td>435.952854</td>
+<td>441.521145</td>
+<td>443.038886</td>
+<td>433.118847</td>
+<td>466.103355</td>
+<td>430.056944</td>
+<td>423.632873</td>
+<td>446.973484</td>
+<td>442.793633</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">495</td>
+<td>9.057243</td>
+<td>4.288465</td>
+<td>280</td>
+<td>276.680902</td>
+<td>274.502675</td>
+<td>277.868536</td>
+<td>292.283300</td>
+<td>277.476630</td>
+<td>281.671647</td>
+<td>296.307373</td>
+<td>...</td>
+<td>269.541846</td>
+<td>278.220546</td>
+<td>278.484758</td>
+<td>284.901284</td>
+<td>272.451612</td>
+<td>265.784490</td>
+<td>275.795948</td>
+<td>280.465992</td>
+<td>268.528889</td>
+<td>283.638470</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">496</td>
+<td>4.108020</td>
+<td>2.601212</td>
+<td>310</td>
+<td>296.940263</td>
+<td>301.545000</td>
+<td>306.725610</td>
+<td>314.811407</td>
+<td>311.935810</td>
+<td>309.695838</td>
+<td>301.979914</td>
+<td>...</td>
+<td>304.680578</td>
+<td>295.476836</td>
+<td>316.582100</td>
+<td>319.412132</td>
+<td>312.984039</td>
+<td>312.372112</td>
+<td>312.106944</td>
+<td>314.101927</td>
+<td>309.409533</td>
+<td>297.429968</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">497</td>
+<td>2.430590</td>
+<td>0.042323</td>
+<td>225</td>
+<td>206.793217</td>
+<td>228.335345</td>
+<td>222.115146</td>
+<td>216.479498</td>
+<td>227.469560</td>
+<td>238.710310</td>
+<td>233.797065</td>
+<td>...</td>
+<td>233.469238</td>
+<td>235.160919</td>
+<td>228.517306</td>
+<td>228.349646</td>
+<td>224.153606</td>
+<td>230.860484</td>
+<td>218.683195</td>
+<td>232.949484</td>
+<td>236.951938</td>
+<td>227.997629</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">498</td>
+<td>5.343171</td>
+<td>1.041416</td>
+<td>320</td>
+<td>327.461442</td>
+<td>323.019899</td>
+<td>329.589337</td>
+<td>313.312233</td>
+<td>315.645050</td>
+<td>324.448247</td>
+<td>314.271045</td>
+<td>...</td>
+<td>326.297700</td>
+<td>309.893822</td>
+<td>312.873223</td>
+<td>322.356584</td>
+<td>319.332809</td>
+<td>319.405283</td>
+<td>324.021917</td>
+<td>312.363694</td>
+<td>318.493866</td>
+<td>310.973930</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">499</td>
+<td>6.505106</td>
+<td>3.626883</td>
+<td>375</td>
+<td>370.966595</td>
+<td>364.668477</td>
+<td>371.853566</td>
+<td>373.574930</td>
+<td>376.701708</td>
+<td>356.905085</td>
+<td>354.584022</td>
+<td>...</td>
+<td>382.278782</td>
+<td>379.460816</td>
+<td>371.031640</td>
+<td>370.272639</td>
+<td>375.618182</td>
+<td>369.252740</td>
+<td>376.925543</td>
+<td>391.863103</td>
+<td>368.735260</td>
+<td>368.520844</td>
+</tr>
+</tbody>
+</table>
+
+<p>500 rows × 503 columns</p>
+</div>
+</div>
+</div>
+<section id="a.-lasso를-이용한-분석" class="level3">
+<h3 class="anchored" data-anchor-id="a.-lasso를-이용한-분석"><strong>A. Lasso를 이용한 분석</strong></h3>
+<hr>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df, test_size <span class="op">=</span> <span class="fl">0.3</span>, random_state <span class="op">=</span> <span class="dv">42</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.drop(<span class="st">'employment_score'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.employment_score</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.drop(<span class="st">'employment_score'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test.employment_score</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.Lasso()</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co">## 4</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y), predictr.score(XX, yy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.877e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>(0.8600312387900632, 0.8306176063318933)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'train_score:</span><span class="ch">\t</span><span class="ss"> </span><span class="sc">{</span>predictr<span class="sc">.</span>score(X,y)<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'test_score:</span><span class="ch">\t</span><span class="ss"> </span><span class="sc">{</span>predictr<span class="sc">.</span>score(XX,yy)<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>train_score:     0.8600
+test_score:  0.8306</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>alpha를 default로 두었음에도 굉장히 우수한 결과가 나왔다.</p>
+</blockquote>
+</section>
+</section>
+<section id="b.-lasso의-원리" class="level2">
+<h2 class="anchored" data-anchor-id="b.-lasso의-원리">### <strong>B. Lasso의 원리</strong></h2>
+<p>- 정확한 설명</p>
+<blockquote class="blockquote">
+<p>지금 이해하기엔 어려움…</p>
+</blockquote>
+<p>- 상관성이 짙은 설명변수 몇개로만 그 합의 계수를 만들게 해서는 안된다.</p>
+<blockquote class="blockquote">
+<p>아주 적은 숫자의 coef만 살려두고, 나머지는 0으로 강제한다.</p>
+<p>계수가 0이라는 것은 해당 변수를 제거한 것과 같은 효과를 가진다.</p>
+</blockquote>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>plt.plot(predictr.coef_[<span class="dv">1</span>:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A6. 다중공선성의 해소_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>실제로 계수값이 0인 녀석이 많음을 알 수 있다.</p>
+</blockquote>
+<section id="c.-alpha의-값에-따른-변화" class="level3">
+<h3 class="anchored" data-anchor-id="c.-alpha의-값에-따른-변화"><strong>C. <span class="math inline">\(\alpha\)</span>의 값에 따른 변화</strong></h3>
+<hr>
+<p>- 여러 개의 predictor를 학습시켜 계수값들의 변화를 관찰해보자.</p>
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:true}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df, test_size <span class="op">=</span> <span class="fl">0.3</span>, random_state <span class="op">=</span> <span class="dv">42</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.drop(<span class="st">'employment_score'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.employment_score</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.drop(<span class="st">'employment_score'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test.employment_score</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>alphas <span class="op">=</span> np.linspace(<span class="fl">0.1</span>, <span class="dv">2</span>, <span class="dv">20</span>)</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>predictrs <span class="op">=</span> [sklearn.linear_model.Lasso(alpha <span class="op">=</span> alpha) <span class="cf">for</span> alpha <span class="kw">in</span> alphas]</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> predictr <span class="kw">in</span> predictrs:</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>    predictr.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.115e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.023e+02, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.047e+02, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.991e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 9.375e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 9.588e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.730e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 7.671e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 7.117e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.877e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.875e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.698e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.606e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.719e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.015e+01, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.205e+00, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.086e+00, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.192e+00, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.498e+00, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.073e+00, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>plt.plot(predictrs[<span class="dv">0</span>].coef_[<span class="dv">1</span>:], label<span class="op">=</span><span class="vs">r'$\alpha=</span><span class="sc">{}</span><span class="vs">$'</span>.<span class="bu">format</span>(predictrs[<span class="dv">0</span>].alpha))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>plt.plot(predictrs[<span class="dv">9</span>].coef_[<span class="dv">1</span>:], label<span class="op">=</span><span class="vs">r'$\alpha=</span><span class="sc">{}</span><span class="vs">$'</span>.<span class="bu">format</span>(predictrs[<span class="dv">9</span>].alpha.<span class="bu">round</span>(<span class="dv">5</span>)))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>plt.plot(predictrs[<span class="op">-</span><span class="dv">1</span>].coef_[<span class="dv">1</span>:], label<span class="op">=</span><span class="vs">r'$\alpha=</span><span class="sc">{}</span><span class="vs">$'</span>.<span class="bu">format</span>(predictrs[<span class="op">-</span><span class="dv">1</span>].alpha))</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A6. 다중공선성의 해소_files/figure-html/cell-30-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>계수값들의 분산이 갈수록 작아지는 것을 느낄 수 있다.</p>
+</blockquote>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'alpha=</span><span class="sc">{</span>predictrs[<span class="dv">0</span>]<span class="sc">.</span>alpha<span class="sc">:.4f}</span><span class="ch">\t</span><span class="ss">sum(toeic_coef)=</span><span class="sc">{</span>predictrs[<span class="dv">0</span>]<span class="sc">.</span>coef_[<span class="dv">1</span>:]<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'alpha=</span><span class="sc">{</span>predictrs[<span class="dv">9</span>]<span class="sc">.</span>alpha<span class="sc">:.4f}</span><span class="ch">\t</span><span class="ss">sum(toeic_coef)=</span><span class="sc">{</span>predictrs[<span class="dv">9</span>]<span class="sc">.</span>coef_[<span class="dv">1</span>:]<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'alpha=</span><span class="sc">{</span>predictrs[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span>alpha<span class="sc">:.4f}</span><span class="ch">\t</span><span class="ss">sum(toeic_coef)=</span><span class="sc">{</span>predictrs[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span>coef_[<span class="dv">1</span>:]<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>alpha=0.1000    sum(toeic_coef)=0.010169320378140704
+alpha=1.0000    sum(toeic_coef)=0.009987870459109604
+alpha=2.0000    sum(toeic_coef)=0.009864586871194559</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>predictor들의 toeic 계수 합은 여전히 0.01 근처….</p>
+</blockquote>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>plt.plot([(predictr.coef_ <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">sum</span>() <span class="cf">for</span> predictr <span class="kw">in</span> predictrs])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A6. 다중공선성의 해소_files/figure-html/cell-32-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>alpha값이 커질수록 0이 아닌 계수의 갯수가 줄어드는 것을 볼 수 있다.</p>
+</blockquote>
+</section>
+</section>
+<section id="d.-lassocvcross-validation" class="level2">
+<h2 class="anchored" data-anchor-id="d.-lassocvcross-validation">### <strong>D. LassoCV(Cross Validation)</strong></h2>
+<p>- 가장 적합한 <span class="math inline">\(\alpha\)</span>값을 자동으로 찾아준다.</p>
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:true}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>df_train, df_test <span class="op">=</span> sklearn.model_selection.train_test_split(df, test_size <span class="op">=</span> <span class="fl">0.3</span>, random_state <span class="op">=</span> <span class="dv">42</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.drop(<span class="st">'employment_score'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.employment_score</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>XX <span class="op">=</span> df_test.drop(<span class="st">'employment_score'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>yy <span class="op">=</span> df_test.employment_score</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.LassoCV(alphas <span class="op">=</span> np.linspace(<span class="fl">0.1</span>, <span class="dv">2</span>, <span class="dv">20</span>))</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a><span class="co">## 4</span></span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.256e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.561e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.640e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 6.989e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.860e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 6.878e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 9.633e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.252e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.352e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.306e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.440e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.798e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.242e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.872e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.998e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.992e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.436e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.353e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.359e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.790e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.771e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.627e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.635e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.897e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.514e+00, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.024e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.141e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.461e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.014e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.375e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.590e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.812e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.907e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.234e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.637e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.876e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.340e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.293e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.578e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.930e+01, tolerance: 2.707e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.021e+00, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 6.646e-01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.295e+00, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.779e+00, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.310e+00, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.064e+00, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 7.075e+00, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 9.837e+00, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.093e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.277e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.556e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.943e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.170e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.293e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.617e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.108e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.724e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.145e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.746e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.480e+01, tolerance: 2.670e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 6.197e+00, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 9.328e+00, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 7.987e+00, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.132e+00, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 9.659e+00, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.356e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.658e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.074e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.443e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.203e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.698e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.031e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.921e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.384e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.669e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.082e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.384e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.782e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.134e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.001e+01, tolerance: 2.721e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 9.107e+00, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.057e+00, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.464e+00, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 7.606e+00, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.704e+00, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.481e+00, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.384e+00, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 7.910e+00, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.173e+00, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.076e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.301e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.835e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.949e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.076e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.993e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.923e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.063e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.883e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.713e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.017e+01, tolerance: 2.540e-01
+  model = cd_fast.enet_coordinate_descent(
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:628: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.047e+02, tolerance: 3.337e-01
+  model = cd_fast.enet_coordinate_descent(</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>0.9555099850022306</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y), predictr.score(XX, yy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>(0.9555099850022306, 0.8756348559919926)</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>살짝 과적합된 면이 있으나, 그래도 상당히 높은 수치이다.</p>
+</blockquote>
+</section>
+<section id="coef를-0으로-만드는-수학적-장치" class="level2">
+<h2 class="anchored" data-anchor-id="coef를-0으로-만드는-수학적-장치">5. coef를 0으로 만드는 수학적 장치</h2>
+<dl>
+<dt><strong>Ridge : L2-penalty</strong></dt>
+<dd>
+<p>coef의 값들을 가중치에 따라 분할하는 수학적 장치.</p>
+</dd>
+</dl>
+<blockquote class="blockquote">
+<p>패널티 : 상관성이 짙은 설명변수들의 계수값을 제곱한 뒤 합치고(L2-norm을 구하고), 그 값이 0에서 떨어져 있을수록 패널티 부여.</p>
+</blockquote>
+<dl>
+<dt><strong>Lasso : L1-penalty</strong></dt>
+<dd>
+<p>다수의 coef 값들을 0으로 만드는 수학적 장치</p>
+</dd>
+</dl>
+<blockquote class="blockquote">
+<p>패널티 : 상관성이 짙은 설명변수들의 계수값의 절대값을 구한 뒤에 합치고(L1-norm을 구하고), 그 값이 0에서 떨어져 있을수록 패널티 부여.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

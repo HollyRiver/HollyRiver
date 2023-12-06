@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="강신성">
+<meta name="dcterms.date" content="2023-11-13">
+
+<title>RiverFlow - 훌륭한 시각화 2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">RiverFlow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_MP.html" rel="" target="">
+ <span class="menu-text">2023 MP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_DV.html" rel="" target="">
+ <span class="menu-text">2023 DV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HollyRiver?tab=repositories" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://blog.naver.com/hc_ssk2800" rel="" target=""><i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">훌륭한 시각화 2</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">visualization</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>강신성 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-11-13</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p>훌륭한 시각화란 무엇일까…</p>
+</blockquote>
+<section id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다." class="level6">
+<h6 class="anchored" data-anchor-id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다.">해당 포스트는 전북대학교 통계학과 최규빈 교수님의 강의내용을 토대로 재구성되었음을 알립니다.</h6>
+</section>
+<section id="presentation-vs-exploration" class="level2">
+<h2 class="anchored" data-anchor-id="presentation-vs-exploration">1. Presentation vs Exploration</h2>
+<blockquote class="blockquote">
+<p>두 방식의 차이와, 장단점은 무엇일까?</p>
+</blockquote>
+<section id="a.-presentation" class="level3">
+<h3 class="anchored" data-anchor-id="a.-presentation"><strong>A. Presentation</strong></h3>
+<hr>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG1.png?raw=true" class="img-fluid"></p>
+<p>- 프리젠테이션 방식의 시각화는 화자가 다듬은 이야기를 전달하기에 좋은 시각화이다. 즉, 잘 정리된 메시지를 전달하기에 좋다.</p>
+</section>
+</section>
+<section id="b.-exploration" class="level2">
+<h2 class="anchored" data-anchor-id="b.-exploration">### <strong>B. Exploration</strong></h2>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG2.png?raw=true" class="img-fluid"></p>
+<blockquote class="blockquote">
+<p>문학적유기체라는 작품으로 어떤 소설책을 시각화한 것이다.</p>
+<p>수형도와 색깔로 구성되고, 수형도는 단원 <span class="math inline">\(\leftarrow\)</span> 문단 <span class="math inline">\(\leftarrow\)</span> 문장 <span class="math inline">\(\leftarrow\)</span> 단어 순으로 뻗어진다. 색깔은 소설에서 등장하는 소재를 구분(범주형 변수 표현에 적합)한다.</p>
+</blockquote>
+<p>- 익스플로래이션 방식은 독자가 스스로 그림에서 메시지를 찾아내도록 한다. 소설을 읽어보지 않은 사람은 해당 그래픽으로 소설책의 전체 주제를 미리 파악할 수 있고, 읽어본 사람은 분석 및 탐구를 할 수 있을 것이다.</p>
+<section id="c.-절충" class="level3">
+<h3 class="anchored" data-anchor-id="c.-절충"><strong>C. 절충</strong></h3>
+<hr>
+<p>- <em>카이로</em> : 사실 프리젠테이션과 익스플로래이션은 절충 가능하다.</p>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG3.png?raw=true" class="img-fluid"></p>
+<pre><code>## 이 그림을 보면 아래의 코드가 생각나야 함
+fig = ggplot(tidydata)
+line = geom_line(aes(x = '소득', y = '불평등', color = '정부'))
+point = geom_point(aes(x = '소득', y = '불평등'))
+text = geom_text(aes(x = '소득', y = '불평등', label = '연도'))
+
+fig + line + point + text</code></pre>
+<ul>
+<li>초록색 정부 : 소득이 증가 &amp; 불평등이 훨씬 더 증가</li>
+<li>갈색 정부 : 매우 빠른 경제성장 &amp; 불평등의 해소</li>
+<li>포인트 간의 간격이 조밀하다 = 변화가 더디다 // 포인트 간의 간격이 넓다 = 변화가 빠르다.</li>
+</ul>
+<p>- 언뜻 보기에는 익숙한 라인플랏처럼 보이지만, 해석할 만한 정보가 많다.</p>
+<blockquote class="blockquote">
+<p>익스플로레이션 형태의 그래프는 그릴 줄도 알아야 하지만, 남이 그린 그래프를 해석할 수도 있어야 한다.</p>
+</blockquote>
+</section>
+</section>
+<section id="이성적-낙관주의" class="level2">
+<h2 class="anchored" data-anchor-id="이성적-낙관주의">2. 이성적 낙관주의</h2>
+</section>
+<section id="a.-인구문제" class="level2">
+<h2 class="anchored" data-anchor-id="a.-인구문제">### <strong>A. 인구문제</strong></h2>
+<p>- 주장 1 : 가난한 나라에서 애를 너무 많이 낳음 <span class="math inline">\(\leftarrow\)</span> 세계인구가 90억까지 증가할 것이다.</p>
+<p>- 주장 2 : 잘사는 나라에서 애를 적게 낳음 <span class="math inline">\(\leftarrow\)</span> 극심한 고령화 문제가 발생할 것이다.</p>
+<section id="b.-리들리의-메시지" class="level3">
+<h3 class="anchored" data-anchor-id="b.-리들리의-메시지"><strong>B. 리들리의 메시지</strong></h3>
+<hr>
+<p><strong><em>둘다 틀렸는뎁쇼???</em></strong></p>
+<p>- 가난한 나라의 출산율은 점점 감소</p>
+<p>- 잘 사는 사라의 출산율은 점점 증가</p>
+<blockquote class="blockquote">
+<p>따라서 세계의 인구는 안정화되고, 고령화 문제도 오지 않을 것이다.</p>
+</blockquote>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG4.png?raw=true" class="img-fluid"></p>
+</section>
+</section>
+<section id="c.-카이로" class="level2">
+<h2 class="anchored" data-anchor-id="c.-카이로">### <strong>C. 카이로</strong></h2>
+<p>- 리들러의 메시지는 아래의 그림들이 더 잘 전달한다.</p>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG5.png?raw=true" class="img-fluid"></p>
+<pre><code>fig = ggplot(tidydata)
+line = geom_line(aes(x = '연도', y = '인구증가율', color = '국가'))
+fig + line</code></pre>
+<ul>
+<li>노르웨이, 영국, 스웨덴, 스페인, 이탈리아의 경우 출산율이 반등함(일본과 독일의 경우는 감소세가 아주 누그러듬)</li>
+<li>인도, 브라질, 중국과 같은 나라는 출산율이 대폭 감소</li>
+</ul>
+<section id="d.-교수님-소감" class="level3">
+<h3 class="anchored" data-anchor-id="d.-교수님-소감"><strong>D. 교수님 소감</strong></h3>
+<hr>
+<p>- 어떠한 현상을 살펴볼 때, 그것의 부분집합들이 역시 그러한 지 살펴보는 것은 기본임.</p>
+<p>- 중요한 선을 제외한 나머지는 일러레를 통해 회색으로 처리한 것이 시각적으로 우수하다.</p>
+<p>- 과학적인 논문작업에 들어갈 그림이라면 임의로 회색처리한 것이 다소 비판을 받을 수 있음.</p>
+</section>
+</section>
+<section id="시각화-예시" class="level2">
+<h2 class="anchored" data-anchor-id="시각화-예시">3. 시각화 예시</h2>
+</section>
+<section id="a.-상관관계의-해석" class="level2">
+<h2 class="anchored" data-anchor-id="a.-상관관계의-해석">### <strong>A. 상관관계의 해석</strong></h2>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG6.png?raw=true" class="img-fluid"></p>
+<p>중졸 여성의 비율과 출산율을 나타냄</p>
+<p>- 해설 : 당신이 더 교육받고 부유할수록, 가질 아이들의 수는 적어집니다.</p>
+<blockquote class="blockquote">
+<p>??? 여중을 다 때려부수면 출산율이 올라가나요?</p>
+</blockquote>
+<section id="b.-남미-국가들의-국방력" class="level3">
+<h3 class="anchored" data-anchor-id="b.-남미-국가들의-국방력"><strong>B. 남미 국가들의 국방력</strong></h3>
+<hr>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG7.png?raw=true" class="img-fluid"></p>
+<p>- 교수님께선 이를 쓸모없는 그래픽이라고 말씀하셨지…(뭐 기억나는 게 있나요?)</p>
+<p>- 아래가 더 우수한 그림이다.(바 차트)</p>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG8.png?raw=true" class="img-fluid"></p>
+<p>- 그리고 이게 더 우수한 시각화이다.(분야별 바 차트)</p>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG9.png?raw=true" class="img-fluid"></p>
+<ul>
+<li>분야별 비교가 유용하다. 브라질의 국방력은 모든 지표에서 1등인 것 같다.</li>
+<li>브라질을 하이라이팅한 것도 우아함…(라고 하셨음)</li>
+</ul>
+<p><strong>근데 흑막을 제거하면 어떻게 될까.</strong></p>
+<hr>
+<p>- 흑막을 제거</p>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG10.png?raw=true" class="img-fluid"></p>
+<blockquote class="blockquote">
+<p>인구라는 흑막을 제거하고 보니 인구당 군인수도, 국방비 지출도, 군인 당 교육 투자비도 높지 않다.</p>
+<p>즉, 내실이 없다.</p>
+</blockquote>
+<p>- 최종적으로 제안하는 그래프</p>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG11.png?raw=true" class="img-fluid"></p>
+<ul>
+<li>우측하단 : 관심있는 그래프가 아님(지역적 특성을 나타냈을뿐…)</li>
+<li>좌측하단 : 산점도??</li>
+</ul>
+<pre><code>fig = ggplot(tidydata)
+point = geom_point(aes(x = '인구', y = '군인 수', size = '예산'), alpha = 0.5)
+point2 = geom_point(aes(x = '인구', y = '군인 수'))
+fig + point + point2</code></pre>
+<section id="교수님-사실-저는-아래의-그래프가-좋은-시각화라고-생각-안해요." class="level6">
+<h6 class="anchored" data-anchor-id="교수님-사실-저는-아래의-그래프가-좋은-시각화라고-생각-안해요."><strong>교수님 : 사실 저는 아래의 그래프가 좋은 시각화라고 생각 안해요.</strong></h6>
+<p><img src="https://guebin.github.io/DV2023/posts/09wk-2_files/figure-html/fe3deab0-a1af-49c2-bfb1-934562c43a06-1-fa9d4e53-ddd9-45b6-9fe0-a6cdd43d9319.png" class="img-fluid"></p>
+<p>- x축과 y축에 비슷한 정보가 들어가있다. 모든 점들이 직선에 몰려있다면 왜 2차원으로 표현해야 할까???</p>
+<blockquote class="blockquote">
+<p>산점도에서 데이터를 한눈에 파악하고 특징을 요약하기 위해서는 <span class="math inline">\(x\)</span>축과 <span class="math inline">\(y\)</span>축을 너무 비슷한 성질의 변수로 설정하지 마라.</p>
+</blockquote>
+<pre><code>fig1 = fig + geom_point(aes(x = '토익', y = '텝스', color = '합격여부', shape = '회사명'))
+fig2 = fig + geom_point(aes(x = '토익', y = 'GPA', color = '합격여부', shape = '회사명'))</code></pre>
+<p>fig2가 더 합리적이다.(토익과 텝스가 유사한 항목이라면…)</p>
+</section>
+</section>
+<section id="c.-스페인의-실업률" class="level3">
+<h3 class="anchored" data-anchor-id="c.-스페인의-실업률"><strong>C. 스페인의 실업률</strong></h3>
+<hr>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG12.png?raw=true" class="img-fluid"> * 명암으로 왜 크기비교를 하는 것인가??? 게다가 명암으로 한 크기비교마저 이상한데???</p>
+<blockquote class="blockquote">
+<p>비교를 위해서는 바플랏이 더 우수하다.</p>
+</blockquote>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG13.png?raw=true" class="img-fluid"></p>
+</section>
+</section>
+<section id="d.-은행들의-시가총액" class="level2">
+<h2 class="anchored" data-anchor-id="d.-은행들의-시가총액">### <strong>D. 은행들의 시가총액</strong></h2>
+<p>- 카이로 교수햄의 강의자료에 등장하는 그림(bubble chart)</p>
+<p>- 회색이 before, 검은색이 after임</p>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG14.png?raw=true" class="img-fluid"></p>
+<blockquote class="blockquote">
+<p>우리 눈은 부피의 비교를 잘 못하기 때문에, 해당 차트는 결과를 왜곡한다… 버블 차트의 경우 크기를 왜곡시키므로 사용을 지양해야 한다.</p>
+</blockquote>
+<section id="e.-분열된-유권자들" class="level3">
+<h3 class="anchored" data-anchor-id="e.-분열된-유권자들"><strong>E. 분열된 유권자들</strong></h3>
+<hr>
+<p>- 하지만 아래의 버블차트는 우수하다.(왜? 크기비교 자체가 목적이 아니므로)</p>
+<p><img src="https://github.com/guebin/2021DV/blob/master/_notebooks/2021-11-16-FIG17.png?raw=true" class="img-fluid"></p>
+<ul>
+<li>선거 지도의 경우 수치 비교에 별로 관심이 없다.(미국의 경우 간접선거라 그럼…)</li>
+<li>민주당표와 공화당표가 어떤 지역에 몰렸는지 파악하는 것이 중요하므로, aes중 가장 중요한 <span class="math inline">\(x\)</span>와 <span class="math inline">\(y\)</span>를 모두 지역정보를 표현하기 위해 투자함(좌표)</li>
+</ul>
+</section>
+</section>
+<section id="f.-좋은-aes-속성들일반적으로" class="level2">
+<h2 class="anchored" data-anchor-id="f.-좋은-aes-속성들일반적으로">### <strong>F. 좋은 aes 속성들(일반적으로…)</strong></h2>
+<p><img src="https://guebin.github.io/DV2023/posts/09wk-2_files/figure-html/534600c1-b9fe-4808-80a3-7824c7f81ad9-1-b719a0f3-ffcd-4317-9a88-a47f7a77540c.png" class="img-fluid"></p>
+<p>아래로 갈수록 뭔가 난잡해지고 있음…</p>
+<p>- 근데 스티븐 잡스는 하위에 해당하는 Volume 방식으로 시각화를 했음.</p>
+<p><img src="https://paragraft.files.wordpress.com/2008/06/dsc_0143.jpg" class="img-fluid"></p>
+<ul>
+<li>왜???</li>
+</ul>
+<blockquote class="blockquote">
+<p>자사의 점유율이 높아보이도록 트릭을 쓴 것이라고 본다.</p>
+</blockquote>
+</section>
+<section id="시각화의-정석" class="level2">
+<h2 class="anchored" data-anchor-id="시각화의-정석">4. 시각화의 정석</h2>
+<p>그래서, 어떻게 하라는 건데요???</p>
+<ul>
+<li><p>시간 경과에 따른 변화를 보여주고 싶다!(시계열 자료) &gt; 라인플랏</p></li>
+<li><p>집단 간 비교를 하고 싶다! &gt; 바플랏</p></li>
+<li><p>변수 간 관계를 알고 싶다! &gt; 산점도</p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

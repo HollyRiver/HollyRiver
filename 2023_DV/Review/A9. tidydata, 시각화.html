@@ -1,0 +1,3083 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="강신성">
+<meta name="dcterms.date" content="2023-10-23">
+
+<title>RiverFlow - Tidydata 만들기</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">RiverFlow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_MP.html" rel="" target="">
+ <span class="menu-text">2023 MP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_DV.html" rel="" target="">
+ <span class="menu-text">2023 DV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HollyRiver?tab=repositories" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://blog.naver.com/hc_ssk2800" rel="" target=""><i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tidydata 만들기</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">pandas</div>
+    <div class="quarto-category">plotnine</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>강신성 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-10-23</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p>여러가지 방법들을 사용해서 tidydata를 만들어보자!</p>
+</blockquote>
+<section id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다." class="level6">
+<h6 class="anchored" data-anchor-id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다.">해당 포스트는 전북대학교 통계학과 최규빈 교수님의 강의내용을 토대로 재구성되었음을 알립니다.</h6>
+</section>
+<section id="라이브러리-imports" class="level2">
+<h2 class="anchored" data-anchor-id="라이브러리-imports">1. 라이브러리 imports</h2>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pandas---lambda-_df-의-활용" class="level2">
+<h2 class="anchored" data-anchor-id="pandas---lambda-_df-의-활용">2. Pandas - <code>lambda _df :</code>의 활용</h2>
+<section id="a.-lambda-_df-with-indexer" class="level3">
+<h3 class="anchored" data-anchor-id="a.-lambda-_df-with-indexer"><strong>A. <code>lambda _df :</code> with indexer</strong></h3>
+<hr>
+<p>- <code>예시 1</code> : 아래와 같은 데이터프레임이 있다고 할 때, 표현 1, 2, 3은 모두 같은 문법이다.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:[<span class="op">-</span><span class="dv">1</span>,np.nan,<span class="dv">1</span>,<span class="dv">1</span>],<span class="st">'B'</span>:[<span class="dv">2</span>,<span class="dv">3</span>,np.nan,<span class="dv">4</span>],<span class="st">'C'</span>:[np.nan,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]})</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-1.0</td>
+<td>2.0</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.0</td>
+<td>4.0</td>
+<td>6.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>표현 1</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df[df.A.isna()]  <span class="co">## 행 슬라이싱, [False, True, False, False]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>표현 2</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df[(<span class="kw">lambda</span> _df : _df.A.isna())(df)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>표현 3</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df[<span class="kw">lambda</span> _df : _df.A.isna()]  <span class="co">## 괄호로 함수를 묶어줘도 되고(그럼 구분이 쉬워진다), 안해도 됨</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>- <code>예시 2</code> : <code>.loc</code>, <code>.iloc</code></p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:[<span class="op">-</span><span class="dv">1</span>,np.nan,<span class="dv">1</span>,<span class="dv">1</span>],<span class="st">'B'</span>:[<span class="dv">2</span>,<span class="dv">3</span>,np.nan,<span class="dv">4</span>],<span class="st">'C'</span>:[np.nan,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]})</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-1.0</td>
+<td>2.0</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.0</td>
+<td>4.0</td>
+<td>6.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df.loc[<span class="kw">lambda</span> _df : _df.A.isna()]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df.iloc[<span class="kw">lambda</span> _df : <span class="bu">list</span>(_df.A.isna())]  <span class="co">## iloc은 튜플로 입력이 안된다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>iloc의 경우 범용성이 떨어지긴 한다… 그러니까 왠만해선 .loc을 사용하거나 시리즈를 list로 묶어주자…</p>
+</blockquote>
+<p>근데 왜 이런 문법이 있을까? 연속적으로 DataFrame을 변화시켜야 할 경우 유용하기 때문이다.</p>
+<p>- <code>예시 3</code></p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:[<span class="op">-</span><span class="dv">1</span>,np.nan,<span class="dv">1</span>,<span class="dv">1</span>],<span class="st">'B'</span>:[<span class="dv">2</span>,<span class="dv">3</span>,np.nan,<span class="dv">4</span>],<span class="st">'C'</span>:[np.nan,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]})</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-1.0</td>
+<td>2.0</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.0</td>
+<td>4.0</td>
+<td>6.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df.assign(D <span class="op">=</span> df.A <span class="op">+</span> df.B <span class="op">+</span> df.C)  <span class="co">## 결측치가 있을 경우 합은 NaN이 됨.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+<th data-quarto-table-cell-role="th">D</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-1.0</td>
+<td>2.0</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>5.0</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.0</td>
+<td>4.0</td>
+<td>6.0</td>
+<td>11.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>해당 데이터프레임에서 결측치의 수가 50%가 넘는 열만 고르고 싶다면?</p>
+</blockquote>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df.assign(D <span class="op">=</span> df.A <span class="op">+</span> df.B <span class="op">+</span> df.C).loc[:, <span class="kw">lambda</span> _df : _df.isna().mean() <span class="op">&gt;</span> <span class="fl">0.5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">D</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>11.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="b.-lambda-df-with-assign" class="level2">
+<h2 class="anchored" data-anchor-id="b.-lambda-df-with-assign">### <strong>B. <code>lambda df:</code> with assign</strong></h2>
+<p><code>예시 1</code></p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:[<span class="op">-</span><span class="dv">1</span>,np.nan,<span class="dv">1</span>,<span class="dv">1</span>],<span class="st">'B'</span>:[<span class="dv">2</span>,<span class="dv">3</span>,np.nan,<span class="dv">4</span>],<span class="st">'C'</span>:[np.nan,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]})</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-1.0</td>
+<td>2.0</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.0</td>
+<td>4.0</td>
+<td>6.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df.assign(D <span class="op">=</span> df.A <span class="op">+</span> df.B <span class="op">+</span> df.C)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+<th data-quarto-table-cell-role="th">D</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-1.0</td>
+<td>2.0</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>5.0</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.0</td>
+<td>4.0</td>
+<td>6.0</td>
+<td>11.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>여기에서 결측치의 값을 count하여 새로운 열 <code>E</code>에 할당하고 싶다면?</p>
+</blockquote>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df.assign(D <span class="op">=</span> df.A <span class="op">+</span> df.B <span class="op">+</span> df.C).assign(E <span class="op">=</span> <span class="kw">lambda</span> _df : _df.isna().<span class="bu">sum</span>(axis <span class="op">=</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+<th data-quarto-table-cell-role="th">D</th>
+<th data-quarto-table-cell-role="th">E</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-1.0</td>
+<td>2.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>4.0</td>
+<td>NaN</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>5.0</td>
+<td>NaN</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.0</td>
+<td>4.0</td>
+<td>6.0</td>
+<td>11.0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><code>예시 2</code> : 원본 데이터를 손상시키지 않으며 데이터를 변형하고 싶을 때</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">43052</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:[<span class="dv">12</span>,<span class="dv">234</span>,<span class="dv">3456</span>,<span class="dv">12345</span>,<span class="dv">654222</span>]})</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>234</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3456</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>12345</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>654222</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df2[<span class="st">'B'</span>] <span class="op">=</span> np.log(df2.A)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>df2[<span class="st">'C'</span>] <span class="op">=</span> (df2.B <span class="op">-</span> df2.B.mean())<span class="op">/</span>df2.B.std()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>12</td>
+<td>2.484907</td>
+<td>-1.286574</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>234</td>
+<td>5.455321</td>
+<td>-0.564847</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3456</td>
+<td>8.147867</td>
+<td>0.089367</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>12345</td>
+<td>9.421006</td>
+<td>0.398704</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>654222</td>
+<td>13.391202</td>
+<td>1.363350</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>???</strong></p>
+</blockquote>
+<p>~이성적으로 이해하기 어려운 결과~ 왜 이렇게 될까? 왜냐면 df2는 df와 같은 녀석을 의미하기 때문이다.(id가 같음)</p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df.copy()</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df2[<span class="st">'B'</span>] <span class="op">=</span> np.log(df2.A)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>df2[<span class="st">'C'</span>] <span class="op">=</span> (df2.B <span class="op">-</span> df2.B.mean())<span class="op">/</span>df2.B.std()</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>12</td>
+<td>2.484907</td>
+<td>-1.286574</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>234</td>
+<td>5.455321</td>
+<td>-0.564847</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3456</td>
+<td>8.147867</td>
+<td>0.089367</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>12345</td>
+<td>9.421006</td>
+<td>0.398704</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>654222</td>
+<td>13.391202</td>
+<td>1.363350</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>이러면 원본 데이터를 손상시키지 않는다. 또는…</p>
+</blockquote>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df.assign(B <span class="op">=</span> <span class="kw">lambda</span> _df : np.log(df.A)).assign(C <span class="op">=</span> <span class="kw">lambda</span> _df : (_df.B <span class="op">-</span> _df.B.mean())<span class="op">/</span>_df.B.std())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>12</td>
+<td>2.484907</td>
+<td>-1.286574</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>234</td>
+<td>5.455321</td>
+<td>-0.564847</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3456</td>
+<td>8.147867</td>
+<td>0.089367</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>12345</td>
+<td>9.421006</td>
+<td>0.398704</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>654222</td>
+<td>13.391202</td>
+<td>1.363350</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="pandas---multi_index의-이해" class="level2">
+<h2 class="anchored" data-anchor-id="pandas---multi_index의-이해">3. Pandas - Multi_index의 이해</h2>
+<section id="a.-원래-df-s는-딕셔너리-계열임" class="level3">
+<h3 class="anchored" data-anchor-id="a.-원래-df-s는-딕셔너리-계열임"><strong>A. 원래 <code>df</code>, <code>s</code>는 딕셔너리 계열임</strong></h3>
+<hr>
+<p>- 예시 1 : df는 dict에서 만들 수 있음</p>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dct <span class="op">=</span> {<span class="st">'A'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>],<span class="st">'B'</span>: [<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]}  <span class="co">## 애초에 데이터프레임에 입력되는 값과 동일...</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(dct)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>- 예시 2 : s도 dict에서 만들 수 있음.</p>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dct <span class="op">=</span> {<span class="st">'43052'</span>: <span class="dv">80</span>, <span class="st">'43053'</span>: <span class="dv">90</span>, <span class="st">'43054'</span>: <span class="dv">50</span>}   <span class="co">## key가 index가 된다.</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(dct)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>43052    80
+43053    90
+43054    50
+dtype: int64</code></pre>
+</div>
+</div>
+<p>- 예시 3 : dict의 키로 올 수 있는 것들</p>
+<ul>
+<li>튜플로 dict를 만든다면?</li>
+</ul>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dct <span class="op">=</span> {(<span class="st">'43052'</span>,<span class="dv">4</span>): <span class="dv">80</span>, (<span class="st">'43053'</span>,<span class="dv">1</span>): <span class="dv">90</span>, (<span class="st">'43054'</span>,<span class="dv">2</span>): <span class="dv">50</span>} <span class="co"># (학번,학년)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(dct)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>43052  4    80
+43053  1    90
+43054  2    50
+dtype: int64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>s.index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>MultiIndex([('43052', 4),
+            ('43053', 1),
+            ('43054', 2)],
+           )</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>멀쩡하게 잘 작동한다. 그리고 MultiIndex가 나온다.</p>
+</blockquote>
+</section>
+</section>
+<section id="b.-.index혹은-.columns에-name이-있는-경우" class="level2">
+<h2 class="anchored" data-anchor-id="b.-.index혹은-.columns에-name이-있는-경우">### <strong>B. <code>.index</code>혹은 <code>.columns</code>에 <code>name</code>이 있는 경우</strong></h2>
+<p><code>예시 1</code> : index에 이름이 있는 경우</p>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>dct <span class="op">=</span> {<span class="st">'43052'</span>: <span class="dv">80</span>, <span class="st">'43053'</span>: <span class="dv">90</span>, <span class="st">'43054'</span>: <span class="dv">50</span>}</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(dct)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>s.rename_axis([<span class="st">'id'</span>])  <span class="co">## set_axis()가 인덱스와 컬럼의 이름을 조정하는 것이라면 이건 그것의 이름을 조정한다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>id
+43052    80
+43053    90
+43054    50
+dtype: int64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>s.index, s.rename_axis([<span class="st">'id'</span>]).index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>(Index(['43052', '43053', '43054'], dtype='object'),
+ Index(['43052', '43053', '43054'], dtype='object', name='id'))</code></pre>
+</div>
+</div>
+<p><code>예시 2</code> : index에 이름이 있는 경우(멀티 인덱스)</p>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dct <span class="op">=</span> {(<span class="st">'43052'</span>,<span class="dv">4</span>): <span class="dv">80</span>, (<span class="st">'43053'</span>,<span class="dv">1</span>): <span class="dv">90</span>, (<span class="st">'43054'</span>,<span class="dv">2</span>): <span class="dv">50</span>} <span class="co"># (학번,학년)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(dct)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>s.rename_axis([<span class="st">'id'</span>,<span class="st">'year'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<pre><code>id     year
+43052  4       80
+43053  1       90
+43054  2       50
+dtype: int64</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>MultiIndex에서 인덱스의 이름을 각각 지정해준 경우이다.</p>
+</blockquote>
+<ul>
+<li>예시 2가 데이터프레임이라면 이렇게 보인다.</li>
+</ul>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>dct <span class="op">=</span> {(<span class="st">'43052'</span>,<span class="dv">4</span>): <span class="dv">80</span>, (<span class="st">'43053'</span>,<span class="dv">1</span>): <span class="dv">90</span>, (<span class="st">'43054'</span>,<span class="dv">2</span>): <span class="dv">50</span>} <span class="co"># (학번,학년)</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(dct)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(s.rename_axis([<span class="st">'id'</span>,<span class="st">'year'</span>]))  <span class="co">## index의 이름을 지정해줌</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">0</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">43052</td>
+<td data-quarto-table-cell-role="th">4</td>
+<td>80</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">43053</td>
+<td data-quarto-table-cell-role="th">1</td>
+<td>90</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">43054</td>
+<td data-quarto-table-cell-role="th">2</td>
+<td>50</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>만약 여기서 각 원소를 호출하고 싶다면…</p>
+</blockquote>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df.loc[(<span class="st">'43052'</span>, <span class="dv">4</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>0    80
+Name: (43052, 4), dtype: int64</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>그냥 멀티인덱스, 튜플을 입력하여 호출하면 된다.</p>
+</blockquote>
+</section>
+<section id="tidydata" class="level2">
+<h2 class="anchored" data-anchor-id="tidydata">4. Tidydata</h2>
+<section id="a.-tidydata의-개념" class="level3">
+<h3 class="anchored" data-anchor-id="a.-tidydata의-개념"><strong>A. tidydata의 개념</strong></h3>
+<hr>
+<p>- 아래의 자료는 불리하다.</p>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"https://raw.githubusercontent.com/guebin/DV2022/master/posts/Simpson.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>,header<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">1</span>])<span class="op">\</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>.stack().stack().reset_index()<span class="op">\</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>.rename({<span class="st">'level_0'</span>:<span class="st">'department'</span>,<span class="st">'level_1'</span>:<span class="st">'result'</span>,<span class="st">'level_2'</span>:<span class="st">'gender'</span>,<span class="dv">0</span>:<span class="st">'count'</span>},axis<span class="op">=</span><span class="dv">1</span>).pivot_table(index<span class="op">=</span>[<span class="st">'gender'</span>,<span class="st">'department'</span>], columns<span class="op">=</span><span class="st">'result'</span>,values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="bu">sum</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">fail</th>
+<th data-quarto-table-cell-role="th">pass</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="6" data-quarto-table-cell-role="th" data-valign="top">female</td>
+<td data-quarto-table-cell-role="th">A</td>
+<td>19</td>
+<td>89</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">B</td>
+<td>7</td>
+<td>18</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C</td>
+<td>391</td>
+<td>202</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">D</td>
+<td>244</td>
+<td>131</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">E</td>
+<td>299</td>
+<td>94</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">F</td>
+<td>103</td>
+<td>238</td>
+</tr>
+<tr class="odd">
+<td rowspan="6" data-quarto-table-cell-role="th" data-valign="top">male</td>
+<td data-quarto-table-cell-role="th">A</td>
+<td>314</td>
+<td>511</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">B</td>
+<td>208</td>
+<td>352</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C</td>
+<td>204</td>
+<td>121</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">D</td>
+<td>279</td>
+<td>138</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">E</td>
+<td>137</td>
+<td>54</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">F</td>
+<td>149</td>
+<td>224</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>만약 A학과에 해당하는 결과만 뽑고 싶다면? -&gt; department가 column으로 있어야 함…</p>
+<p>pass인 사람만 bar plot을 그리고 싶다면? result가 column으로 있어야 함…</p>
+</blockquote>
+<p>원하는 정보를 쉽게 뽑아낼 수 있는 데이터를 <strong>tidydata</strong>라고 한다.</p>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tidydata <span class="op">=</span> df[<span class="st">'pass'</span>].reset_index()</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#---#</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(tidydata)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>col <span class="op">=</span> geom_col(aes(x<span class="op">=</span><span class="st">'department'</span>,y<span class="op">=</span><span class="st">'pass'</span>,fill<span class="op">=</span><span class="st">'gender'</span>),position<span class="op">=</span><span class="st">'dodge'</span>)   <span class="co">## dodge 설정으로 누적으로 표기하지 않고 옆에 늘여서 표시</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">+</span> col</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A9. tidydata, 시각화_files/figure-html/cell-30-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="b.-tidydata가-아닌-예시" class="level2">
+<h2 class="anchored" data-anchor-id="b.-tidydata가-아닌-예시">### <strong>B. tidydata가 아닌 예시</strong></h2>
+<ol type="1">
+<li>MultiIndex 구조를 가지면 무조건 tidydata가 아님</li>
+<li>열의 값이 여러 개의 정보를 가지고 있다면 tidydata가 아님</li>
+<li>wide data는 tidydata가 아님 -&gt; melt나 pivot_table등을 활용하여 조정해줘야…</li>
+</ol>
+<p>- <code>wide df</code> 예시</p>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/2021DV/master/_notebooks/phone.csv'</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Date</th>
+<th data-quarto-table-cell-role="th">Samsung</th>
+<th data-quarto-table-cell-role="th">Apple</th>
+<th data-quarto-table-cell-role="th">Huawei</th>
+<th data-quarto-table-cell-role="th">Xiaomi</th>
+<th data-quarto-table-cell-role="th">Oppo</th>
+<th data-quarto-table-cell-role="th">Mobicel</th>
+<th data-quarto-table-cell-role="th">Motorola</th>
+<th data-quarto-table-cell-role="th">LG</th>
+<th data-quarto-table-cell-role="th">Others</th>
+<th data-quarto-table-cell-role="th">Realme</th>
+<th data-quarto-table-cell-role="th">Google</th>
+<th data-quarto-table-cell-role="th">Nokia</th>
+<th data-quarto-table-cell-role="th">Lenovo</th>
+<th data-quarto-table-cell-role="th">OnePlus</th>
+<th data-quarto-table-cell-role="th">Sony</th>
+<th data-quarto-table-cell-role="th">Asus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2019-10</td>
+<td>461</td>
+<td>324</td>
+<td>136</td>
+<td>109</td>
+<td>76</td>
+<td>81</td>
+<td>43</td>
+<td>37</td>
+<td>135</td>
+<td>28</td>
+<td>39</td>
+<td>14</td>
+<td>22</td>
+<td>17</td>
+<td>20</td>
+<td>17</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2019-11</td>
+<td>461</td>
+<td>358</td>
+<td>167</td>
+<td>141</td>
+<td>86</td>
+<td>61</td>
+<td>29</td>
+<td>36</td>
+<td>141</td>
+<td>27</td>
+<td>29</td>
+<td>20</td>
+<td>23</td>
+<td>10</td>
+<td>19</td>
+<td>27</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2019-12</td>
+<td>426</td>
+<td>383</td>
+<td>143</td>
+<td>105</td>
+<td>53</td>
+<td>45</td>
+<td>51</td>
+<td>48</td>
+<td>129</td>
+<td>30</td>
+<td>20</td>
+<td>26</td>
+<td>28</td>
+<td>18</td>
+<td>18</td>
+<td>19</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2020-01</td>
+<td>677</td>
+<td>494</td>
+<td>212</td>
+<td>187</td>
+<td>110</td>
+<td>79</td>
+<td>65</td>
+<td>49</td>
+<td>158</td>
+<td>23</td>
+<td>13</td>
+<td>19</td>
+<td>19</td>
+<td>22</td>
+<td>27</td>
+<td>22</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2020-02</td>
+<td>593</td>
+<td>520</td>
+<td>217</td>
+<td>195</td>
+<td>112</td>
+<td>67</td>
+<td>62</td>
+<td>71</td>
+<td>157</td>
+<td>25</td>
+<td>18</td>
+<td>16</td>
+<td>24</td>
+<td>18</td>
+<td>23</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>2020-03</td>
+<td>637</td>
+<td>537</td>
+<td>246</td>
+<td>187</td>
+<td>92</td>
+<td>66</td>
+<td>59</td>
+<td>67</td>
+<td>145</td>
+<td>21</td>
+<td>16</td>
+<td>24</td>
+<td>18</td>
+<td>31</td>
+<td>22</td>
+<td>14</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>2020-04</td>
+<td>647</td>
+<td>583</td>
+<td>222</td>
+<td>154</td>
+<td>98</td>
+<td>59</td>
+<td>48</td>
+<td>64</td>
+<td>113</td>
+<td>20</td>
+<td>23</td>
+<td>25</td>
+<td>19</td>
+<td>19</td>
+<td>23</td>
+<td>21</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>2020-05</td>
+<td>629</td>
+<td>518</td>
+<td>192</td>
+<td>176</td>
+<td>91</td>
+<td>87</td>
+<td>50</td>
+<td>66</td>
+<td>150</td>
+<td>43</td>
+<td>27</td>
+<td>15</td>
+<td>18</td>
+<td>19</td>
+<td>19</td>
+<td>13</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>2020-06</td>
+<td>663</td>
+<td>552</td>
+<td>209</td>
+<td>185</td>
+<td>93</td>
+<td>69</td>
+<td>54</td>
+<td>60</td>
+<td>140</td>
+<td>39</td>
+<td>16</td>
+<td>16</td>
+<td>17</td>
+<td>29</td>
+<td>25</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>2020-07</td>
+<td>599</td>
+<td>471</td>
+<td>214</td>
+<td>193</td>
+<td>89</td>
+<td>78</td>
+<td>65</td>
+<td>59</td>
+<td>130</td>
+<td>40</td>
+<td>27</td>
+<td>25</td>
+<td>21</td>
+<td>18</td>
+<td>18</td>
+<td>12</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>2020-08</td>
+<td>615</td>
+<td>567</td>
+<td>204</td>
+<td>182</td>
+<td>105</td>
+<td>82</td>
+<td>62</td>
+<td>42</td>
+<td>129</td>
+<td>47</td>
+<td>16</td>
+<td>23</td>
+<td>21</td>
+<td>27</td>
+<td>23</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>2020-09</td>
+<td>621</td>
+<td>481</td>
+<td>230</td>
+<td>220</td>
+<td>102</td>
+<td>88</td>
+<td>56</td>
+<td>49</td>
+<td>143</td>
+<td>54</td>
+<td>14</td>
+<td>15</td>
+<td>17</td>
+<td>15</td>
+<td>19</td>
+<td>15</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>2020-10</td>
+<td>637</td>
+<td>555</td>
+<td>232</td>
+<td>203</td>
+<td>90</td>
+<td>52</td>
+<td>63</td>
+<td>49</td>
+<td>140</td>
+<td>33</td>
+<td>17</td>
+<td>20</td>
+<td>22</td>
+<td>9</td>
+<td>22</td>
+<td>21</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>- 여러 방법을 통해 tidydata로 변환</p>
+<div class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'Date'</span>]).stack().reset_index().rename({<span class="st">'level_1'</span> : <span class="st">'Brand'</span>, <span class="dv">0</span> : <span class="st">'Sales'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Date</th>
+<th data-quarto-table-cell-role="th">Brand</th>
+<th data-quarto-table-cell-role="th">Sales</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2019-10</td>
+<td>Samsung</td>
+<td>461</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2019-10</td>
+<td>Apple</td>
+<td>324</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2019-10</td>
+<td>Huawei</td>
+<td>136</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2019-10</td>
+<td>Xiaomi</td>
+<td>109</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2019-10</td>
+<td>Oppo</td>
+<td>76</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">203</td>
+<td>2020-10</td>
+<td>Nokia</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">204</td>
+<td>2020-10</td>
+<td>Lenovo</td>
+<td>22</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">205</td>
+<td>2020-10</td>
+<td>OnePlus</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">206</td>
+<td>2020-10</td>
+<td>Sony</td>
+<td>22</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">207</td>
+<td>2020-10</td>
+<td>Asus</td>
+<td>21</td>
+</tr>
+</tbody>
+</table>
+
+<p>208 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<p>- melt를 통해 변환</p>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>df.melt(id_vars <span class="op">=</span> [<span class="st">'Date'</span>])  <span class="co">## 이럼 한번에 되서 편하긴 하다. wide data 한정</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Date</th>
+<th data-quarto-table-cell-role="th">variable</th>
+<th data-quarto-table-cell-role="th">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2019-10</td>
+<td>Samsung</td>
+<td>461</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2019-11</td>
+<td>Samsung</td>
+<td>461</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2019-12</td>
+<td>Samsung</td>
+<td>426</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2020-01</td>
+<td>Samsung</td>
+<td>677</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2020-02</td>
+<td>Samsung</td>
+<td>593</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">203</td>
+<td>2020-06</td>
+<td>Asus</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">204</td>
+<td>2020-07</td>
+<td>Asus</td>
+<td>12</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">205</td>
+<td>2020-08</td>
+<td>Asus</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">206</td>
+<td>2020-09</td>
+<td>Asus</td>
+<td>15</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">207</td>
+<td>2020-10</td>
+<td>Asus</td>
+<td>21</td>
+</tr>
+</tbody>
+</table>
+
+<p>208 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><code>df.melt(id_vars = [])</code>는 index로 지정한 열외의 모든 열들을 한 행에 엮어버린다.</p>
+<p><code>df.stack()</code>의 경우 <code>set_index()</code>나 <code>reset_index()</code>등 사용해야 할 게 많을 수 있다. 하지만 직관적이고 사용에 용이하다.</p>
+<p><code>df.stack()</code>의 반대로 <code>df.unstack()</code>을 사용하여 인덱스를 컬럼으로 올릴수도 있다.</p>
+</blockquote>
+</section>
+<section id="pivot_table-groupby-aggregate" class="level2">
+<h2 class="anchored" data-anchor-id="pivot_table-groupby-aggregate">5. <code>pivot_table</code>, <code>groupby</code> + <code>aggregate</code></h2>
+<blockquote class="blockquote">
+<p>대부분은 <code>pivot_table</code>로 해결이 된다.</p>
+</blockquote>
+<section id="a.-intro" class="level3">
+<h3 class="anchored" data-anchor-id="a.-intro"><strong>A. intro</strong></h3>
+<hr>
+<p>- tidydata 만드는 개념 : 그룹화 -&gt; 집계</p>
+<p><code>예제 1</code> : 아래의 데이터프레임에서 학과, 성별로 count의 합계를 구하라.</p>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.read_csv(<span class="st">"https://raw.githubusercontent.com/guebin/DV2022/master/posts/Simpson.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>,header<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">1</span>])<span class="op">\</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>.stack().stack().reset_index()<span class="op">\</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>.rename({<span class="st">'level_0'</span>:<span class="st">'department'</span>,<span class="st">'level_1'</span>:<span class="st">'result'</span>,<span class="st">'level_2'</span>:<span class="st">'gender'</span>,<span class="dv">0</span>:<span class="st">'count'</span>},axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>fail</td>
+<td>female</td>
+<td>19</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A</td>
+<td>fail</td>
+<td>male</td>
+<td>314</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>A</td>
+<td>pass</td>
+<td>female</td>
+<td>89</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>A</td>
+<td>pass</td>
+<td>male</td>
+<td>511</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>B</td>
+<td>fail</td>
+<td>female</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>B</td>
+<td>fail</td>
+<td>male</td>
+<td>208</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>B</td>
+<td>pass</td>
+<td>female</td>
+<td>18</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>B</td>
+<td>pass</td>
+<td>male</td>
+<td>352</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>C</td>
+<td>fail</td>
+<td>female</td>
+<td>391</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>C</td>
+<td>fail</td>
+<td>male</td>
+<td>204</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>C</td>
+<td>pass</td>
+<td>female</td>
+<td>202</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>C</td>
+<td>pass</td>
+<td>male</td>
+<td>121</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>D</td>
+<td>fail</td>
+<td>female</td>
+<td>244</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>D</td>
+<td>fail</td>
+<td>male</td>
+<td>279</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>D</td>
+<td>pass</td>
+<td>female</td>
+<td>131</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>D</td>
+<td>pass</td>
+<td>male</td>
+<td>138</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>E</td>
+<td>fail</td>
+<td>female</td>
+<td>299</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>E</td>
+<td>fail</td>
+<td>male</td>
+<td>137</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">18</td>
+<td>E</td>
+<td>pass</td>
+<td>female</td>
+<td>94</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19</td>
+<td>E</td>
+<td>pass</td>
+<td>male</td>
+<td>54</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">20</td>
+<td>F</td>
+<td>fail</td>
+<td>female</td>
+<td>103</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">21</td>
+<td>F</td>
+<td>fail</td>
+<td>male</td>
+<td>149</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">22</td>
+<td>F</td>
+<td>pass</td>
+<td>female</td>
+<td>238</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">23</td>
+<td>F</td>
+<td>pass</td>
+<td>male</td>
+<td>224</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index <span class="op">=</span> [<span class="st">'department'</span>, <span class="st">'gender'</span>], values <span class="op">=</span> <span class="st">'count'</span>, aggfunc <span class="op">=</span> <span class="bu">sum</span>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>female</td>
+<td>108</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A</td>
+<td>male</td>
+<td>825</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>B</td>
+<td>female</td>
+<td>25</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>B</td>
+<td>male</td>
+<td>560</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>C</td>
+<td>female</td>
+<td>593</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>C</td>
+<td>male</td>
+<td>325</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>D</td>
+<td>female</td>
+<td>375</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>D</td>
+<td>male</td>
+<td>417</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>E</td>
+<td>female</td>
+<td>393</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>E</td>
+<td>male</td>
+<td>191</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>F</td>
+<td>female</td>
+<td>341</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>F</td>
+<td>male</td>
+<td>373</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>인덱스에만 몰아주든 둘다 넣어주든 똑같이 tidydata를 만들어준다.</p>
+</blockquote>
+<p>- 예시에서 본 작업은 아래의 작업들로 세분화할 수 있다.</p>
+<ol type="1">
+<li>그룹화(쿼리) : 하나의 DataFrame을 sub-dataframe으로 나누는 과정, 전체 자료를 <strong>(학과, 성별)</strong>로 묶어 총 12개의 sub-dataframe을 만든다.</li>
+<li>각각집계 : 나눠진 sub-dataframe에서 어떠한 계산을 각각 수행함, 나눠진 sub-dataframe에서 지원자 수의 합계를 각각 구함</li>
+</ol>
+<p>- 위와 같은 작업을 하려면 아래와 같은 요소들이 필요하다.</p>
+<ol type="1">
+<li>그룹변수~(없는 용어임)~ : 그룹화를 위해 필요한 변수 : DataFrame을 sub-dataframe으로 나누는 역할. &gt;&gt; <code>index and columns</code> &gt; 범주형이거나 범주형으로 바꿀 수 있는 데이터</li>
+<li>집계변수~(이것도 없는 용어임)~ : 집계함수의 대상이 되는 변수 &gt;&gt; <code>values</code></li>
+<li>집계함수 : 그룹화된 데이터프레임에 수행하는 계산을 정의하는 함수 &gt;&gt; <code>aggfunc</code></li>
+</ol>
+</section>
+</section>
+<section id="b.-pivot_table의-문법" class="level2">
+<h2 class="anchored" data-anchor-id="b.-pivot_table의-문법">### <strong>B. <code>pivot_table</code>의 문법</strong></h2>
+<p>- pivot_table의 문법</p>
+<pre><code>df.pivot_table(
+    index = 그룹변수
+    columns = 그룹변수
+    values = 집계변수
+    aggfunc = 집계함수
+)</code></pre>
+<p>index &amp; columns에 그룹변수를 적절히 나누어 입력한다.</p>
+<p>예시 : 집계함수 전달방법</p>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'category'</span>:[<span class="st">'A'</span>]<span class="op">*</span><span class="dv">5</span><span class="op">+</span>[<span class="st">'B'</span>]<span class="op">*</span><span class="dv">5</span>, <span class="st">'value'</span>:np.concatenate([np.random.randn(<span class="dv">5</span>), np.random.randn(<span class="dv">5</span>)<span class="op">+</span><span class="dv">10</span>])})</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">category</th>
+<th data-quarto-table-cell-role="th">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>0.383420</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A</td>
+<td>1.084175</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>A</td>
+<td>1.142778</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>A</td>
+<td>0.307894</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>A</td>
+<td>0.237787</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>B</td>
+<td>10.355951</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>B</td>
+<td>8.336925</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>B</td>
+<td>8.617227</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>B</td>
+<td>8.073155</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>B</td>
+<td>8.513784</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index <span class="op">=</span> <span class="st">'category'</span>, values <span class="op">=</span> <span class="st">'value'</span>, aggfunc <span class="op">=</span> np.<span class="bu">sum</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index <span class="op">=</span> <span class="st">'category'</span>, values <span class="op">=</span> <span class="st">'value'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co">## 동일한 코드</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">value</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">category</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">A</td>
+<td>3.156054</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">B</td>
+<td>43.897041</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index <span class="op">=</span> <span class="st">'category'</span>, values <span class="op">=</span> <span class="st">'value'</span>, aggfunc <span class="op">=</span> [<span class="st">'sum'</span>, <span class="st">'count'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sum</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">value</th>
+<th data-quarto-table-cell-role="th">value</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">category</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">A</td>
+<td>3.156054</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">B</td>
+<td>43.897041</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>집계함수들의 리스트를 넣는다면 각각의 집계치를 따로 알아서 구해준다.</p>
+</blockquote>
+<section id="c.-groupby-aggregate의-문법" class="level3">
+<h3 class="anchored" data-anchor-id="c.-groupby-aggregate의-문법"><strong>C. <code>groupby</code> + <code>aggregate</code>의 문법</strong></h3>
+<hr>
+<p>- <code>groupby</code> + <code>aggregate</code></p>
+<blockquote class="blockquote">
+<p><code>df.groupby(그룹변수).aggregate({집계변수:집계함수})</code></p>
+</blockquote>
+<p>그룹화를 한 후(<code>index, columns</code>), 무엇을 집계할 것인지 dictionary로 지정해준다.(<code>values, aggfunc</code>)</p>
+<blockquote class="blockquote">
+<p>딕셔너리로 지정해주는 것은 pivot_table도 가능하긴 하다…</p>
+</blockquote>
+</section>
+</section>
+<section id="연습---airline-data" class="level2">
+<h2 class="anchored" data-anchor-id="연습---airline-data">6. 연습 - Airline Data</h2>
+<div class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.read_csv(<span class="st">'https://raw.githubusercontent.com/PacktPublishing/Pandas-Cookbook/master/data/flights.csv'</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 58492 entries, 0 to 58491
+Data columns (total 14 columns):
+ #   Column     Non-Null Count  Dtype  
+---  ------     --------------  -----  
+ 0   MONTH      58492 non-null  int64  
+ 1   DAY        58492 non-null  int64  
+ 2   WEEKDAY    58492 non-null  int64  
+ 3   AIRLINE    58492 non-null  object 
+ 4   ORG_AIR    58492 non-null  object 
+ 5   DEST_AIR   58492 non-null  object 
+ 6   SCHED_DEP  58492 non-null  int64  
+ 7   DEP_DELAY  57659 non-null  float64
+ 8   AIR_TIME   57474 non-null  float64
+ 9   DIST       58492 non-null  int64  
+ 10  SCHED_ARR  58492 non-null  int64  
+ 11  ARR_DELAY  57474 non-null  float64
+ 12  DIVERTED   58492 non-null  int64  
+ 13  CANCELLED  58492 non-null  int64  
+dtypes: float64(3), int64(8), object(3)
+memory usage: 6.2+ MB</code></pre>
+</div>
+</div>
+<p>- ChatGPT의 도움을 받아 해당 인포를 정리</p>
+<ol type="1">
+<li>MONTH: 비행이 이루어진 월을 나타냄. 1에서 12 사이의 값을 갖음.</li>
+<li>DAY: 비행이 이루어진 일자를 나타냄. 월에 따라 1~28/29/30/31 사이의 값을 1. 가질 수 있음.</li>
+<li>WEEKDAY: 비행이 이루어진 요일을 나타냄. 일반적으로 1(일요일)부터 7(토요일1)까지의 값을 갖음.</li>
+<li>AIRLINE: 해당 항공편을 운영하는 항공사의 약어나 코드를 나타냄.</li>
+<li>ORG_AIR: 비행기가 출발하는 공항의 약어나 코드를 나타냄.</li>
+<li>DEST_AIR: 비행기가 도착하는 공항의 약어나 코드를 나타냄.</li>
+<li>SCHED_DEP: 원래의 예정된 출발 시간을 나타냄. 시간은 일반적으로 HHMM 형식으로 표시될 수 있음.</li>
+<li>DEP_DELAY: 출발 지연 시간을 나타냄. 음수 값은 조기 출발, 양수 값은 지연을 의미함.</li>
+<li>AIR_TIME: 실제 공중에서 비행한 시간을 분 단위로 나타냄.</li>
+<li>DIST: 비행 거리를 나타냄. 일반적으로 마일 또는 킬로미터로 표시됨.</li>
+<li>SCHED_ARR: 원래의 예정된 도착 시간을 나타냄. SCHED_DEP와 같은 형식으로 표시될 수 있음.</li>
+<li>ARR_DELAY: 도착 지연 시간을 나타냄. 음수는 조기 도착, 양수는 지연을 의미함.</li>
+<li>DIVERTED: 항공편이 다른 곳으로 우회되었는지를 나타냄. 1은 우회, 0은 정상 경로를 의미함.</li>
+<li>CANCELLED: 항공편이 취소되었는지 여부를 나타냄. 1은 취소, 0은 취소되지 않음을 의미함.</li>
+</ol>
+<p><code># 예제1</code> : <strong>항공사별</strong>로 <strong>도착지연시간</strong>의 <strong>평균</strong>을 구하라.</p>
+<div class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index <span class="op">=</span> <span class="st">'AIRLINE'</span>, values <span class="op">=</span> <span class="st">'ARR_DELAY'</span>, aggfunc <span class="op">=</span> <span class="st">'mean'</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>df.groupby(by <span class="op">=</span> <span class="st">'AIRLINE'</span>).aggregate({<span class="st">'ARR_DELAY'</span> : <span class="st">'mean'</span>})</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co">## 동일한 코드</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">ARR_DELAY</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AIRLINE</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">AA</td>
+<td>5.542661</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">AS</td>
+<td>-0.833333</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">B6</td>
+<td>8.692593</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">DL</td>
+<td>0.339691</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">EV</td>
+<td>7.034580</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">F9</td>
+<td>13.630651</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">HA</td>
+<td>4.972973</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">MQ</td>
+<td>6.860591</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">NK</td>
+<td>18.436070</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">OO</td>
+<td>7.593463</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">UA</td>
+<td>7.765755</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">US</td>
+<td>1.681105</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">VX</td>
+<td>5.348884</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">WN</td>
+<td>6.397353</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><code># 예제2</code> : <strong>항공사 별</strong>로 <strong>비행취소건수</strong>의 <strong>합계</strong>를 구하라. 취소건수가 높은 항공사 순으로 <strong>정렬</strong>하라.</p>
+<div class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index <span class="op">=</span> <span class="st">'AIRLINE'</span>, values <span class="op">=</span> <span class="st">'CANCELLED'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).sort_values(<span class="st">'CANCELLED'</span>, ascending <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>df.groupby(by <span class="op">=</span> <span class="st">'AIRLINE'</span>).aggregate({<span class="st">'CANCELLED'</span> : <span class="st">'sum'</span>}).sort_values(<span class="st">'CANCELLED'</span>, ascending <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co">## 역시 동일한 코드</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">CANCELLED</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AIRLINE</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">AA</td>
+<td>154</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">MQ</td>
+<td>152</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">EV</td>
+<td>146</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">OO</td>
+<td>142</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">UA</td>
+<td>93</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">WN</td>
+<td>93</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">DL</td>
+<td>38</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">NK</td>
+<td>25</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">US</td>
+<td>21</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">F9</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">VX</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">B6</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">AS</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">HA</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><code># 예제3</code> : <strong>항공사별</strong>로 <strong>비행취소율</strong>을 구하라. 비행취소율이 가장 높은 항공사 순으로 <strong>정렬</strong>하라</p>
+<div class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index <span class="op">=</span> <span class="st">'AIRLINE'</span>, values <span class="op">=</span> <span class="st">'CANCELLED'</span>, aggfunc <span class="op">=</span> <span class="st">'mean'</span>).sort_values(<span class="st">'CANCELLED'</span>, ascending <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>df.groupby(by <span class="op">=</span> <span class="st">'AIRLINE'</span>).aggregate({<span class="st">'CANCELLED'</span> : <span class="st">'mean'</span>}).sort_values(<span class="st">'CANCELLED'</span>, ascending <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co">## 동일한 코드</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">CANCELLED</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">AIRLINE</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">MQ</td>
+<td>0.043791</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">EV</td>
+<td>0.024923</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">OO</td>
+<td>0.021554</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">AA</td>
+<td>0.017303</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">NK</td>
+<td>0.016491</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">US</td>
+<td>0.013003</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">UA</td>
+<td>0.011935</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">WN</td>
+<td>0.011048</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">F9</td>
+<td>0.007593</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">VX</td>
+<td>0.006042</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">DL</td>
+<td>0.003585</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">B6</td>
+<td>0.001842</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">AS</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">HA</td>
+<td>0.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><code># 예제4</code> : (항공사, 요일)별 비행취소건수와 비행취소율을 조사하라.</p>
+<div class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index <span class="op">=</span> [<span class="st">'AIRLINE'</span>, <span class="st">'WEEKDAY'</span>], values <span class="op">=</span> <span class="st">'CANCELLED'</span>, aggfunc <span class="op">=</span> [<span class="st">'sum'</span>, <span class="st">'mean'</span>])</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>df.groupby(by <span class="op">=</span> [<span class="st">'AIRLINE'</span>, <span class="st">'WEEKDAY'</span>]).aggregate({<span class="st">'CANCELLED'</span> : [<span class="st">'sum'</span>,<span class="st">'mean'</span>]})</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co">## 동일</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="62">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">CANCELLED</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sum</th>
+<th data-quarto-table-cell-role="th">mean</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">AIRLINE</th>
+<th data-quarto-table-cell-role="th">WEEKDAY</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">AA</td>
+<td data-quarto-table-cell-role="th">1</td>
+<td>41</td>
+<td>0.032106</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2</td>
+<td>9</td>
+<td>0.007341</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>16</td>
+<td>0.011949</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>20</td>
+<td>0.015004</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5</td>
+<td>18</td>
+<td>0.014151</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">WN</td>
+<td data-quarto-table-cell-role="th">3</td>
+<td>18</td>
+<td>0.014118</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>10</td>
+<td>0.007911</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5</td>
+<td>7</td>
+<td>0.005828</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6</td>
+<td>10</td>
+<td>0.010132</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7</td>
+<td>7</td>
+<td>0.006066</td>
+</tr>
+</tbody>
+</table>
+
+<p>98 rows × 2 columns</p>
+</div>
+</div>
+</div>
+<p><code># 예제4</code> : (항공사, 요일)별로 <code>CANCELLED</code>는 평균과 합계를 구하고, <code>AIR_TIME</code>은 평균과 표준편차를 구하여라.</p>
+<div class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index <span class="op">=</span> [<span class="st">'AIRLINE'</span>, <span class="st">'WEEKDAY'</span>], values <span class="op">=</span> [<span class="st">'CANCELLED'</span>, <span class="st">'AIR_TIME'</span>], aggfunc <span class="op">=</span> {<span class="st">'CANCELLED'</span> : [<span class="st">'sum'</span>, <span class="st">'mean'</span>], <span class="st">'AIR_TIME'</span> : [<span class="st">'mean'</span>, <span class="st">'std'</span>]})</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>df.groupby(by <span class="op">=</span> [<span class="st">'AIRLINE'</span>, <span class="st">'WEEKDAY'</span>]).aggregate({<span class="st">'CANCELLED'</span> : [<span class="st">'mean'</span>, <span class="st">'sum'</span>], <span class="st">'AIR_TIME'</span> : [<span class="st">'mean'</span>, <span class="st">'std'</span>]})</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co">## 거의 유사한 코드임</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="64">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">CANCELLED</th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">AIR_TIME</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sum</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">std</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">AIRLINE</th>
+<th data-quarto-table-cell-role="th">WEEKDAY</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">AA</td>
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.032106</td>
+<td>41</td>
+<td>147.610569</td>
+<td>73.442540</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.007341</td>
+<td>9</td>
+<td>143.851852</td>
+<td>73.211275</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.011949</td>
+<td>16</td>
+<td>144.514005</td>
+<td>73.340675</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.015004</td>
+<td>20</td>
+<td>141.124618</td>
+<td>69.220840</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0.014151</td>
+<td>18</td>
+<td>145.430966</td>
+<td>76.711095</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">WN</td>
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.014118</td>
+<td>18</td>
+<td>104.219920</td>
+<td>53.869040</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.007911</td>
+<td>10</td>
+<td>107.200800</td>
+<td>54.466218</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0.005828</td>
+<td>7</td>
+<td>107.893635</td>
+<td>57.172695</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0.010132</td>
+<td>10</td>
+<td>109.247433</td>
+<td>56.149388</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.006066</td>
+<td>7</td>
+<td>107.602273</td>
+<td>56.419207</td>
+</tr>
+</tbody>
+</table>
+
+<p>98 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<p><code># 예제5</code> : 운행구간(거리의 구간)을 그룹화하고, 운행구간 별 비행취소건수와 취소율을 구하여라.</p>
+<div class="cell" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>pd.qcut(df.DIST, q <span class="op">=</span> <span class="dv">4</span>)  <span class="co">## 어레이나 시리즈를 넣어주면 해당 시리즈를 분위수로 컷한다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="66">
+<pre><code>0          (391.0, 690.0]
+1        (1199.0, 4502.0]
+2          (391.0, 690.0]
+3         (690.0, 1199.0]
+4        (1199.0, 4502.0]
+               ...       
+58487    (1199.0, 4502.0]
+58488      (391.0, 690.0]
+58489     (66.999, 391.0]
+58490     (690.0, 1199.0]
+58491      (391.0, 690.0]
+Name: DIST, Length: 58492, dtype: category
+Categories (4, interval[float64, right]): [(66.999, 391.0] &lt; (391.0, 690.0] &lt; (690.0, 1199.0] &lt; (1199.0, 4502.0]]</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>df.assign(DIST_CUT <span class="op">=</span> pd.qcut(df.DIST, q <span class="op">=</span> <span class="dv">4</span>))<span class="op">\</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> <span class="st">'DIST_CUT'</span>, values <span class="op">=</span> <span class="st">'CANCELLED'</span>, aggfunc <span class="op">=</span> [<span class="st">'sum'</span>, <span class="st">'mean'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="68">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sum</th>
+<th data-quarto-table-cell-role="th">mean</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">CANCELLED</th>
+<th data-quarto-table-cell-role="th">CANCELLED</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">DIST_CUT</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">(66.999, 391.0]</td>
+<td>334</td>
+<td>0.022659</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">(391.0, 690.0]</td>
+<td>196</td>
+<td>0.013503</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">(690.0, 1199.0]</td>
+<td>203</td>
+<td>0.013637</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">(1199.0, 4502.0]</td>
+<td>148</td>
+<td>0.010313</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>긴 구간일 수록 취소율이 낮은 것 같다.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

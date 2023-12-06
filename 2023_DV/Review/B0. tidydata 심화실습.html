@@ -1,0 +1,4483 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="강신성">
+<meta name="dcterms.date" content="2023-10-26">
+
+<title>RiverFlow - Tidydata 심화 실습</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">RiverFlow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_MP.html" rel="" target="">
+ <span class="menu-text">2023 MP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_DV.html" rel="" target="">
+ <span class="menu-text">2023 DV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HollyRiver?tab=repositories" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://blog.naver.com/hc_ssk2800" rel="" target=""><i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tidydata 심화 실습</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">pandas</div>
+    <div class="quarto-category">plotnine</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>강신성 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-10-26</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p><code>Tidydata</code>를 만드는 방법의 모든(?) 것</p>
+</blockquote>
+<section id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다." class="level6">
+<h6 class="anchored" data-anchor-id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다.">해당 포스트는 전북대학교 통계학과 최규빈 교수님의 강의내용을 토대로 재구성되었음을 알립니다.</h6>
+</section>
+<section id="라이브러리-imports" class="level2">
+<h2 class="anchored" data-anchor-id="라이브러리-imports">1. 라이브러리 imports</h2>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="사전학습" class="level2">
+<h2 class="anchored" data-anchor-id="사전학습">2. 사전학습</h2>
+<section id="pd.concat" class="level3">
+<h3 class="anchored" data-anchor-id="pd.concat"><code>pd.concat()</code></h3>
+<hr>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>],<span class="st">'B'</span>:[<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]})</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:[<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">2</span>,<span class="op">-</span><span class="dv">3</span>],<span class="st">'B'</span>:[<span class="op">-</span><span class="dv">2</span>,<span class="op">-</span><span class="dv">3</span>,<span class="op">-</span><span class="dv">4</span>]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>display(<span class="st">"df1"</span>, df1)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>display(<span class="st">"df2"</span>, df2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'df1'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>'df2'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-1</td>
+<td>-2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-2</td>
+<td>-3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-3</td>
+<td>-4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>위 두 개의 데이터프레임을 합치고 싶다면?</p>
+</blockquote>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>display(pd.concat([df1, df2], axis <span class="op">=</span> <span class="dv">1</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>display(pd.concat([df1, df2], axis <span class="op">=</span> <span class="dv">0</span>).reset_index(drop <span class="op">=</span> <span class="va">True</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>2</td>
+<td>-1</td>
+<td>-2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>3</td>
+<td>-2</td>
+<td>-3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>4</td>
+<td>-3</td>
+<td>-4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-1</td>
+<td>-2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-2</td>
+<td>-3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>-3</td>
+<td>-4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="df.merge" class="level2">
+<h2 class="anchored" data-anchor-id="df.merge">### <code>df.merge()</code></h2>
+<p>- 사이즈가 맞지 않는 두 데이터프레임의 정보를 결합</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>big <span class="op">=</span> pd.DataFrame({<span class="st">'department'</span>:[<span class="st">'A'</span>,<span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'B'</span>], <span class="st">'gender'</span>:[<span class="st">'male'</span>,<span class="st">'female'</span>,<span class="st">'male'</span>,<span class="st">'female'</span>],<span class="st">'count'</span>:[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">1</span>]})</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> pd.DataFrame({<span class="st">'department'</span>:[<span class="st">'A'</span>,<span class="st">'B'</span>], <span class="st">'total'</span>:[<span class="dv">3</span>,<span class="dv">4</span>]})</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>display(<span class="st">'big'</span>, big) <span class="co">## title을 달아주고 아래 산출</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>display(<span class="st">'small'</span>, small)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'big'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>male</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A</td>
+<td>female</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>B</td>
+<td>male</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>B</td>
+<td>female</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>'small'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>B</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>display(big.merge(small))  <span class="co">## 큰 거를 기준으로 작은거 병합</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>display(small.merge(big))  <span class="co">## 작은거를 기준으로 큰거를 병합</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">## 사실 둘 다 비슷하긴 함</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>male</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A</td>
+<td>female</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>B</td>
+<td>male</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>B</td>
+<td>female</td>
+<td>1</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">total</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>3</td>
+<td>male</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A</td>
+<td>3</td>
+<td>female</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>B</td>
+<td>4</td>
+<td>male</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>B</td>
+<td>4</td>
+<td>female</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="df.applymap" class="level3">
+<h3 class="anchored" data-anchor-id="df.applymap"><code>df.applymap()</code></h3>
+<hr>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">43052</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:np.random.rand(<span class="dv">3</span>), <span class="st">'B'</span>:np.random.rand(<span class="dv">3</span>)})</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.817682</td>
+<td>0.619777</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.049532</td>
+<td>0.122541</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.838686</td>
+<td>0.117128</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>0.5보다 크면 yes, 0.5보다 작으면 no로 바꾸고 싶다면…</p>
+</blockquote>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df.applymap(<span class="kw">lambda</span> x : <span class="st">'yes'</span> <span class="cf">if</span> x <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="cf">else</span> <span class="st">'no'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="d.-df.astype" class="level2">
+<h2 class="anchored" data-anchor-id="d.-df.astype">### <strong>D. <code>df.astype()</code></strong></h2>
+<p>- 데이터프레임이나 시리즈의 형식을 일괄적으로 변경</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:[<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>],<span class="st">'B'</span>:[<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]})</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df.astype(<span class="bu">float</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.0</td>
+<td>4.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1.0</td>
+<td>5.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2.0</td>
+<td>6.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="e.-데이터프레임-열의-형식" class="level3">
+<h3 class="anchored" data-anchor-id="e.-데이터프레임-열의-형식"><strong>E. 데이터프레임 열의 형식</strong></h3>
+<hr>
+<p>- info()에서의 형식, object는 일괄적으로 문자형이라는 것을 의미하는 게 아님.</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">43052</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'A'</span>:[<span class="st">'1'</span>,<span class="st">'2'</span>,<span class="st">'0'</span>,<span class="st">'1'</span>,<span class="dv">2</span>], <span class="st">'B'</span>:[<span class="st">'2'</span>,<span class="st">'3'</span>,<span class="st">'0'</span>,<span class="st">'0'</span>,<span class="dv">0</span>]})  <span class="co">## integer가 포함되어 있다.</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 5 entries, 0 to 4
+Data columns (total 2 columns):
+ #   Column  Non-Null Count  Dtype 
+---  ------  --------------  ----- 
+ 0   A       5 non-null      object
+ 1   B       5 non-null      object
+dtypes: object(2)
+memory usage: 208.0+ bytes</code></pre>
+</div>
+</div>
+<p>- column의 이름이 이상하게 들어가 있는 경우도 있음.</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({(<span class="st">'A'</span>,<span class="st">''</span>):[<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>], (<span class="st">'B'</span>,<span class="st">''</span>):[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]})</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'A'</span>]</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>df[(<span class="st">'A'</span>, <span class="st">''</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>0    0
+1    0
+2    0
+Name: (A, ), dtype: int64</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>놀랍게도 둘은 같다. 인덱스를 다시 설정해주는 편이 정신건강에 이로움</p>
+</blockquote>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df.columns <span class="co">## 쓸모없는 멀티인덱스</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>MultiIndex([('A', ''),
+            ('B', '')],
+           )</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="실습-에너지-사용량-시각화" class="level2">
+<h2 class="anchored" data-anchor-id="실습-에너지-사용량-시각화">3. 실습 : 에너지 사용량 시각화</h2>
+<p>- 문제</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2019.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">지역</th>
+<th data-quarto-table-cell-role="th">건물동수</th>
+<th data-quarto-table-cell-role="th">연면적</th>
+<th data-quarto-table-cell-role="th">에너지사용량(TOE)/전기</th>
+<th data-quarto-table-cell-role="th">에너지사용량(TOE)/도시가스</th>
+<th data-quarto-table-cell-role="th">에너지사용량(TOE)/지역난방</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>종로구</td>
+<td>17,851</td>
+<td>9,204,140</td>
+<td>63,492</td>
+<td>76,653</td>
+<td>799</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>중구</td>
+<td>10,383</td>
+<td>10,078,848</td>
+<td>79,223</td>
+<td>68,210</td>
+<td>497</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>용산구</td>
+<td>17,138</td>
+<td>10,756,612</td>
+<td>51,229</td>
+<td>79,805</td>
+<td>11,128</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>성동구</td>
+<td>13,980</td>
+<td>11,804,313</td>
+<td>59,832</td>
+<td>99,986</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>광진구</td>
+<td>21,556</td>
+<td>12,272,738</td>
+<td>68,756</td>
+<td>123,447</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>동대문구</td>
+<td>21,794</td>
+<td>12,664,554</td>
+<td>65,913</td>
+<td>111,420</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>중랑구</td>
+<td>23,950</td>
+<td>15,182,802</td>
+<td>59,370</td>
+<td>109,284</td>
+<td>7,442</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>성북구</td>
+<td>27,112</td>
+<td>15,938,807</td>
+<td>77,007</td>
+<td>148,376</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>강북구</td>
+<td>23,334</td>
+<td>9,458,987</td>
+<td>47,731</td>
+<td>100,045</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>도봉구</td>
+<td>13,168</td>
+<td>10,644,704</td>
+<td>44,985</td>
+<td>90,379</td>
+<td>5,268</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>노원구</td>
+<td>9,704</td>
+<td>17,197,086</td>
+<td>77,010</td>
+<td>94,340</td>
+<td>50,859</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>은평구</td>
+<td>25,200</td>
+<td>14,735,131</td>
+<td>75,914</td>
+<td>130,159</td>
+<td>14,370</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>서대문구</td>
+<td>17,651</td>
+<td>12,559,425</td>
+<td>65,164</td>
+<td>111,542</td>
+<td>6,330</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>마포구</td>
+<td>18,844</td>
+<td>15,024,186</td>
+<td>92,453</td>
+<td>114,931</td>
+<td>20,148</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>양천구</td>
+<td>14,690</td>
+<td>15,428,339</td>
+<td>70,721</td>
+<td>82,857</td>
+<td>49,258</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>강서구</td>
+<td>20,446</td>
+<td>20,641,866</td>
+<td>86,809</td>
+<td>128,786</td>
+<td>35,896</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>구로구</td>
+<td>17,204</td>
+<td>13,509,894</td>
+<td>59,916</td>
+<td>120,457</td>
+<td>2,963</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>금천구</td>
+<td>12,135</td>
+<td>7,420,441</td>
+<td>34,791</td>
+<td>69,814</td>
+<td>732</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">18</td>
+<td>영등포구</td>
+<td>18,133</td>
+<td>14,914,027</td>
+<td>87,480</td>
+<td>114,238</td>
+<td>13,531</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19</td>
+<td>동작구</td>
+<td>20,102</td>
+<td>13,612,946</td>
+<td>66,811</td>
+<td>132,285</td>
+<td>899</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">20</td>
+<td>관악구</td>
+<td>26,460</td>
+<td>14,997,859</td>
+<td>85,416</td>
+<td>158,543</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">21</td>
+<td>서초구</td>
+<td>12,856</td>
+<td>21,560,285</td>
+<td>135,491</td>
+<td>121,437</td>
+<td>38,866</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">22</td>
+<td>강남구</td>
+<td>16,129</td>
+<td>29,961,585</td>
+<td>180,121</td>
+<td>149,045</td>
+<td>83,459</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">23</td>
+<td>송파구</td>
+<td>19,331</td>
+<td>26,573,343</td>
+<td>139,117</td>
+<td>143,601</td>
+<td>71,954</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">24</td>
+<td>강동구</td>
+<td>16,636</td>
+<td>15,048,315</td>
+<td>70,341</td>
+<td>121,931</td>
+<td>11,921</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>에너지 사용량은 2018년부터 2021년까지의 기간 동안 서울, 부산 등 여러 지역에 대해 정리되어 있으며, 아래 주소 형식으로 저장되어 있다.</p>
+<pre><code>https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2018.csv
+https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2019.csv
+https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2020.csv
+https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2021.csv
+...
+https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Busan2018.csv
+https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Busan2019.csv
+https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Busan2020.csv
+https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Busan2021.csv</code></pre>
+<ol type="1">
+<li>아래의 <code>url</code>, <code>prov</code>를 참고하여 모든 자료를 불러온 뒤 <code>pd.concat()</code>을 이용하여 하나의 df로 합쳐라.</li>
+</ol>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/</span><span class="sc">{}</span><span class="st">.csv'</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>prov <span class="op">=</span> [<span class="st">'Seoul'</span>, <span class="st">'Busan'</span>, <span class="st">'Daegu'</span>, <span class="st">'Incheon'</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Gwangju'</span>, <span class="st">'Daejeon'</span>, <span class="st">'Ulsan'</span>, <span class="st">'Sejongsi'</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Gyeonggi-do'</span>, <span class="st">'Gangwon-do'</span>, <span class="st">'Chungcheongbuk-do'</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Chungcheongnam-do'</span>, <span class="st">'Jeollabuk-do'</span>, <span class="st">'Jeollanam-do'</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Gyeongsangbuk-do'</span>, <span class="st">'Gyeongsangnam-do'</span>, <span class="st">'Jeju-do'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>1. 풀이</code></p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>url.<span class="bu">format</span>(<span class="st">'Seoul2018'</span>)  <span class="co">## 이런 식으로 하나하나 리스트로 지정해줘야 함</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2018.csv'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>[url.<span class="bu">format</span>(region <span class="op">+</span> <span class="bu">str</span>(year)) <span class="cf">for</span> year <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2018</span>,<span class="dv">2022</span>) <span class="cf">for</span> region <span class="kw">in</span> prov]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>['https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Busan2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Daegu2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Incheon2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gwangju2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Daejeon2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Ulsan2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Sejongsi2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeonggi-do2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gangwon-do2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Chungcheongbuk-do2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Chungcheongnam-do2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeollabuk-do2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeollanam-do2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeongsangbuk-do2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeongsangnam-do2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeju-do2018.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Busan2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Daegu2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Incheon2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gwangju2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Daejeon2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Ulsan2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Sejongsi2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeonggi-do2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gangwon-do2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Chungcheongbuk-do2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Chungcheongnam-do2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeollabuk-do2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeollanam-do2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeongsangbuk-do2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeongsangnam-do2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeju-do2019.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Busan2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Daegu2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Incheon2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gwangju2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Daejeon2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Ulsan2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Sejongsi2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeonggi-do2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gangwon-do2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Chungcheongbuk-do2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Chungcheongnam-do2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeollabuk-do2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeollanam-do2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeongsangbuk-do2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeongsangnam-do2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeju-do2020.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Seoul2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Busan2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Daegu2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Incheon2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gwangju2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Daejeon2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Ulsan2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Sejongsi2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeonggi-do2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gangwon-do2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Chungcheongbuk-do2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Chungcheongnam-do2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeollabuk-do2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeollanam-do2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeongsangbuk-do2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Gyeongsangnam-do2021.csv',
+ 'https://raw.githubusercontent.com/guebin/DV2022/main/posts/Energy/Jeju-do2021.csv']</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([pd.read_csv(url.<span class="bu">format</span>(region <span class="op">+</span> <span class="bu">str</span>(year))).assign(년도 <span class="op">=</span> year, 시도 <span class="op">=</span> region) <span class="cf">for</span> year <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2018</span>,<span class="dv">2022</span>) <span class="cf">for</span> region <span class="kw">in</span> prov], axis <span class="op">=</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">지역</th>
+<th data-quarto-table-cell-role="th">건물동수</th>
+<th data-quarto-table-cell-role="th">연면적</th>
+<th data-quarto-table-cell-role="th">에너지사용량(TOE)/전기</th>
+<th data-quarto-table-cell-role="th">에너지사용량(TOE)/도시가스</th>
+<th data-quarto-table-cell-role="th">에너지사용량(TOE)/지역난방</th>
+<th data-quarto-table-cell-role="th">년도</th>
+<th data-quarto-table-cell-role="th">시도</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>종로구</td>
+<td>17,929</td>
+<td>9,141,777</td>
+<td>64,818</td>
+<td>82,015</td>
+<td>111</td>
+<td>2018</td>
+<td>Seoul</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>중구</td>
+<td>10,598</td>
+<td>10,056,233</td>
+<td>81,672</td>
+<td>75,260</td>
+<td>563</td>
+<td>2018</td>
+<td>Seoul</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>용산구</td>
+<td>17,201</td>
+<td>10,639,652</td>
+<td>52,659</td>
+<td>85,220</td>
+<td>12,043</td>
+<td>2018</td>
+<td>Seoul</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>성동구</td>
+<td>14,180</td>
+<td>11,631,770</td>
+<td>60,559</td>
+<td>107,416</td>
+<td>0</td>
+<td>2018</td>
+<td>Seoul</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>광진구</td>
+<td>21,520</td>
+<td>12,054,796</td>
+<td>70,609</td>
+<td>130,308</td>
+<td>0</td>
+<td>2018</td>
+<td>Seoul</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19</td>
+<td>함양군</td>
+<td>12,505</td>
+<td>1,509,149</td>
+<td>6,328</td>
+<td>3,164</td>
+<td>0</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">20</td>
+<td>거창군</td>
+<td>14,607</td>
+<td>2,322,093</td>
+<td>10,404</td>
+<td>8,850</td>
+<td>0</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">21</td>
+<td>합천군</td>
+<td>16,039</td>
+<td>1,612,734</td>
+<td>7,587</td>
+<td>0</td>
+<td>0</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">0</td>
+<td>제주시</td>
+<td>67,053</td>
+<td>20,275,738</td>
+<td>103,217</td>
+<td>25,689</td>
+<td>0</td>
+<td>2021</td>
+<td>Jeju-do</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>서귀포시</td>
+<td>35,230</td>
+<td>7,512,206</td>
+<td>37,884</td>
+<td>2,641</td>
+<td>0</td>
+<td>2021</td>
+<td>Jeju-do</td>
+</tr>
+</tbody>
+</table>
+
+<p>1000 rows × 8 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>문자열을 pd.read_csv()에 넣어준 후, 컴프리헨션 된 리스트를 행 방향으로 concat했다. 또한 연도와 시도의 정보를 유지시켰다.</p>
+</blockquote>
+<ol start="2" type="1">
+<li>의미상 숫자형이지만, 문자형으로 입력이 된 자료를 모두 전처리하라.</li>
+</ol>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+Index: 1000 entries, 0 to 1
+Data columns (total 8 columns):
+ #   Column            Non-Null Count  Dtype 
+---  ------            --------------  ----- 
+ 0   지역                1000 non-null   object
+ 1   건물동수              1000 non-null   object
+ 2   연면적               1000 non-null   object
+ 3   에너지사용량(TOE)/전기    1000 non-null   object
+ 4   에너지사용량(TOE)/도시가스  1000 non-null   object
+ 5   에너지사용량(TOE)/지역난방  1000 non-null   object
+ 6   년도                1000 non-null   int64 
+ 7   시도                1000 non-null   object
+dtypes: int64(1), object(7)
+memory usage: 70.3+ KB</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>지역, 시도의 경우 문자형으로 입력된 게 맞음. 하지만 나머지는 다 숫자형이 되어야 한다.</p>
+</blockquote>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : x.replace(<span class="st">','</span>,<span class="st">''</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>AttributeError: 'int' object has no attribute 'replace'</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>문자형이 아닌 숫자형인 녀석이 몇몇 있나보다.</p>
+</blockquote>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index().info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 1000 entries, 0 to 999
+Data columns (total 8 columns):
+ #   Column            Non-Null Count  Dtype 
+---  ------            --------------  ----- 
+ 0   지역                1000 non-null   object
+ 1   년도                1000 non-null   int64 
+ 2   시도                1000 non-null   object
+ 3   건물동수              1000 non-null   int32 
+ 4   연면적               1000 non-null   int32 
+ 5   에너지사용량(TOE)/전기    1000 non-null   int32 
+ 6   에너지사용량(TOE)/도시가스  1000 non-null   int32 
+ 7   에너지사용량(TOE)/지역난방  1000 non-null   int32 
+dtypes: int32(5), int64(1), object(2)
+memory usage: 43.1+ KB</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>자료의 형식이 알맞게 설정되었다.</p>
+</blockquote>
+<ol type="1">
+<li><p>년도에는 쉼표가 없으므로 integer로 바꿈(여기선 애초에 숫자형으로 들어가긴 함)</p></li>
+<li><p>년도와 시도, 지역을 배제(문자형)</p></li>
+<li><p>혹시라도 integer인 녀석들을 string으로 변경 후 문자열 바꾸는 메소드를 통해 <code>,</code>를 제거, 인덱스 초기화</p></li>
+<li><p>열의 이름을 아래와 같이 바꿔라.</p></li>
+</ol>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>name_dict <span class="op">=</span> {</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'년도'</span>: <span class="st">'Year'</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'시도'</span>: <span class="st">'Prov'</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'지역'</span>: <span class="st">'Reg'</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'건물동수'</span>: <span class="st">'BldgCount'</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'연면적'</span>: <span class="st">'Area'</span>,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'에너지사용량(TOE)/전기'</span>: <span class="st">'Elec'</span>,</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'에너지사용량(TOE)/도시가스'</span>: <span class="st">'Gas'</span>,</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'에너지사용량(TOE)/지역난방'</span>: <span class="st">'Heat'</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>딕셔너리가 주어졌으므로 그냥 바꾸면 된다.</p>
+</blockquote>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)  <span class="co">## axis를 꼭 지정해주자.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">BldgCount</th>
+<th data-quarto-table-cell-role="th">Area</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">Gas</th>
+<th data-quarto-table-cell-role="th">Heat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>종로구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>17929</td>
+<td>9141777</td>
+<td>64818</td>
+<td>82015</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>중구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>10598</td>
+<td>10056233</td>
+<td>81672</td>
+<td>75260</td>
+<td>563</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>용산구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>17201</td>
+<td>10639652</td>
+<td>52659</td>
+<td>85220</td>
+<td>12043</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>성동구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>14180</td>
+<td>11631770</td>
+<td>60559</td>
+<td>107416</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>광진구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>21520</td>
+<td>12054796</td>
+<td>70609</td>
+<td>130308</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">995</td>
+<td>함양군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>12505</td>
+<td>1509149</td>
+<td>6328</td>
+<td>3164</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">996</td>
+<td>거창군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>14607</td>
+<td>2322093</td>
+<td>10404</td>
+<td>8850</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">997</td>
+<td>합천군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>16039</td>
+<td>1612734</td>
+<td>7587</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">998</td>
+<td>제주시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>67053</td>
+<td>20275738</td>
+<td>103217</td>
+<td>25689</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">999</td>
+<td>서귀포시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>35230</td>
+<td>7512206</td>
+<td>37884</td>
+<td>2641</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>1000 rows × 8 columns</p>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li>아래와 같은 그림을 시각화하라. <img src="https://guebin.github.io/DV2023/posts/08wk-1_files/figure-html/cell-65-1-25b4bfcf-106c-4382-b741-ed59c977c13f.png" class="img-fluid"></li>
+</ol>
+<blockquote class="blockquote">
+<p>가로축이 Year, 세로축이 LogEnergyUse(에너지 사용량에 log를 취한 것)이고, Region으로 면분할했으며, Type으로 라인의 색상을 구분했다.</p>
+</blockquote>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">BldgCount</th>
+<th data-quarto-table-cell-role="th">Area</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">Gas</th>
+<th data-quarto-table-cell-role="th">Heat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>종로구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>17929</td>
+<td>9141777</td>
+<td>64818</td>
+<td>82015</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>중구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>10598</td>
+<td>10056233</td>
+<td>81672</td>
+<td>75260</td>
+<td>563</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>용산구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>17201</td>
+<td>10639652</td>
+<td>52659</td>
+<td>85220</td>
+<td>12043</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>성동구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>14180</td>
+<td>11631770</td>
+<td>60559</td>
+<td>107416</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>광진구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>21520</td>
+<td>12054796</td>
+<td>70609</td>
+<td>130308</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">995</td>
+<td>함양군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>12505</td>
+<td>1509149</td>
+<td>6328</td>
+<td>3164</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">996</td>
+<td>거창군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>14607</td>
+<td>2322093</td>
+<td>10404</td>
+<td>8850</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">997</td>
+<td>합천군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>16039</td>
+<td>1612734</td>
+<td>7587</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">998</td>
+<td>제주시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>67053</td>
+<td>20275738</td>
+<td>103217</td>
+<td>25689</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">999</td>
+<td>서귀포시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>35230</td>
+<td>7512206</td>
+<td>37884</td>
+<td>2641</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>1000 rows × 8 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>사용해야 할 것은 Prov, Year, Elec Gas Heat.</p>
+</blockquote>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Prov'</span>, <span class="st">'Year'</span>]).loc[:, [<span class="st">'Elec'</span>, <span class="st">'Gas'</span>, <span class="st">'Heat'</span>]].stack().reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">level_2</th>
+<th data-quarto-table-cell-role="th">0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Elec</td>
+<td>64818</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Gas</td>
+<td>82015</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Heat</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Elec</td>
+<td>81672</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Gas</td>
+<td>75260</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2995</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Gas</td>
+<td>25689</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2996</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2997</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Elec</td>
+<td>37884</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2998</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Gas</td>
+<td>2641</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2999</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>3000 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>사용할 두 개의 열을 골라주고, 에너지 관련 세 개 열을 long data로 변환했다.</p>
+</blockquote>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Prov'</span>, <span class="st">'Year'</span>]).loc[:, [<span class="st">'Elec'</span>, <span class="st">'Gas'</span>, <span class="st">'Heat'</span>]].stack().reset_index()<span class="op">\</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>.rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Elec</td>
+<td>64818</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Gas</td>
+<td>82015</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Heat</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Elec</td>
+<td>81672</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Seoul</td>
+<td>2018</td>
+<td>Gas</td>
+<td>75260</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2995</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Gas</td>
+<td>25689</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2996</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2997</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Elec</td>
+<td>37884</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2998</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Gas</td>
+<td>2641</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2999</td>
+<td>Jeju-do</td>
+<td>2021</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>3000 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>이름을 바꾸고…</p>
+</blockquote>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Prov'</span>, <span class="st">'Year'</span>]).loc[:, [<span class="st">'Elec'</span>, <span class="st">'Gas'</span>, <span class="st">'Heat'</span>]].stack().reset_index()<span class="op">\</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>.rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Prov'</span>, <span class="st">'Year'</span>, <span class="st">'Type'</span>], values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Elec</td>
+<td>613522</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Gas</td>
+<td>708240</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Heat</td>
+<td>23694</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Busan</td>
+<td>2019</td>
+<td>Elec</td>
+<td>602980</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Busan</td>
+<td>2019</td>
+<td>Gas</td>
+<td>675882</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">199</td>
+<td>Ulsan</td>
+<td>2020</td>
+<td>Gas</td>
+<td>306896</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">200</td>
+<td>Ulsan</td>
+<td>2020</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">201</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Elec</td>
+<td>196412</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">202</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Gas</td>
+<td>312276</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">203</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>204 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>지역별로 중복되는 것들을 더했다.</p>
+</blockquote>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Prov'</span>, <span class="st">'Year'</span>]).loc[:, [<span class="st">'Elec'</span>, <span class="st">'Gas'</span>, <span class="st">'Heat'</span>]].stack().reset_index()<span class="op">\</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>.rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Prov'</span>, <span class="st">'Year'</span>, <span class="st">'Type'</span>], values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).reset_index()<span class="op">\</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>.assign(LogEnergyUse <span class="op">=</span> <span class="kw">lambda</span> _df : _df.EnergyUse.<span class="bu">apply</span>(np.log))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+<th data-quarto-table-cell-role="th">LogEnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Elec</td>
+<td>613522</td>
+<td>13.326971</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Gas</td>
+<td>708240</td>
+<td>13.470538</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Heat</td>
+<td>23694</td>
+<td>10.072977</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Busan</td>
+<td>2019</td>
+<td>Elec</td>
+<td>602980</td>
+<td>13.309639</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Busan</td>
+<td>2019</td>
+<td>Gas</td>
+<td>675882</td>
+<td>13.423774</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">199</td>
+<td>Ulsan</td>
+<td>2020</td>
+<td>Gas</td>
+<td>306896</td>
+<td>12.634264</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">200</td>
+<td>Ulsan</td>
+<td>2020</td>
+<td>Heat</td>
+<td>0</td>
+<td>-inf</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">201</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Elec</td>
+<td>196412</td>
+<td>12.187970</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">202</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Gas</td>
+<td>312276</td>
+<td>12.651643</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">203</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Heat</td>
+<td>0</td>
+<td>-inf</td>
+</tr>
+</tbody>
+</table>
+
+<p>204 rows × 5 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>그리고 로그를 취해준 것을 새로운 열로 할당해줬다. 이정도면 타이디데이터라 할 만 하다.</p>
+</blockquote>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>tidydata <span class="op">=</span> df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Prov'</span>, <span class="st">'Year'</span>]).loc[:, [<span class="st">'Elec'</span>, <span class="st">'Gas'</span>, <span class="st">'Heat'</span>]].stack().reset_index()<span class="op">\</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>.rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Prov'</span>, <span class="st">'Year'</span>, <span class="st">'Type'</span>], values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).reset_index()<span class="op">\</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>.assign(LogEnergyUse <span class="op">=</span> <span class="kw">lambda</span> _df : _df.EnergyUse.<span class="bu">apply</span>(np.log))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>시각화</p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(tidydata)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>line <span class="op">=</span> geom_line(aes(x <span class="op">=</span> <span class="st">'Year'</span>, y <span class="op">=</span> <span class="st">'LogEnergyUse'</span>, color <span class="op">=</span> <span class="st">'Type'</span>, linetype <span class="op">=</span> <span class="st">'Type'</span>))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">+</span> line <span class="op">+</span> facet_wrap(<span class="st">'Prov'</span>, scales <span class="op">=</span> <span class="st">'free'</span>)  <span class="co">## 해당 옵션은 그래프마다 스케일을 따로 적용시킨다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="B0. tidydata 심화실습_files/figure-html/cell-33-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>뭔가 시각화는 되었는데, 마음에 들지 않는다.</p>
+</blockquote>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">## matplotlib로 해당 개체를 이전</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> (fig <span class="op">+</span> line <span class="op">+</span> facet_wrap(<span class="st">'Prov'</span>, scales <span class="op">=</span> <span class="st">'free'</span>)).draw()</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<p><img src="B0. tidydata 심화실습_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(<span class="dv">10</span>, <span class="dv">6</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>fig.set_dpi(<span class="dv">150</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<p><img src="B0. tidydata 심화실습_files/figure-html/cell-35-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>matplotlib에서의 메소드를 쉽게 적용시킬 수 있다.</p>
+</blockquote>
+<ol start="5" type="1">
+<li>Prov별로 총 에너지사용량이 많은 상위5개의 Reg을 찾고 아래와 같이 시각화 하라. <img src="https://guebin.github.io/DV2023/posts/08wk-1_files/figure-html/cell-71-1-20b38260-b005-4d39-8ce1-2ee9a593ddb9.png" class="img-fluid"></li>
+</ol>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">BldgCount</th>
+<th data-quarto-table-cell-role="th">Area</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">Gas</th>
+<th data-quarto-table-cell-role="th">Heat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>종로구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>17929</td>
+<td>9141777</td>
+<td>64818</td>
+<td>82015</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>중구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>10598</td>
+<td>10056233</td>
+<td>81672</td>
+<td>75260</td>
+<td>563</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>용산구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>17201</td>
+<td>10639652</td>
+<td>52659</td>
+<td>85220</td>
+<td>12043</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>성동구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>14180</td>
+<td>11631770</td>
+<td>60559</td>
+<td>107416</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>광진구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>21520</td>
+<td>12054796</td>
+<td>70609</td>
+<td>130308</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">995</td>
+<td>함양군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>12505</td>
+<td>1509149</td>
+<td>6328</td>
+<td>3164</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">996</td>
+<td>거창군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>14607</td>
+<td>2322093</td>
+<td>10404</td>
+<td>8850</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">997</td>
+<td>합천군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>16039</td>
+<td>1612734</td>
+<td>7587</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">998</td>
+<td>제주시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>67053</td>
+<td>20275738</td>
+<td>103217</td>
+<td>25689</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">999</td>
+<td>서귀포시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>35230</td>
+<td>7512206</td>
+<td>37884</td>
+<td>2641</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>1000 rows × 8 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Year'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">Gas</th>
+<th data-quarto-table-cell-role="th">Heat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>종로구</td>
+<td>Seoul</td>
+<td>64818</td>
+<td>82015</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>중구</td>
+<td>Seoul</td>
+<td>81672</td>
+<td>75260</td>
+<td>563</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>용산구</td>
+<td>Seoul</td>
+<td>52659</td>
+<td>85220</td>
+<td>12043</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>성동구</td>
+<td>Seoul</td>
+<td>60559</td>
+<td>107416</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>광진구</td>
+<td>Seoul</td>
+<td>70609</td>
+<td>130308</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">995</td>
+<td>함양군</td>
+<td>Gyeongsangnam-do</td>
+<td>6328</td>
+<td>3164</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">996</td>
+<td>거창군</td>
+<td>Gyeongsangnam-do</td>
+<td>10404</td>
+<td>8850</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">997</td>
+<td>합천군</td>
+<td>Gyeongsangnam-do</td>
+<td>7587</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">998</td>
+<td>제주시</td>
+<td>Jeju-do</td>
+<td>103217</td>
+<td>25689</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">999</td>
+<td>서귀포시</td>
+<td>Jeju-do</td>
+<td>37884</td>
+<td>2641</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>1000 rows × 5 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>필요없는 열을 없앤다.</p>
+</blockquote>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Year'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Prov'</span>, <span class="st">'Reg'</span>]).stack().reset_index().rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Seoul</td>
+<td>종로구</td>
+<td>Elec</td>
+<td>64818</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Seoul</td>
+<td>종로구</td>
+<td>Gas</td>
+<td>82015</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Seoul</td>
+<td>종로구</td>
+<td>Heat</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Seoul</td>
+<td>중구</td>
+<td>Elec</td>
+<td>81672</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Seoul</td>
+<td>중구</td>
+<td>Gas</td>
+<td>75260</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2995</td>
+<td>Jeju-do</td>
+<td>제주시</td>
+<td>Gas</td>
+<td>25689</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2996</td>
+<td>Jeju-do</td>
+<td>제주시</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2997</td>
+<td>Jeju-do</td>
+<td>서귀포시</td>
+<td>Elec</td>
+<td>37884</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2998</td>
+<td>Jeju-do</td>
+<td>서귀포시</td>
+<td>Gas</td>
+<td>2641</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2999</td>
+<td>Jeju-do</td>
+<td>서귀포시</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>3000 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>지역과 구, 타입과 에너지를 표기했다. 이름도 적절히 설정해줬다.</p>
+</blockquote>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Year'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Prov'</span>, <span class="st">'Reg'</span>]).stack().reset_index().rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Prov'</span>, <span class="st">'Reg'</span>], values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Busan</td>
+<td>강서구</td>
+<td>200386</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Busan</td>
+<td>금정구</td>
+<td>451212</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Busan</td>
+<td>기장군</td>
+<td>287926</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Busan</td>
+<td>남구</td>
+<td>491030</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Busan</td>
+<td>동구</td>
+<td>156302</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">245</td>
+<td>Ulsan</td>
+<td>남구</td>
+<td>607820</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">246</td>
+<td>Ulsan</td>
+<td>동구</td>
+<td>281094</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">247</td>
+<td>Ulsan</td>
+<td>북구</td>
+<td>334844</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">248</td>
+<td>Ulsan</td>
+<td>울주군</td>
+<td>394217</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">249</td>
+<td>Ulsan</td>
+<td>중구</td>
+<td>395158</td>
+</tr>
+</tbody>
+</table>
+
+<p>250 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>구역별로 에너지 사용량을 합쳐버렸다.</p>
+</blockquote>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Year'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Prov'</span>, <span class="st">'Reg'</span>]).stack().reset_index().rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Prov'</span>, <span class="st">'Reg'</span>], values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).reset_index()<span class="op">\</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>.groupby(by <span class="op">=</span> <span class="st">'Prov'</span>)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>pd.concat([j.sort_values(<span class="st">'EnergyUse'</span>, ascending <span class="op">=</span> <span class="va">False</span>).reset_index(drop <span class="op">=</span> <span class="va">True</span>).iloc[:<span class="dv">5</span>] <span class="cf">for</span> i, j <span class="kw">in</span> g], axis <span class="op">=</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Busan</td>
+<td>부산진구</td>
+<td>690344</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Busan</td>
+<td>해운대구</td>
+<td>689901</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Busan</td>
+<td>사하구</td>
+<td>522150</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Busan</td>
+<td>북구</td>
+<td>493913</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Busan</td>
+<td>남구</td>
+<td>491030</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Ulsan</td>
+<td>남구</td>
+<td>607820</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Ulsan</td>
+<td>중구</td>
+<td>395158</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Ulsan</td>
+<td>울주군</td>
+<td>394217</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Ulsan</td>
+<td>북구</td>
+<td>334844</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Ulsan</td>
+<td>동구</td>
+<td>281094</td>
+</tr>
+</tbody>
+</table>
+
+<p>78 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>구간마다 순위를 정해주기 위해 groupby 함수를 사용, sub-dataframe으로 쪼갠 후에 각각 sort_values() 해주었다.</p>
+</blockquote>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>pd.concat([j.sort_values(<span class="st">'EnergyUse'</span>, ascending <span class="op">=</span> <span class="va">False</span>).reset_index(drop <span class="op">=</span> <span class="va">True</span>).iloc[:<span class="dv">5</span>] <span class="cf">for</span> i, j <span class="kw">in</span> g], axis <span class="op">=</span> <span class="dv">0</span>)<span class="op">\</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>.reset_index().rename({<span class="st">'index'</span> : <span class="st">'rank'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">rank</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>Busan</td>
+<td>부산진구</td>
+<td>690344</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>Busan</td>
+<td>해운대구</td>
+<td>689901</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2</td>
+<td>Busan</td>
+<td>사하구</td>
+<td>522150</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3</td>
+<td>Busan</td>
+<td>북구</td>
+<td>493913</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>4</td>
+<td>Busan</td>
+<td>남구</td>
+<td>491030</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">73</td>
+<td>0</td>
+<td>Ulsan</td>
+<td>남구</td>
+<td>607820</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">74</td>
+<td>1</td>
+<td>Ulsan</td>
+<td>중구</td>
+<td>395158</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75</td>
+<td>2</td>
+<td>Ulsan</td>
+<td>울주군</td>
+<td>394217</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">76</td>
+<td>3</td>
+<td>Ulsan</td>
+<td>북구</td>
+<td>334844</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">77</td>
+<td>4</td>
+<td>Ulsan</td>
+<td>동구</td>
+<td>281094</td>
+</tr>
+</tbody>
+</table>
+
+<p>78 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>인덱스는 랭크와 동일하므로 따로 남겨둔다.</p>
+</blockquote>
+<div class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>tidydata <span class="op">=</span> pd.concat([j.sort_values(<span class="st">'EnergyUse'</span>, ascending <span class="op">=</span> <span class="va">False</span>).reset_index(drop <span class="op">=</span> <span class="va">True</span>).iloc[:<span class="dv">5</span>] <span class="cf">for</span> i, j <span class="kw">in</span> g], axis <span class="op">=</span> <span class="dv">0</span>)<span class="op">\</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>.reset_index().rename({<span class="st">'index'</span> : <span class="st">'rank'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(tidydata)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>bar <span class="op">=</span> geom_col(aes(x <span class="op">=</span> <span class="st">'rank'</span>, y <span class="op">=</span> <span class="st">'EnergyUse'</span>, fill <span class="op">=</span> <span class="st">'Prov'</span>))</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>fig <span class="op">+</span> bar <span class="op">+</span> facet_wrap(<span class="st">'Prov'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="B0. tidydata 심화실습_files/figure-html/cell-42-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="42">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>정보는 모두 포함하나, 짜임새가 없으므로 matplotlib로 이전</p>
+</blockquote>
+<div class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> (fig <span class="op">+</span> bar <span class="op">+</span> facet_wrap(<span class="st">'Prov'</span>)).draw()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(<span class="dv">12</span>, <span class="dv">6</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>fig.set_dpi(<span class="dv">150</span>)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<p><img src="B0. tidydata 심화실습_files/figure-html/cell-44-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>완료</p>
+</blockquote>
+<ol start="5" type="1">
+<li>(Prov,Year)별 전기에너지 사용량 비율을 구하고 아래와 같이 시각화 하라. + 제주를 제외한 지역으로 한정하고 시각화하라.</li>
+</ol>
+<p><img src="https://guebin.github.io/DV2023/posts/08wk-1_files/figure-html/cell-78-1-b4b7f41b-cd4f-46dd-9f7c-6455be63f23f.png" class="img-fluid"></p>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="47">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">BldgCount</th>
+<th data-quarto-table-cell-role="th">Area</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">Gas</th>
+<th data-quarto-table-cell-role="th">Heat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>종로구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>17929</td>
+<td>9141777</td>
+<td>64818</td>
+<td>82015</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>중구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>10598</td>
+<td>10056233</td>
+<td>81672</td>
+<td>75260</td>
+<td>563</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>용산구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>17201</td>
+<td>10639652</td>
+<td>52659</td>
+<td>85220</td>
+<td>12043</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>성동구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>14180</td>
+<td>11631770</td>
+<td>60559</td>
+<td>107416</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>광진구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>21520</td>
+<td>12054796</td>
+<td>70609</td>
+<td>130308</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">995</td>
+<td>함양군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>12505</td>
+<td>1509149</td>
+<td>6328</td>
+<td>3164</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">996</td>
+<td>거창군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>14607</td>
+<td>2322093</td>
+<td>10404</td>
+<td>8850</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">997</td>
+<td>합천군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>16039</td>
+<td>1612734</td>
+<td>7587</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">998</td>
+<td>제주시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>67053</td>
+<td>20275738</td>
+<td>103217</td>
+<td>25689</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">999</td>
+<td>서귀포시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>35230</td>
+<td>7512206</td>
+<td>37884</td>
+<td>2641</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>1000 rows × 8 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>사용해야 할 것</p>
+</blockquote>
+<p>x = ‘Year’, y = ‘ElecRate’, facet_wrap(’Prov”)</p>
+<p>Elec, Gas, Heat</p>
+<div class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Reg'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">Gas</th>
+<th data-quarto-table-cell-role="th">Heat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>64818</td>
+<td>82015</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>81672</td>
+<td>75260</td>
+<td>563</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>52659</td>
+<td>85220</td>
+<td>12043</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>60559</td>
+<td>107416</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>70609</td>
+<td>130308</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">995</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>6328</td>
+<td>3164</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">996</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>10404</td>
+<td>8850</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">997</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>7587</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">998</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>103217</td>
+<td>25689</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">999</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>37884</td>
+<td>2641</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>1000 rows × 5 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>필요없는 걸 없애고…</p>
+</blockquote>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Reg'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="56">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>Elec</td>
+<td>64818</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>Gas</td>
+<td>82015</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>Heat</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>Elec</td>
+<td>81672</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>Gas</td>
+<td>75260</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2995</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>Gas</td>
+<td>25689</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2996</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2997</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>Elec</td>
+<td>37884</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2998</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>Gas</td>
+<td>2641</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2999</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>3000 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>long data로 변환했다.</p>
+</blockquote>
+<div class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Reg'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Year'</span>, <span class="st">'Prov'</span>], columns <span class="op">=</span> <span class="st">'Type'</span>, values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">Gas</th>
+<th data-quarto-table-cell-role="th">Heat</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">2018</td>
+<td data-quarto-table-cell-role="th">Busan</td>
+<td>613522</td>
+<td>708240</td>
+<td>23694</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Chungcheongbuk-do</td>
+<td>361490</td>
+<td>288927</td>
+<td>55002</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Chungcheongnam-do</td>
+<td>456260</td>
+<td>420315</td>
+<td>24286</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Daegu</td>
+<td>457556</td>
+<td>599115</td>
+<td>77399</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Daejeon</td>
+<td>309660</td>
+<td>379571</td>
+<td>51341</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">2021</td>
+<td data-quarto-table-cell-role="th">Jeollabuk-do</td>
+<td>357058</td>
+<td>403399</td>
+<td>4321</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Jeollanam-do</td>
+<td>338032</td>
+<td>281895</td>
+<td>9012</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Sejongsi</td>
+<td>70915</td>
+<td>30533</td>
+<td>61404</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Seoul</td>
+<td>3486022</td>
+<td>3617731</td>
+<td>546491</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Ulsan</td>
+<td>196412</td>
+<td>312276</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>68 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>지역(Prov)과 연도(Year)가 중복되는 값들을 각각 더해줘서 정리했다.</p>
+</blockquote>
+<div class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Reg'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Year'</span>, <span class="st">'Prov'</span>], columns <span class="op">=</span> <span class="st">'Type'</span>, values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>)<span class="op">\</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>.assign(EnergyUse <span class="op">=</span> <span class="kw">lambda</span> _df : _df.Elec <span class="op">+</span> _df.Gas <span class="op">+</span> _df.Heat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">Gas</th>
+<th data-quarto-table-cell-role="th">Heat</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">2018</td>
+<td data-quarto-table-cell-role="th">Busan</td>
+<td>613522</td>
+<td>708240</td>
+<td>23694</td>
+<td>1345456</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Chungcheongbuk-do</td>
+<td>361490</td>
+<td>288927</td>
+<td>55002</td>
+<td>705419</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Chungcheongnam-do</td>
+<td>456260</td>
+<td>420315</td>
+<td>24286</td>
+<td>900861</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Daegu</td>
+<td>457556</td>
+<td>599115</td>
+<td>77399</td>
+<td>1134070</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Daejeon</td>
+<td>309660</td>
+<td>379571</td>
+<td>51341</td>
+<td>740572</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">2021</td>
+<td data-quarto-table-cell-role="th">Jeollabuk-do</td>
+<td>357058</td>
+<td>403399</td>
+<td>4321</td>
+<td>764778</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Jeollanam-do</td>
+<td>338032</td>
+<td>281895</td>
+<td>9012</td>
+<td>628939</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Sejongsi</td>
+<td>70915</td>
+<td>30533</td>
+<td>61404</td>
+<td>162852</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Seoul</td>
+<td>3486022</td>
+<td>3617731</td>
+<td>546491</td>
+<td>7650244</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Ulsan</td>
+<td>196412</td>
+<td>312276</td>
+<td>0</td>
+<td>508688</td>
+</tr>
+</tbody>
+</table>
+
+<p>68 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>총 에너지 사용량 중 전기 에너지만을 구해야 하니 먼저 총 에너지를 구해준다.</p>
+</blockquote>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Reg'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Year'</span>, <span class="st">'Prov'</span>], columns <span class="op">=</span> <span class="st">'Type'</span>, values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>)<span class="op">\</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>.assign(EnergyUse <span class="op">=</span> <span class="kw">lambda</span> _df : _df.Elec <span class="op">+</span> _df.Gas <span class="op">+</span> _df.Heat)<span class="op">\</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Gas'</span>, <span class="st">'Heat'</span>], axis <span class="op">=</span> <span class="dv">1</span>).assign(ElecRate <span class="op">=</span> <span class="kw">lambda</span> _df : _df.Elec <span class="op">/</span> _df.EnergyUse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="60">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+<th data-quarto-table-cell-role="th">ElecRate</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">2018</td>
+<td data-quarto-table-cell-role="th">Busan</td>
+<td>613522</td>
+<td>1345456</td>
+<td>0.455996</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Chungcheongbuk-do</td>
+<td>361490</td>
+<td>705419</td>
+<td>0.512447</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Chungcheongnam-do</td>
+<td>456260</td>
+<td>900861</td>
+<td>0.506471</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Daegu</td>
+<td>457556</td>
+<td>1134070</td>
+<td>0.403464</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Daejeon</td>
+<td>309660</td>
+<td>740572</td>
+<td>0.418136</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td rowspan="5" data-quarto-table-cell-role="th" data-valign="top">2021</td>
+<td data-quarto-table-cell-role="th">Jeollabuk-do</td>
+<td>357058</td>
+<td>764778</td>
+<td>0.466878</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Jeollanam-do</td>
+<td>338032</td>
+<td>628939</td>
+<td>0.537464</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Sejongsi</td>
+<td>70915</td>
+<td>162852</td>
+<td>0.435457</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Seoul</td>
+<td>3486022</td>
+<td>7650244</td>
+<td>0.455675</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Ulsan</td>
+<td>196412</td>
+<td>508688</td>
+<td>0.386115</td>
+</tr>
+</tbody>
+</table>
+
+<p>68 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>필요없는 것을 없애고 비율을 넣어줬다. 이제 필요한 것은 비율 뿐이다.</p>
+</blockquote>
+<div class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Reg'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Year'</span>, <span class="st">'Prov'</span>], columns <span class="op">=</span> <span class="st">'Type'</span>, values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>)<span class="op">\</span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>.assign(EnergyUse <span class="op">=</span> <span class="kw">lambda</span> _df : _df.Elec <span class="op">+</span> _df.Gas <span class="op">+</span> _df.Heat)<span class="op">\</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Gas'</span>, <span class="st">'Heat'</span>], axis <span class="op">=</span> <span class="dv">1</span>).assign(ElecRate <span class="op">=</span> <span class="kw">lambda</span> _df : _df.Elec <span class="op">/</span> _df.EnergyUse)<span class="op">\</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Elec'</span>, <span class="st">'EnergyUse'</span>], axis <span class="op">=</span> <span class="dv">1</span>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="62">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">ElecRate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2018</td>
+<td>Busan</td>
+<td>0.455996</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2018</td>
+<td>Chungcheongbuk-do</td>
+<td>0.512447</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2018</td>
+<td>Chungcheongnam-do</td>
+<td>0.506471</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2018</td>
+<td>Daegu</td>
+<td>0.403464</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2018</td>
+<td>Daejeon</td>
+<td>0.418136</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">63</td>
+<td>2021</td>
+<td>Jeollabuk-do</td>
+<td>0.466878</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">64</td>
+<td>2021</td>
+<td>Jeollanam-do</td>
+<td>0.537464</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">65</td>
+<td>2021</td>
+<td>Sejongsi</td>
+<td>0.435457</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">66</td>
+<td>2021</td>
+<td>Seoul</td>
+<td>0.455675</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">67</td>
+<td>2021</td>
+<td>Ulsan</td>
+<td>0.386115</td>
+</tr>
+</tbody>
+</table>
+
+<p>68 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>타이디데이터 같다.</p>
+</blockquote>
+<div class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>tidydata <span class="op">=</span> df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Reg'</span>, <span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_2'</span> : <span class="st">'Type'</span>, <span class="dv">0</span> : <span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Year'</span>, <span class="st">'Prov'</span>], columns <span class="op">=</span> <span class="st">'Type'</span>, values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>)<span class="op">\</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>.assign(EnergyUse <span class="op">=</span> <span class="kw">lambda</span> _df : _df.Elec <span class="op">+</span> _df.Gas <span class="op">+</span> _df.Heat)<span class="op">\</span></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Gas'</span>, <span class="st">'Heat'</span>], axis <span class="op">=</span> <span class="dv">1</span>).assign(ElecRate <span class="op">=</span> <span class="kw">lambda</span> _df : _df.Elec <span class="op">/</span> _df.EnergyUse)<span class="op">\</span></span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'Elec'</span>, <span class="st">'EnergyUse'</span>], axis <span class="op">=</span> <span class="dv">1</span>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(tidydata)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>line <span class="op">=</span> geom_line(aes(x <span class="op">=</span> <span class="st">'Year'</span>, y <span class="op">=</span> <span class="st">'ElecRate'</span>, color <span class="op">=</span> <span class="st">'Prov'</span>), linetype <span class="op">=</span> <span class="st">'dashed'</span>)</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> geom_point(aes(x <span class="op">=</span> <span class="st">'Year'</span>, y <span class="op">=</span> <span class="st">'ElecRate'</span>, color <span class="op">=</span> <span class="st">'Prov'</span>, shape <span class="op">=</span> <span class="st">'Prov'</span>))</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">+</span> line <span class="op">+</span> point</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\mizani\palettes.py:706: UserWarning: Palette can return a maximum of 13 values. 17 values requested.
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\plotnine\layer.py:364: PlotnineWarning: geom_point : Removed 16 rows containing missing values.
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\mizani\palettes.py:706: UserWarning: Palette can return a maximum of 13 values. 17 values requested.
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\plotnine\guides\guides.py:259: PlotnineWarning: geom_point legend : Removed 4 rows containing missing values.</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="B0. tidydata 심화실습_files/figure-html/cell-53-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="69">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>나름 괜찮지만 그래도 matplotlib에 데려와보자.</p>
+</blockquote>
+<div class="cell" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>fig_ <span class="op">=</span> (fig <span class="op">+</span> line <span class="op">+</span> point).draw()</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>fig_.set_dpi(<span class="dv">150</span>)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>fig_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\mizani\palettes.py:706: UserWarning: Palette can return a maximum of 13 values. 17 values requested.
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\plotnine\layer.py:364: PlotnineWarning: geom_point : Removed 16 rows containing missing values.
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\mizani\palettes.py:706: UserWarning: Palette can return a maximum of 13 values. 17 values requested.
+C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\plotnine\guides\guides.py:259: PlotnineWarning: geom_point legend : Removed 4 rows containing missing values.</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="70">
+<p><img src="B0. tidydata 심화실습_files/figure-html/cell-54-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>~와 나 너무 잘하는 거 아님?~</p>
+</blockquote>
+</section>
+<section id="pd.merge의-이용" class="level2">
+<h2 class="anchored" data-anchor-id="pd.merge의-이용">4. <code>pd.merge()</code>의 이용</h2>
+<blockquote class="blockquote">
+<p>그냥 뇌정지 올 것 같아도 일단 tidydata로 변환하고 시작하자!!</p>
+</blockquote>
+<div class="cell" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>).drop([<span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="72">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Reg</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Elec</th>
+<th data-quarto-table-cell-role="th">Gas</th>
+<th data-quarto-table-cell-role="th">Heat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>종로구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>64818</td>
+<td>82015</td>
+<td>111</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>중구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>81672</td>
+<td>75260</td>
+<td>563</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>용산구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>52659</td>
+<td>85220</td>
+<td>12043</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>성동구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>60559</td>
+<td>107416</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>광진구</td>
+<td>2018</td>
+<td>Seoul</td>
+<td>70609</td>
+<td>130308</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">995</td>
+<td>함양군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>6328</td>
+<td>3164</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">996</td>
+<td>거창군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>10404</td>
+<td>8850</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">997</td>
+<td>합천군</td>
+<td>2021</td>
+<td>Gyeongsangnam-do</td>
+<td>7587</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">998</td>
+<td>제주시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>103217</td>
+<td>25689</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">999</td>
+<td>서귀포시</td>
+<td>2021</td>
+<td>Jeju-do</td>
+<td>37884</td>
+<td>2641</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>1000 rows × 6 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>이런 데이터가 있으면… 일단 value 세 개인 Elec, Gas, Heat를 녹여야 함.</p>
+</blockquote>
+<div class="cell" data-execution_count="78">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>).drop([<span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Reg'</span>, <span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_3'</span>:<span class="st">'Type'</span>, <span class="dv">0</span>:<span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Prov'</span>, <span class="st">'Year'</span>], values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="78">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Busan</td>
+<td>2018</td>
+<td>1345456</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Busan</td>
+<td>2019</td>
+<td>1301422</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Busan</td>
+<td>2020</td>
+<td>1314100</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Busan</td>
+<td>2021</td>
+<td>1951909</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Chungcheongbuk-do</td>
+<td>2018</td>
+<td>705419</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">63</td>
+<td>Seoul</td>
+<td>2021</td>
+<td>7650244</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">64</td>
+<td>Ulsan</td>
+<td>2018</td>
+<td>512512</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">65</td>
+<td>Ulsan</td>
+<td>2019</td>
+<td>491191</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">66</td>
+<td>Ulsan</td>
+<td>2020</td>
+<td>500742</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">67</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>508688</td>
+</tr>
+</tbody>
+</table>
+
+<p>68 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>widedata로 만들었음. 일단 해!</p>
+</blockquote>
+<div class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>).drop([<span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Reg'</span>, <span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_3'</span>:<span class="st">'Type'</span>, <span class="dv">0</span>:<span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Prov'</span>, <span class="st">'Year'</span>, <span class="st">'Type'</span>], values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="83">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">EnergyUse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Elec</td>
+<td>613522</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Gas</td>
+<td>708240</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Heat</td>
+<td>23694</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Busan</td>
+<td>2019</td>
+<td>Elec</td>
+<td>602980</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Busan</td>
+<td>2019</td>
+<td>Gas</td>
+<td>675882</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">199</td>
+<td>Ulsan</td>
+<td>2020</td>
+<td>Gas</td>
+<td>306896</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">200</td>
+<td>Ulsan</td>
+<td>2020</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">201</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Elec</td>
+<td>196412</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">202</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Gas</td>
+<td>312276</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">203</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Heat</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>204 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>큰 데이터와 작은 데이터가 만들어졌다.</p>
+</blockquote>
+<div class="cell" data-execution_count="84">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>big <span class="op">=</span> df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>).drop([<span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Reg'</span>, <span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_3'</span>:<span class="st">'Type'</span>, <span class="dv">0</span>:<span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Prov'</span>, <span class="st">'Year'</span>, <span class="st">'Type'</span>], values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).reset_index()</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> df.set_index([<span class="st">'지역'</span>, <span class="st">'년도'</span>, <span class="st">'시도'</span>]).applymap(<span class="kw">lambda</span> x : <span class="bu">str</span>(x).replace(<span class="st">','</span>,<span class="st">''</span>)).astype(<span class="bu">int</span>).reset_index()<span class="op">\</span></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>.rename(name_dict, axis <span class="op">=</span> <span class="dv">1</span>).drop([<span class="st">'BldgCount'</span>, <span class="st">'Area'</span>], axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>.set_index([<span class="st">'Reg'</span>, <span class="st">'Year'</span>, <span class="st">'Prov'</span>]).stack().reset_index().rename({<span class="st">'level_3'</span>:<span class="st">'Type'</span>, <span class="dv">0</span>:<span class="st">'EnergyUse'</span>}, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> [<span class="st">'Prov'</span>, <span class="st">'Year'</span>], values <span class="op">=</span> <span class="st">'EnergyUse'</span>, aggfunc <span class="op">=</span> <span class="st">'sum'</span>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="93">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>pd.merge(big, small, on <span class="op">=</span> [<span class="st">'Year'</span>, <span class="st">'Prov'</span>]).loc[<span class="kw">lambda</span> _df : _df[<span class="st">'Type'</span>] <span class="op">==</span> <span class="st">'Elec'</span>].reset_index(drop <span class="op">=</span> <span class="va">True</span>)<span class="op">\</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>.assign(ElecRate <span class="op">=</span> <span class="kw">lambda</span> _df : _df.EnergyUse_x <span class="op">/</span> _df.EnergyUse_y)<span class="op">\</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>.drop([<span class="st">'EnergyUse_x'</span>, <span class="st">'EnergyUse_y'</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="93">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Prov</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Type</th>
+<th data-quarto-table-cell-role="th">ElecRate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Busan</td>
+<td>2018</td>
+<td>Elec</td>
+<td>0.455996</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Busan</td>
+<td>2019</td>
+<td>Elec</td>
+<td>0.463324</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Busan</td>
+<td>2020</td>
+<td>Elec</td>
+<td>0.457401</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Busan</td>
+<td>2021</td>
+<td>Elec</td>
+<td>0.534566</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Chungcheongbuk-do</td>
+<td>2018</td>
+<td>Elec</td>
+<td>0.512447</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">63</td>
+<td>Seoul</td>
+<td>2021</td>
+<td>Elec</td>
+<td>0.455675</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">64</td>
+<td>Ulsan</td>
+<td>2018</td>
+<td>Elec</td>
+<td>0.384385</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">65</td>
+<td>Ulsan</td>
+<td>2019</td>
+<td>Elec</td>
+<td>0.392067</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">66</td>
+<td>Ulsan</td>
+<td>2020</td>
+<td>Elec</td>
+<td>0.387118</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">67</td>
+<td>Ulsan</td>
+<td>2021</td>
+<td>Elec</td>
+<td>0.386115</td>
+</tr>
+</tbody>
+</table>
+
+<p>68 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>타이디데이터가 됐다.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

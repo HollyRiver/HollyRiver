@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="강신성">
+<meta name="dcterms.date" content="2023-10-14">
+
+<title>RiverFlow - 집단 간 비교 : 심슨의 역설</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">RiverFlow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_MP.html" rel="" target="">
+ <span class="menu-text">2023 MP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_DV.html" rel="" target="">
+ <span class="menu-text">2023 DV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HollyRiver?tab=repositories" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://blog.naver.com/hc_ssk2800" rel="" target=""><i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">집단 간 비교 : 심슨의 역설</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">plotnine</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>강신성 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-10-14</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>심슨의 역설</p>
+<blockquote class="blockquote">
+<p>여러 집단으로 나눠진 데이터들을 하나로 합쳐서 분석해버리면 어떻게 될까?</p>
+</blockquote>
+<section id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다." class="level6">
+<h6 class="anchored" data-anchor-id="해당-포스트는-전북대학교-통계학과-최규빈-교수님의-강의내용을-토대로-재구성되었음을-알립니다.">해당 포스트는 전북대학교 통계학과 최규빈 교수님의 강의내용을 토대로 재구성되었음을 알립니다.</h6>
+</section>
+<section id="라이브러리-imports" class="level2">
+<h2 class="anchored" data-anchor-id="라이브러리-imports">1. 라이브러리 imports</h2>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:684,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697008568018,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="필요한-코드-비교를-위한-시각화" class="level2">
+<h2 class="anchored" data-anchor-id="필요한-코드-비교를-위한-시각화">2. 필요한 코드 | 비교를 위한 시각화</h2>
+<section id="a.-geom_col" class="level3">
+<h3 class="anchored" data-anchor-id="a.-geom_col"><strong>A. <code>geom_col</code>()</strong></h3>
+<hr>
+<p>- 예시1 : <code>geom_col()</code> 기본적인 막대 그래프</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:5,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697008678893,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="6ecbea47-e297-4f59-c181-7c7453afc6d4" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>:[<span class="dv">0</span>,<span class="dv">1</span>],<span class="st">'y'</span>:[<span class="dv">40</span>,<span class="dv">60</span>]})</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">x</th>
+<th data-quarto-table-cell-role="th">y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>40</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>60</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:917,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697008781723,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="874fc0c6-18b7-4aa0-dcf9-7b1b51eced34" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(df)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bar <span class="op">=</span> geom_col(aes(x <span class="op">=</span> <span class="st">'x'</span>, y <span class="op">=</span> <span class="st">'y'</span>))   <span class="co">## geom_bar()는 그냥 없다고 생각하자.</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">+</span> bar</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<p>- 예시2 : <span class="math inline">\(x\)</span>축이 범주형인 경우</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:3,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697008813401,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="7b32599c-6efa-4f19-8baa-61db1181c64f" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'sex'</span>:[<span class="st">'male'</span>,<span class="st">'female'</span>],<span class="st">'score'</span>:[<span class="dv">40</span>,<span class="dv">60</span>]})</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>male</td>
+<td>40</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>female</td>
+<td>60</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:728,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697008882541,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="df670edf-235e-4e70-a0cb-ceedd1bc086a" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(df)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>bar <span class="op">=</span> geom_col(aes(x <span class="op">=</span> <span class="st">'sex'</span>, y <span class="op">=</span> <span class="st">'score'</span>))   <span class="co">## 설명변수가 문자열이어도 산출해준다.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">+</span> bar</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<p>- 예시3 : <code>fill = 'index'</code>예시2에서 범주별 색깔로 구분하고 싶은 경우</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:4,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697008915539,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="76845b72-7722-4619-e3af-a0cc1d6e6367" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'sex'</span>:[<span class="st">'male'</span>,<span class="st">'female'</span>],<span class="st">'score'</span>:[<span class="dv">40</span>,<span class="dv">60</span>]})</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>male</td>
+<td>40</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>female</td>
+<td>60</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:548,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009002191,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="c85b44a0-cb5f-4fa6-d5a1-029b43191937" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(df)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>bar <span class="op">=</span> geom_col(aes(x <span class="op">=</span> <span class="st">'sex'</span>, y <span class="op">=</span> <span class="st">'score'</span>, fill <span class="op">=</span> <span class="st">'sex'</span>))   <span class="co">## color 옵션도 있으나, 이것은 바깥의 테두리 색상만 바꾼다.</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">+</span> bar</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<p>- 예시4 : 예시3에서 <code>scale_fill_manual()</code>을 이용하여 색상 변경하기</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:955,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009035548,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="b45998d1-0e32-472d-b5e7-3950957e1e12" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'sex'</span>:[<span class="st">'male'</span>,<span class="st">'female'</span>],<span class="st">'score'</span>:[<span class="dv">40</span>,<span class="dv">60</span>]})</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+
+  <div id="df-ff6d553f-35d3-49e7-ba9a-a8361dd71dec" class="colab-df-container">
+    <div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>male</td>
+<td>40</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>female</td>
+<td>60</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-ff6d553f-35d3-49e7-ba9a-a8361dd71dec')" title="Convert this dataframe to an interactive table." style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewbox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"></path>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-ff6d553f-35d3-49e7-ba9a-a8361dd71dec button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-ff6d553f-35d3-49e7-ba9a-a8361dd71dec');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+<div id="df-31a1ef32-3a01-4b45-930d-5f1d73ddb538">
+  <button class="colab-df-quickchart" onclick="quickchart('df-31a1ef32-3a01-4b45-930d-5f1d73ddb538')" title="Suggest charts." style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewbox="0 0 24 24" width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path>
+    </g>
+</svg>
+  </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+  <script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-31a1ef32-3a01-4b45-930d-5f1d73ddb538 button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:681,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009109800,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="994329bb-87e5-4823-c878-17149d9c934e" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(df)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>bar <span class="op">=</span> geom_col(aes(x <span class="op">=</span> <span class="st">'sex'</span>, y <span class="op">=</span> <span class="st">'score'</span>, fill <span class="op">=</span> <span class="st">'sex'</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">+</span> bar <span class="op">+</span> scale_fill_manual([<span class="st">'red'</span>,<span class="st">'blue'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>색상 입력에는 이름이 정해진 색상들 뿐만 아니라 <code>plt.plot(color = option)</code>에서의 옵션과 같이 이미 설정된 C0, C1… 또는 hex code도 입력이 가능하다.</p>
+</blockquote>
+</section>
+</section>
+<section id="b.-facet_warp-한-면을-감싸다." class="level2">
+<h2 class="anchored" data-anchor-id="b.-facet_warp-한-면을-감싸다.">### <strong>B. <code>facet_warp()</code> | 한 면을 감싸다.</strong></h2>
+<p>- 예시1 : <code>facet_warp()</code>를 이용한 면분할 – 반별로 면분할</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:3,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009206558,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="64fb98e4-ca05-41a6-a67e-b7162a75b895" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'sex'</span>:[<span class="st">'male'</span>,<span class="st">'female'</span>,<span class="st">'male'</span>,<span class="st">'female'</span>],<span class="st">'score'</span>:[<span class="dv">40</span>,<span class="dv">60</span>,<span class="dv">50</span>,<span class="dv">20</span>],<span class="st">'class'</span>:[<span class="st">'A'</span>,<span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'B'</span>]})</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">score</th>
+<th data-quarto-table-cell-role="th">class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>male</td>
+<td>40</td>
+<td>A</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>female</td>
+<td>60</td>
+<td>A</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>male</td>
+<td>50</td>
+<td>B</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>female</td>
+<td>20</td>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1404,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009232132,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="dbde2dd1-bef8-491b-f733-eaf510868601" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ggplot(df) <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">'sex'</span>,y<span class="op">=</span><span class="st">'score'</span>,fill<span class="op">=</span><span class="st">'sex'</span>)) <span class="op">+</span> scale_fill_manual([<span class="st">'red'</span>,<span class="st">'blue'</span>]) <span class="op">+</span> facet_wrap(<span class="st">'class'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><code>class</code>별로 그래프의 면을 분할해서 표시</p>
+</blockquote>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:4,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009378155,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="a2fd998c-df30-4326-aff1-cc3e65ae3c64" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ggplot(df) <span class="op">+</span> geom_col(aes(x <span class="op">=</span> <span class="st">'sex'</span>, y <span class="op">=</span> <span class="st">'score'</span>, fill <span class="op">=</span> <span class="st">'sex'</span>)) <span class="op">+</span> scale_fill_manual([<span class="st">'red'</span>,<span class="st">'blue'</span>])  <span class="co">## 지정해주지 않을 경우 기본적으로 합산하여 지정된다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<p>- 예시2 : 성별로 면분할</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:2,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009397689,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="e5323c2e-7d4d-4476-d6ee-1d34946593d5" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'sex'</span>:[<span class="st">'male'</span>,<span class="st">'female'</span>,<span class="st">'male'</span>,<span class="st">'female'</span>],<span class="st">'score'</span>:[<span class="dv">40</span>,<span class="dv">60</span>,<span class="dv">50</span>,<span class="dv">20</span>],<span class="st">'class'</span>:[<span class="st">'A'</span>,<span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'B'</span>]})</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+
+  <div id="df-2e366722-3970-4b3b-a2a5-a37a18c41c3b" class="colab-df-container">
+    <div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">score</th>
+<th data-quarto-table-cell-role="th">class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>male</td>
+<td>40</td>
+<td>A</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>female</td>
+<td>60</td>
+<td>A</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>male</td>
+<td>50</td>
+<td>B</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>female</td>
+<td>20</td>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-2e366722-3970-4b3b-a2a5-a37a18c41c3b')" title="Convert this dataframe to an interactive table." style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewbox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"></path>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-2e366722-3970-4b3b-a2a5-a37a18c41c3b button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-2e366722-3970-4b3b-a2a5-a37a18c41c3b');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+<div id="df-5712e69d-51bd-4b5d-aa3b-efc3667eb693">
+  <button class="colab-df-quickchart" onclick="quickchart('df-5712e69d-51bd-4b5d-aa3b-efc3667eb693')" title="Suggest charts." style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewbox="0 0 24 24" width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path>
+    </g>
+</svg>
+  </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+  <script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-5712e69d-51bd-4b5d-aa3b-efc3667eb693 button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1362,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009419895,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="702ba0a7-3e6e-4b26-d4cd-bdd704a87c1a" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ggplot(df) <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">'class'</span>,y<span class="op">=</span><span class="st">'score'</span>,fill<span class="op">=</span><span class="st">'sex'</span>)) <span class="op">+</span> facet_wrap(<span class="st">'sex'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>이 경우 <code>'sex'</code>로 <code>color</code>를 구분했으므로 면마다 다른 색의 그래프만이 나온다.</p>
+</blockquote>
+</section>
+<section id="심슨의-역설" class="level2">
+<h2 class="anchored" data-anchor-id="심슨의-역설">4. 심슨의 역설</h2>
+<p>- 버클리 대학교의 입학 데이터에서 gender bias가 존재한다는 주장이 있었다.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:512,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009497331,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="cc94832b-b01a-4e6f-9780-61326af2eedd" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.read_csv(<span class="st">"https://raw.githubusercontent.com/guebin/DV2022/master/posts/Simpson.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>,header<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">1</span>])<span class="op">\</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>.stack().stack().reset_index()<span class="op">\</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>.rename({<span class="st">'level_0'</span>:<span class="st">'department'</span>,<span class="st">'level_1'</span>:<span class="st">'result'</span>,<span class="st">'level_2'</span>:<span class="st">'gender'</span>,<span class="dv">0</span>:<span class="st">'count'</span>},axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>fail</td>
+<td>female</td>
+<td>19</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A</td>
+<td>fail</td>
+<td>male</td>
+<td>314</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>A</td>
+<td>pass</td>
+<td>female</td>
+<td>89</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>A</td>
+<td>pass</td>
+<td>male</td>
+<td>511</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>B</td>
+<td>fail</td>
+<td>female</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>B</td>
+<td>fail</td>
+<td>male</td>
+<td>208</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>B</td>
+<td>pass</td>
+<td>female</td>
+<td>18</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>B</td>
+<td>pass</td>
+<td>male</td>
+<td>352</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>C</td>
+<td>fail</td>
+<td>female</td>
+<td>391</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>C</td>
+<td>fail</td>
+<td>male</td>
+<td>204</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>C</td>
+<td>pass</td>
+<td>female</td>
+<td>202</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>C</td>
+<td>pass</td>
+<td>male</td>
+<td>121</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>D</td>
+<td>fail</td>
+<td>female</td>
+<td>244</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>D</td>
+<td>fail</td>
+<td>male</td>
+<td>279</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>D</td>
+<td>pass</td>
+<td>female</td>
+<td>131</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>D</td>
+<td>pass</td>
+<td>male</td>
+<td>138</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>E</td>
+<td>fail</td>
+<td>female</td>
+<td>299</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>E</td>
+<td>fail</td>
+<td>male</td>
+<td>137</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">18</td>
+<td>E</td>
+<td>pass</td>
+<td>female</td>
+<td>94</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19</td>
+<td>E</td>
+<td>pass</td>
+<td>male</td>
+<td>54</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">20</td>
+<td>F</td>
+<td>fail</td>
+<td>female</td>
+<td>103</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">21</td>
+<td>F</td>
+<td>fail</td>
+<td>male</td>
+<td>149</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">22</td>
+<td>F</td>
+<td>pass</td>
+<td>female</td>
+<td>238</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">23</td>
+<td>F</td>
+<td>pass</td>
+<td>male</td>
+<td>224</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="a.-시각화-1-전체-합격률-시각화-pandas-초보" class="level3">
+<h3 class="anchored" data-anchor-id="a.-시각화-1-전체-합격률-시각화-pandas-초보"><strong>A. 시각화 1 : 전체 합격률 시각화 – pandas 초보</strong></h3>
+<hr>
+<p>- 단순무식하게 query만 이용해서 그룹화</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:2,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009612562,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="3988b3b2-9c95-49b5-c558-25e315e2b857" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'gender == "female" and result == "pass"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>772</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>여성 지원자 중 합격한 사람의 수</p>
+</blockquote>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:2,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009686657,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="114ad4b4-15f9-40d3-c7e5-f7cd5ae5668e" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df.query(<span class="st">'gender == "female"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>1835</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>총 여성 지원자 수</p>
+</blockquote>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:462,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009859463,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="72b1560f-f51f-4884-b471-a120a4261e40" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>(df.query(<span class="st">'gender == "female" and result == "pass"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()<span class="op">/</span>df.query(<span class="st">'gender == "female"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>(),</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a> df.query(<span class="st">'gender == "male" and result == "pass"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()<span class="op">/</span>df.query(<span class="st">'gender == "male"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>(0.420708446866485, 0.5202526941657376)</code></pre>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:2,&quot;status&quot;:&quot;error&quot;,&quot;timestamp&quot;:1697010049036,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="5f9044e8-73cb-4fe7-9762-03d6e4fb4b52" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>tidydata_ <span class="op">=</span> pd.DataFrame({<span class="st">'female'</span> : [df.query(<span class="st">'gender == "female" and result == "pass"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()<span class="op">/</span>df.query(<span class="st">'gender == "female"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()],</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                          <span class="st">'male'</span> : [df.query(<span class="st">'gender == "male" and result == "pass"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()<span class="op">/</span>df.query(<span class="st">'gender == "male"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()]})</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>tidydata_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">female</th>
+<th data-quarto-table-cell-role="th">male</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.420708</td>
+<td>0.520253</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>이렇게 하면 시각화 못해요…</p>
+</blockquote>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:2,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697009959490,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="60aa597e-9920-4441-a522-62a2991aa554" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>tidydata <span class="op">=</span> pd.DataFrame({<span class="st">'sex'</span> : [<span class="st">'male'</span>, <span class="st">'female'</span>],</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                         <span class="st">'rate'</span> : [df.query(<span class="st">'gender == "female" and result == "pass"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()<span class="op">/</span>df.query(<span class="st">'gender == "female"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>(),</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                                   df.query(<span class="st">'gender == "male" and result == "pass"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()<span class="op">/</span>df.query(<span class="st">'gender == "male"'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()]})</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>tidydata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>male</td>
+<td>0.420708</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>female</td>
+<td>0.520253</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="b.-시각화-1-전체-합격률-시각화-pandas-고수" class="level2">
+<h2 class="anchored" data-anchor-id="b.-시각화-1-전체-합격률-시각화-pandas-고수">### <strong>B. 시각화 1 : 전체 합격률 시각화 – pandas 고수</strong></h2>
+<p><strong><code>df.pivot_table(index = row, columns = col, valuse = value_col, aggfunc = func)</code></strong></p>
+<p>- 피벗 테이블을 만든다. (두 범주형 자료들을 나누는 것)</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:566,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697010118035,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="e7a4c9c3-8763-4157-e4de-d1c23d0149d2" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index<span class="op">=</span><span class="st">'gender'</span>,columns<span class="op">=</span><span class="st">'result'</span>,values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="bu">sum</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">fail</th>
+<th data-quarto-table-cell-role="th">pass</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">female</td>
+<td>1063</td>
+<td>772</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>1291</td>
+<td>1400</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:3,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697010174511,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="9d529b52-38d8-4fbf-b834-cf8bf8df0d4c" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index<span class="op">=</span><span class="st">'gender'</span>,columns<span class="op">=</span><span class="st">'result'</span>,values<span class="op">=</span><span class="st">'count'</span>)    <span class="co">## 집계함수의 디폴트 값이 mean이다</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="43">
+
+  <div id="df-ec3e0703-d1cb-4657-bdd1-efc9063af726" class="colab-df-container">
+    <div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">fail</th>
+<th data-quarto-table-cell-role="th">pass</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">female</td>
+<td>177.166667</td>
+<td>128.666667</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>215.166667</td>
+<td>233.333333</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-ec3e0703-d1cb-4657-bdd1-efc9063af726')" title="Convert this dataframe to an interactive table." style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewbox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"></path>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-ec3e0703-d1cb-4657-bdd1-efc9063af726 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-ec3e0703-d1cb-4657-bdd1-efc9063af726');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+<div id="df-693743ea-01ce-4122-9554-1e08b4f01aba">
+  <button class="colab-df-quickchart" onclick="quickchart('df-693743ea-01ce-4122-9554-1e08b4f01aba')" title="Suggest charts." style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewbox="0 0 24 24" width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path>
+    </g>
+</svg>
+  </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+  <script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-693743ea-01ce-4122-9554-1e08b4f01aba button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+    </div>
+  </div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>이 상태에서 <code>reset_index()</code>를 통해 자료를 쉽게 정리할 수 있다.</p>
+</blockquote>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index<span class="op">=</span><span class="st">'gender'</span>,columns<span class="op">=</span><span class="st">'result'</span>,values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="bu">sum</span>)<span class="op">\</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>.assign(rate <span class="op">=</span> <span class="kw">lambda</span> _df : _df[<span class="st">'pass'</span>]<span class="op">/</span>(_df[<span class="st">'fail'</span>] <span class="op">+</span> _df[<span class="st">'pass'</span>]))</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co">## 비율까지 추가한 모습, lambda _df : _df를 통해 현재 데이터프레임까지 호출한 모습</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">fail</th>
+<th data-quarto-table-cell-role="th">pass</th>
+<th data-quarto-table-cell-role="th">rate</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">female</td>
+<td>1063</td>
+<td>772</td>
+<td>0.420708</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>1291</td>
+<td>1400</td>
+<td>0.520253</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:3,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697010427739,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="6d0547a6-c849-45c2-ef1c-4eea3b9f2dd0" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index<span class="op">=</span><span class="st">'gender'</span>,columns<span class="op">=</span><span class="st">'result'</span>,values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="bu">sum</span>)<span class="op">\</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>.assign(rate <span class="op">=</span> <span class="kw">lambda</span> _df : _df[<span class="st">'pass'</span>]<span class="op">/</span>(_df[<span class="st">'fail'</span>] <span class="op">+</span> _df[<span class="st">'pass'</span>])).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">fail</th>
+<th data-quarto-table-cell-role="th">pass</th>
+<th data-quarto-table-cell-role="th">rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>female</td>
+<td>1063</td>
+<td>772</td>
+<td>0.420708</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>male</td>
+<td>1291</td>
+<td>1400</td>
+<td>0.520253</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>- 이제 가공된 데이터를 <code>tidydata</code>라고 하여 그래프를 그려보자.</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:1476,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697010476524,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="f979ffe6-d914-49d0-c8fc-5a3155800e1d" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>tidydata <span class="op">=</span> df.pivot_table(index<span class="op">=</span><span class="st">'gender'</span>,columns<span class="op">=</span><span class="st">'result'</span>,values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="bu">sum</span>).assign(rate <span class="op">=</span> <span class="kw">lambda</span> _df : _df[<span class="st">'pass'</span>]<span class="op">/</span>(_df[<span class="st">'fail'</span>] <span class="op">+</span> _df[<span class="st">'pass'</span>])).reset_index()</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(tidydata)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>bar <span class="op">=</span> geom_col(aes(x<span class="op">=</span><span class="st">'gender'</span>,fill<span class="op">=</span><span class="st">'gender'</span>,y<span class="op">=</span><span class="st">'rate'</span>))</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>fig<span class="op">+</span>bar</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>이 그래프를 보고 나온 주장 : 여성이 남성에 비해 합격률이 낮으니까 차별이 있다!!</p>
+</blockquote>
+<p>- 반박</p>
+<div class="cell" data-executioninfo="{&quot;elapsed&quot;:3,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1697010765417,&quot;user&quot;:{&quot;displayName&quot;:&quot;강신성 (Dealer)&quot;,&quot;userId&quot;:&quot;01117960150476567863&quot;},&quot;user_tz&quot;:-540}" data-outputid="da182d0d-fd0e-4582-a511-99bee2dcdad2" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index<span class="op">=</span>[<span class="st">'department'</span>],columns<span class="op">=</span>[<span class="st">'result'</span>,<span class="st">'gender'</span>],values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="bu">sum</span>).stack()</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">##df.pivot_table(index = ['department', 'gender'], columns = 'result', values = 'count', aggfunc = sum)</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">## 위의 두 코드는 완전히 똑같은 동작을 한다. 아마도...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">fail</th>
+<th data-quarto-table-cell-role="th">pass</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">A</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>19</td>
+<td>89</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>314</td>
+<td>511</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">B</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>7</td>
+<td>18</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>208</td>
+<td>352</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">C</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>391</td>
+<td>202</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>204</td>
+<td>121</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">D</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>244</td>
+<td>131</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>279</td>
+<td>138</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">E</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>299</td>
+<td>94</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>137</td>
+<td>54</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">F</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>103</td>
+<td>238</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>149</td>
+<td>224</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>temp.<span class="cf">pass</span>  <span class="co">## pass 자체가 파이썬에서 특수하게 사용되는 조건어같은 거여서 안된다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>SyntaxError: invalid syntax (2928908933.py, line 1)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> df.pivot_table(index<span class="op">=</span>[<span class="st">'department'</span>],columns<span class="op">=</span>[<span class="st">'result'</span>,<span class="st">'gender'</span>],values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="bu">sum</span>).stack()</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>temp[<span class="st">'fail'</span>] <span class="op">+</span> temp[<span class="st">'pass'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<pre><code>department  gender
+A           female    108
+            male      825
+B           female     25
+            male      560
+C           female    593
+            male      325
+D           female    375
+            male      417
+E           female    393
+            male      191
+F           female    341
+            male      373
+dtype: int64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index<span class="op">=</span>[<span class="st">'department'</span>],columns<span class="op">=</span>[<span class="st">'result'</span>,<span class="st">'gender'</span>],values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="bu">sum</span>).stack()<span class="op">\</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>.assign(rate <span class="op">=</span> <span class="kw">lambda</span> _df: _df[<span class="st">'pass'</span>]<span class="op">/</span>(_df.fail<span class="op">+</span>_df[<span class="st">'pass'</span>]))</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">##df.pivot_table(index = ['gender', 'department'], columns = 'result', values = 'count', aggfunc = sum).reset_index().assign(rate = lambda _df: _df['pass']/(_df.fail+_df['pass']))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="60">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">fail</th>
+<th data-quarto-table-cell-role="th">pass</th>
+<th data-quarto-table-cell-role="th">rate</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">A</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>19</td>
+<td>89</td>
+<td>0.824074</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>314</td>
+<td>511</td>
+<td>0.619394</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">B</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>7</td>
+<td>18</td>
+<td>0.720000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>208</td>
+<td>352</td>
+<td>0.628571</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">C</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>391</td>
+<td>202</td>
+<td>0.340641</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>204</td>
+<td>121</td>
+<td>0.372308</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">D</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>244</td>
+<td>131</td>
+<td>0.349333</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>279</td>
+<td>138</td>
+<td>0.330935</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">E</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>299</td>
+<td>94</td>
+<td>0.239186</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>137</td>
+<td>54</td>
+<td>0.282723</td>
+</tr>
+<tr class="odd">
+<td rowspan="2" data-quarto-table-cell-role="th" data-valign="top">F</td>
+<td data-quarto-table-cell-role="th">female</td>
+<td>103</td>
+<td>238</td>
+<td>0.697947</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">male</td>
+<td>149</td>
+<td>224</td>
+<td>0.600536</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>- tidydata 완성</p>
+<div class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index<span class="op">=</span>[<span class="st">'department'</span>],columns<span class="op">=</span>[<span class="st">'result'</span>,<span class="st">'gender'</span>],values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="bu">sum</span>).stack()<span class="op">\</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>.assign(rate <span class="op">=</span> <span class="kw">lambda</span> _df: _df[<span class="st">'pass'</span>]<span class="op">/</span>(_df.fail<span class="op">+</span>_df[<span class="st">'pass'</span>])).reset_index().drop([<span class="st">'fail'</span>, <span class="st">'pass'</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>tidydata <span class="op">=</span> _</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>tidydata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="64">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">result</th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>female</td>
+<td>0.824074</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A</td>
+<td>male</td>
+<td>0.619394</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>B</td>
+<td>female</td>
+<td>0.720000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>B</td>
+<td>male</td>
+<td>0.628571</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>C</td>
+<td>female</td>
+<td>0.340641</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>C</td>
+<td>male</td>
+<td>0.372308</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>D</td>
+<td>female</td>
+<td>0.349333</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>D</td>
+<td>male</td>
+<td>0.330935</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>E</td>
+<td>female</td>
+<td>0.239186</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>E</td>
+<td>male</td>
+<td>0.282723</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>F</td>
+<td>female</td>
+<td>0.697947</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>F</td>
+<td>male</td>
+<td>0.600536</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(tidydata)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>bar <span class="op">=</span> geom_col(aes(x <span class="op">=</span> <span class="st">'gender'</span>, y <span class="op">=</span> <span class="st">'rate'</span>, fill <span class="op">=</span> <span class="st">'gender'</span>))</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">+</span> bar <span class="op">+</span> scale_fill_manual([<span class="st">'red'</span>, <span class="st">'blue'</span>]) <span class="op">+</span> facet_wrap([<span class="st">'department'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-32-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="65">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>C와 E를 제외하고는 오히려 여성의 합격 비율이 더 높은 것을 알 수 있다.</p>
+</blockquote>
+<section id="d.-해석" class="level3">
+<h3 class="anchored" data-anchor-id="d.-해석"><strong>D. 해석</strong></h3>
+<hr>
+<p>- 시각화 1 : 남자의 합격률이 더 높다 -&gt; 성차별이 있어보인다(?)</p>
+<p>- 시각화 2 : 학과별로 살펴보니 오히려 A, B, F, D의 경우 여성의 합격률이 높다.</p>
+<p>- 교재에서 설명한 이유 : 여성이 합격률이 낮은 학과에만 많이 지원하였기 때문.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>df.pivot_table(index<span class="op">=</span><span class="st">'department'</span>, columns<span class="op">=</span><span class="st">'gender'</span>, values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="st">'sum'</span>)<span class="op">\</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>.stack().reset_index().rename({<span class="dv">0</span>:<span class="st">'count'</span>},axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">department</th>
+<th data-quarto-table-cell-role="th">gender</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>A</td>
+<td>female</td>
+<td>108</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>A</td>
+<td>male</td>
+<td>825</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>B</td>
+<td>female</td>
+<td>25</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>B</td>
+<td>male</td>
+<td>560</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>C</td>
+<td>female</td>
+<td>593</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>C</td>
+<td>male</td>
+<td>325</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>D</td>
+<td>female</td>
+<td>375</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>D</td>
+<td>male</td>
+<td>417</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>E</td>
+<td>female</td>
+<td>393</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>E</td>
+<td>male</td>
+<td>191</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>F</td>
+<td>female</td>
+<td>341</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>F</td>
+<td>male</td>
+<td>373</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>tidydata <span class="op">=</span> df.pivot_table(index<span class="op">=</span><span class="st">'department'</span>, columns<span class="op">=</span><span class="st">'gender'</span>, values<span class="op">=</span><span class="st">'count'</span>,aggfunc<span class="op">=</span><span class="st">'sum'</span>)<span class="op">\</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>.stack().reset_index().rename({<span class="dv">0</span>:<span class="st">'count'</span>},axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ggplot(tidydata) </span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>col <span class="op">=</span> geom_col(aes(x<span class="op">=</span><span class="st">'department'</span>,y<span class="op">=</span><span class="st">'count'</span>,fill<span class="op">=</span><span class="st">'gender'</span>),position<span class="op">=</span><span class="st">'dodge'</span>)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>fig<span class="op">+</span>col</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A8. 집단 간 비교_심슨의 역설_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>A, B학과가 신체적 역량을 많이 요구로 하거나 하는 학과일 경우 아무래도 기피하겠지…</p>
+<p>은닉변수에 의해 왜곡이 될 수 있다</p>
+</blockquote>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

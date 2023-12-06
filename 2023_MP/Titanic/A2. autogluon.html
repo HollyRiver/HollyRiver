@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="강신성">
+<meta name="dcterms.date" content="2023-10-17">
+
+<title>RiverFlow - Kaggle | Autogluon</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">RiverFlow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_MP.html" rel="" target="">
+ <span class="menu-text">2023 MP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_DV.html" rel="" target="">
+ <span class="menu-text">2023 DV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HollyRiver?tab=repositories" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://blog.naver.com/hc_ssk2800" rel="" target=""><i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Kaggle | Autogluon</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">python</div>
+    <div class="quarto-category">kaggle</div>
+    <div class="quarto-category">titanic</div>
+    <div class="quarto-category">autogluon</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>강신성 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-10-17</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p>자동 예측 프로그램인 Autogluon을 활용하여 titanic data를 적합해보자!</p>
+</blockquote>
+<section id="라이브러리-imports" class="level2">
+<h2 class="anchored" data-anchor-id="라이브러리-imports">1. 라이브러리 imports</h2>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-09-14T13:17:45.995229Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-09-14T13:17:45.994716Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-09-14T13:21:19.235677Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-09-14T13:21:19.234337Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-09-14T13:17:45.995197Z&quot;}">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#pip install autogluon</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">## tabular(테이블) 형식의 데이터를 다루는 모듈을 다운로드한다.</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> autogluon.tabular <span class="im">import</span> TabularDataset, TabularPredictor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm</code></pre>
+</div>
+</div>
+</section>
+<section id="분석" class="level2">
+<h2 class="anchored" data-anchor-id="분석">2. 분석</h2>
+<section id="a.-데이터-입력" class="level3">
+<h3 class="anchored" data-anchor-id="a.-데이터-입력"><strong>A. 데이터 입력</strong></h3>
+<hr>
+<blockquote class="blockquote">
+<p>문제를 받아오는 과정으로 비유할 수 있다.</p>
+</blockquote>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tr <span class="op">=</span> TabularDataset(<span class="st">'./data/train.csv'</span>)  <span class="co">## 학습할 데이터</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tst <span class="op">=</span> TabularDataset(<span class="st">'./data/test.csv'</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">## tr = TabularDataset('/kaggle/input/titanic/train.csv')  ## 학습할 데이터</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">## tst = TabularDataset('/kaggle/input/titanic/test.csv')</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">## tr = pd.read_csv('/kaggle/input/titanic/train.csv')</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">## tst</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="b.-predictor-생성" class="level2">
+<h2 class="anchored" data-anchor-id="b.-predictor-생성">### <strong>B. Predictor 생성</strong></h2>
+<blockquote class="blockquote">
+<p>문제를 풀 학생을 생성하는 과정으로 비유할 수 있다.</p>
+</blockquote>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(<span class="st">'Survived'</span>) <span class="co">## target variable이 들어있는 데이터프레임, 변수 철자는 임의로 틀리게 설정</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No path specified. Models will be saved in: "AutogluonModels\ag-20231017_130536"</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>predictr는 뭔데?</p>
+</blockquote>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(predictr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>autogluon.tabular.predictor.predictor.TabularPredictor</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>대충 autogluon에서의 class인듯.</p>
+</blockquote>
+<section id="c.-적합fit" class="level3">
+<h3 class="anchored" data-anchor-id="c.-적합fit"><strong>C. 적합(fit)</strong></h3>
+<hr>
+<blockquote class="blockquote">
+<p>학습 과정에 해당한다.</p>
+</blockquote>
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:true}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>predictr.fit(tr) <span class="co">## 학생(predictr)에게 문제(tr)를 주어 학습을 시킴(predictr.fit(tr))</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">##tr 그 자체로 학습할 수 있는 건 다 시킨다. sklearn의 모델과는 차이가 있음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Beginning AutoGluon training ...
+AutoGluon will save models to "AutogluonModels\ag-20231017_130536"
+AutoGluon Version:  0.8.2
+Python Version:     3.10.13
+Operating System:   Windows
+Platform Machine:   AMD64
+Platform Version:   10.0.19045
+Disk Space Avail:   57.71 GB / 255.01 GB (22.6%)
+Train Data Rows:    891
+Train Data Columns: 11
+Label Column: Survived
+Preprocessing data ...
+AutoGluon infers your prediction problem is: 'binary' (because only two unique label-values observed).
+    2 unique label values:  [0, 1]
+    If 'binary' is not the correct problem_type, please manually specify the problem_type parameter during predictor init (You may specify problem_type as one of: ['binary', 'multiclass', 'regression'])
+Selected class &lt;--&gt; label mapping:  class 1 = 1, class 0 = 0
+Using Feature Generators to preprocess the data ...
+Fitting AutoMLPipelineFeatureGenerator...
+    Available Memory:                    1930.98 MB
+    Train Data (Original)  Memory Usage: 0.31 MB (0.0% of available memory)
+    Inferring data type of each feature based on column values. Set feature_metadata_in to manually specify special dtypes of the features.
+    Stage 1 Generators:
+        Fitting AsTypeFeatureGenerator...
+            Note: Converting 1 features to boolean dtype as they only contain 2 unique values.
+    Stage 2 Generators:
+        Fitting FillNaFeatureGenerator...
+    Stage 3 Generators:
+        Fitting IdentityFeatureGenerator...
+        Fitting CategoryFeatureGenerator...
+            Fitting CategoryMemoryMinimizeFeatureGenerator...
+        Fitting TextSpecialFeatureGenerator...
+            Fitting BinnedFeatureGenerator...
+            Fitting DropDuplicatesFeatureGenerator...
+        Fitting TextNgramFeatureGenerator...
+            Fitting CountVectorizer for text features: ['Name']
+            CountVectorizer fit with vocabulary size = 8
+    Stage 4 Generators:
+        Fitting DropUniqueFeatureGenerator...
+    Stage 5 Generators:
+        Fitting DropDuplicatesFeatureGenerator...
+    Types of features in original data (raw dtype, special dtypes):
+        ('float', [])        : 2 | ['Age', 'Fare']
+        ('int', [])          : 4 | ['PassengerId', 'Pclass', 'SibSp', 'Parch']
+        ('object', [])       : 4 | ['Sex', 'Ticket', 'Cabin', 'Embarked']
+        ('object', ['text']) : 1 | ['Name']
+    Types of features in processed data (raw dtype, special dtypes):
+        ('category', [])                    : 3 | ['Ticket', 'Cabin', 'Embarked']
+        ('float', [])                       : 2 | ['Age', 'Fare']
+        ('int', [])                         : 4 | ['PassengerId', 'Pclass', 'SibSp', 'Parch']
+        ('int', ['binned', 'text_special']) : 9 | ['Name.char_count', 'Name.word_count', 'Name.capital_ratio', 'Name.lower_ratio', 'Name.special_ratio', ...]
+        ('int', ['bool'])                   : 1 | ['Sex']
+        ('int', ['text_ngram'])             : 9 | ['__nlp__.henry', '__nlp__.john', '__nlp__.master', '__nlp__.miss', '__nlp__.mr', ...]
+    0.3s = Fit runtime
+    11 features in original data used to generate 28 features in processed data.
+    Train Data (Processed) Memory Usage: 0.07 MB (0.0% of available memory)
+Data preprocessing and feature engineering runtime = 0.36s ...
+AutoGluon will gauge predictive performance using evaluation metric: 'accuracy'
+    To change this, specify the eval_metric parameter of Predictor()
+Automatically generating train/validation split with holdout_frac=0.2, Train Rows: 712, Val Rows: 179
+User-specified model hyperparameters to be fit:
+{
+    'NN_TORCH': {},
+    'GBM': [{'extra_trees': True, 'ag_args': {'name_suffix': 'XT'}}, {}, 'GBMLarge'],
+    'CAT': {},
+    'XGB': {},
+    'FASTAI': {},
+    'RF': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'XT': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'KNN': [{'weights': 'uniform', 'ag_args': {'name_suffix': 'Unif'}}, {'weights': 'distance', 'ag_args': {'name_suffix': 'Dist'}}],
+}
+Fitting 13 L1 models ...
+Fitting model: KNeighborsUnif ...
+    0.6536   = Validation score   (accuracy)
+    1.83s    = Training   runtime
+    0.22s    = Validation runtime
+Fitting model: KNeighborsDist ...
+    0.6536   = Validation score   (accuracy)
+    0.01s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: LightGBMXT ...
+    0.8156   = Validation score   (accuracy)
+    1.08s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: LightGBM ...
+    0.8212   = Validation score   (accuracy)
+    0.43s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: RandomForestGini ...
+    0.8156   = Validation score   (accuracy)
+    0.64s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: RandomForestEntr ...
+    0.8156   = Validation score   (accuracy)
+    0.54s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: CatBoost ...
+    0.8268   = Validation score   (accuracy)
+    7.47s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: ExtraTreesGini ...
+    0.8156   = Validation score   (accuracy)
+    0.52s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: ExtraTreesEntr ...
+    0.8101   = Validation score   (accuracy)
+    0.52s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: NeuralNetFastAI ...
+No improvement since epoch 9: early stopping
+    0.8324   = Validation score   (accuracy)
+    3.28s    = Training   runtime
+    0.03s    = Validation runtime
+Fitting model: XGBoost ...
+    0.8101   = Validation score   (accuracy)
+    1.32s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: NeuralNetTorch ...
+    0.8212   = Validation score   (accuracy)
+    7.74s    = Training   runtime
+    0.03s    = Validation runtime
+Fitting model: LightGBMLarge ...
+    0.8324   = Validation score   (accuracy)
+    0.93s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: WeightedEnsemble_L2 ...
+    0.8324   = Validation score   (accuracy)
+    0.67s    = Training   runtime
+    0.0s     = Validation runtime
+AutoGluon training complete, total runtime = 28.23s ... Best model: "WeightedEnsemble_L2"
+TabularPredictor saved. To load, use: predictor = TabularPredictor.load("AutogluonModels\ag-20231017_130536")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>&lt;autogluon.tabular.predictor.predictor.TabularPredictor at 0x20df4525d50&gt;</code></pre>
+</div>
+</div>
+<p>학습 완료, 이에 따라 리더보드를 확인한다. (모의고사 채점)</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>predictr.leaderboard()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  model  score_val  pred_time_val  fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0         LightGBMLarge   0.832402       0.009000  0.928348                0.009000           0.928348            1       True         13
+1       NeuralNetFastAI   0.832402       0.028001  3.279027                0.028001           3.279027            1       True         10
+2   WeightedEnsemble_L2   0.832402       0.029001  3.949707                0.001000           0.670681            2       True         14
+3              CatBoost   0.826816       0.006002  7.468165                0.006002           7.468165            1       True          7
+4              LightGBM   0.821229       0.006004  0.432719                0.006004           0.432719            1       True          4
+5        NeuralNetTorch   0.821229       0.031999  7.740229                0.031999           7.740229            1       True         12
+6            LightGBMXT   0.815642       0.005002  1.084200                0.005002           1.084200            1       True          3
+7        ExtraTreesGini   0.815642       0.061763  0.516426                0.061763           0.516426            1       True          8
+8      RandomForestEntr   0.815642       0.064586  0.538568                0.064586           0.538568            1       True          6
+9      RandomForestGini   0.815642       0.064718  0.637898                0.064718           0.637898            1       True          5
+10              XGBoost   0.810056       0.013002  1.323482                0.013002           1.323482            1       True         11
+11       ExtraTreesEntr   0.810056       0.062742  0.519159                0.062742           0.519159            1       True          9
+12       KNeighborsDist   0.653631       0.005996  0.012003                0.005996           0.012003            1       True          2
+13       KNeighborsUnif   0.653631       0.215770  1.826697                0.215770           1.826697            1       True          1</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>LightGBMLarge</td>
+<td>0.832402</td>
+<td>0.009000</td>
+<td>0.928348</td>
+<td>0.009000</td>
+<td>0.928348</td>
+<td>1</td>
+<td>True</td>
+<td>13</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NeuralNetFastAI</td>
+<td>0.832402</td>
+<td>0.028001</td>
+<td>3.279027</td>
+<td>0.028001</td>
+<td>3.279027</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>WeightedEnsemble_L2</td>
+<td>0.832402</td>
+<td>0.029001</td>
+<td>3.949707</td>
+<td>0.001000</td>
+<td>0.670681</td>
+<td>2</td>
+<td>True</td>
+<td>14</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>CatBoost</td>
+<td>0.826816</td>
+<td>0.006002</td>
+<td>7.468165</td>
+<td>0.006002</td>
+<td>7.468165</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>LightGBM</td>
+<td>0.821229</td>
+<td>0.006004</td>
+<td>0.432719</td>
+<td>0.006004</td>
+<td>0.432719</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>NeuralNetTorch</td>
+<td>0.821229</td>
+<td>0.031999</td>
+<td>7.740229</td>
+<td>0.031999</td>
+<td>7.740229</td>
+<td>1</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>LightGBMXT</td>
+<td>0.815642</td>
+<td>0.005002</td>
+<td>1.084200</td>
+<td>0.005002</td>
+<td>1.084200</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>ExtraTreesGini</td>
+<td>0.815642</td>
+<td>0.061763</td>
+<td>0.516426</td>
+<td>0.061763</td>
+<td>0.516426</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>RandomForestEntr</td>
+<td>0.815642</td>
+<td>0.064586</td>
+<td>0.538568</td>
+<td>0.064586</td>
+<td>0.538568</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>RandomForestGini</td>
+<td>0.815642</td>
+<td>0.064718</td>
+<td>0.637898</td>
+<td>0.064718</td>
+<td>0.637898</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>XGBoost</td>
+<td>0.810056</td>
+<td>0.013002</td>
+<td>1.323482</td>
+<td>0.013002</td>
+<td>1.323482</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>ExtraTreesEntr</td>
+<td>0.810056</td>
+<td>0.062742</td>
+<td>0.519159</td>
+<td>0.062742</td>
+<td>0.519159</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>KNeighborsDist</td>
+<td>0.653631</td>
+<td>0.005996</td>
+<td>0.012003</td>
+<td>0.005996</td>
+<td>0.012003</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>KNeighborsUnif</td>
+<td>0.653631</td>
+<td>0.215770</td>
+<td>1.826697</td>
+<td>0.215770</td>
+<td>1.826697</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong>score_val이 의미하는 것</strong> * 실제로 predictr가 학습한 것은? &gt; predictor와 train set이 있고, train set에 데이터가 1000개 있다고 하면 해당 데이터를 전부 가용하지 않는다. &gt; * 800개를 사용한다고 하면 200개는 학습하지 않고 답을 맞춰 보는 식이다. &gt; &gt; * <strong>200개는 왜 남겨두지?</strong> &gt; &gt; 문제에서 답을 찾는 규칙이 맞는지, 다른 데이터들에 대해서도 일반화시킬 수 있는 지 테스트 해보면 좋을 것 같다. 따라서 나머지 데이터셋에서 분석을 해본다. &gt; &gt; <strong>실제 테스트에서 잘하기 위한 자체적 테스트셋에 해당</strong>, 200개의 나머지 테스트용 데이터셋을 validation set이라 일컫는다.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th>train</th>
+<th>val</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>학생1</td>
+<td>95%</td>
+<td>72%</td>
+</tr>
+<tr class="even">
+<td>학생2</td>
+<td>80%</td>
+<td>80%</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>train(연습문제)만 계속 푼 것 보다, val(모의고사)에서 가장 높은 점수를 받은 것이 유의미할 것.</p>
+<blockquote class="blockquote">
+<p>그러니까 score_val는 모의고사 점수라고 보면 된다.</p>
+</blockquote>
+<p>- 따라서 가장 높은 점수를 받은 <code>WeightedEnsemble_L2</code>모델을 사용해보자.<sup>[1]</sup></p>
+<section id="처음-실습할-땐-분명-이게-제일-높았었는데" class="level6">
+<h6 class="anchored" data-anchor-id="처음-실습할-땐-분명-이게-제일-높았었는데">[1] 처음 실습할 땐 분명 이게 제일 높았었는데…</h6>
+</section>
+</section>
+</section>
+<section id="d.-예측predict" class="level2">
+<h2 class="anchored" data-anchor-id="d.-예측predict">### <strong>D. 예측(predict)</strong></h2>
+<blockquote class="blockquote">
+<p>학습 이후에 문제를 푸는 과정으로 비유.</p>
+</blockquote>
+<p>기존에 했던 분석들</p>
+<ol type="1">
+<li>무조건 남자는 죽고, 여자는 사는 형식 0.7x / 0.76555</li>
+<li>RandomForestClassifier를 사용한 형식 0.8x / 0.77511</li>
+<li>RandomForestClassifier에서 하이퍼파라미터를 조정한 형식 0.8x / 0.76555 (트레인 셋에서의 분석에서는 더 높았는데 실제 결과는 오히려 더 낮았다.)</li>
+</ol>
+<p><strong>4. WeightedEnsemble_L2모델 사용</strong>(알아서 사용하긴 함)</p>
+<p>train set을 일단 풀어보자(predict)</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(tr) <span class="co">## 처음 보는 것으로 저장되는데 데이터프레임에서 쓸 수 있는 모든 기능들을 다 사용할 수 있다.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>autogluon.core.dataset.TabularDataset</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tr.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">PassengerId</th>
+<th data-quarto-table-cell-role="th">Survived</th>
+<th data-quarto-table-cell-role="th">Pclass</th>
+<th data-quarto-table-cell-role="th">Name</th>
+<th data-quarto-table-cell-role="th">Sex</th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">SibSp</th>
+<th data-quarto-table-cell-role="th">Parch</th>
+<th data-quarto-table-cell-role="th">Ticket</th>
+<th data-quarto-table-cell-role="th">Fare</th>
+<th data-quarto-table-cell-role="th">Cabin</th>
+<th data-quarto-table-cell-role="th">Embarked</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>Braund, Mr. Owen Harris</td>
+<td>male</td>
+<td>22.0</td>
+<td>1</td>
+<td>0</td>
+<td>A/5 21171</td>
+<td>7.2500</td>
+<td>NaN</td>
+<td>S</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>Cumings, Mrs. John Bradley (Florence Briggs Thayer)</td>
+<td>female</td>
+<td>38.0</td>
+<td>1</td>
+<td>0</td>
+<td>PC 17599</td>
+<td>71.2833</td>
+<td>C85</td>
+<td>C</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+<td>Heikkinen, Miss. Laina</td>
+<td>female</td>
+<td>26.0</td>
+<td>0</td>
+<td>0</td>
+<td>STON/O2. 3101282</td>
+<td>7.9250</td>
+<td>NaN</td>
+<td>S</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>Futrelle, Mrs. Jacques Heath (Lily May Peel)</td>
+<td>female</td>
+<td>35.0</td>
+<td>1</td>
+<td>0</td>
+<td>113803</td>
+<td>53.1000</td>
+<td>C123</td>
+<td>S</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5</td>
+<td>0</td>
+<td>3</td>
+<td>Allen, Mr. William Henry</td>
+<td>male</td>
+<td>35.0</td>
+<td>0</td>
+<td>0</td>
+<td>373450</td>
+<td>8.0500</td>
+<td>NaN</td>
+<td>S</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(tr.Survived <span class="op">==</span> predictr.predict(tr)).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>0.8810325476992144</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>정확도가 0.9349나 된다. 상당히 기대가 되는 부분</p>
+</blockquote>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>predictr.predict(tst)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>0      0
+1      0
+2      0
+3      0
+4      0
+      ..
+413    0
+414    1
+415    0
+416    0
+417    0
+Name: Survived, Length: 418, dtype: int64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution="{&quot;iopub.status.busy&quot;:&quot;2023-09-14T13:21:20.809082Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-09-14T13:21:20.809518Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-09-14T13:21:20.809313Z&quot;,&quot;shell.execute_reply.started&quot;:&quot;2023-09-14T13:21:20.809294Z&quot;}">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>tst.assign(Survived <span class="op">=</span> predictr.predict(tst)).loc[:, [<span class="st">'PassengerId'</span>, <span class="st">'Survived'</span>]]<span class="op">\</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>.to_csv(<span class="st">'autogluon_submission.csv'</span>, index <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>제출 결과 정확도는 0.78947로 지금껏 가장 높은 수치가 나왔다.</p>
+</blockquote>
+</section>
+<section id="개선" class="level2">
+<h2 class="anchored" data-anchor-id="개선">3. 개선</h2>
+<blockquote class="blockquote">
+<p>결과를 좀 더 개선할 수 있지 않을까?</p>
+</blockquote>
+<section id="a.-fsize로-feature-engeenering" class="level3">
+<h3 class="anchored" data-anchor-id="a.-fsize로-feature-engeenering"><strong>A. <code>Fsize</code>로 feature engeenering</strong></h3>
+<hr>
+<p><strong>1) 데이터</strong></p>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tr <span class="op">=</span> TabularDataset(<span class="st">'./data/train.csv'</span>)  <span class="co">## 학습할 데이터</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>tst <span class="op">=</span> TabularDataset(<span class="st">'./data/test.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loaded data from: ./data/train.csv | Columns = 12 / 12 | Rows = 891 -&gt; 891
+Loaded data from: ./data/test.csv | Columns = 11 / 11 | Rows = 418 -&gt; 418</code></pre>
+</div>
+</div>
+<p><code>-</code>피쳐 엔지니어링</p>
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>tr.assign(Fsize <span class="op">=</span> tr.SibSp <span class="op">+</span> tr.Parch)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tst.assign(Fsize <span class="op">=</span> tst.SibSp <span class="op">+</span> tst.Parch)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#tr.eval('Fsize = SibSp + Parch')</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#tst.eval('Fsize = SibSp + Parch')</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>tr.head()  <span class="co">## 원본 데이터를 손상시키지 않음, Fsize 열이 추가되지 않은 것을 알 수 있음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">PassengerId</th>
+<th data-quarto-table-cell-role="th">Survived</th>
+<th data-quarto-table-cell-role="th">Pclass</th>
+<th data-quarto-table-cell-role="th">Name</th>
+<th data-quarto-table-cell-role="th">Sex</th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">SibSp</th>
+<th data-quarto-table-cell-role="th">Parch</th>
+<th data-quarto-table-cell-role="th">Ticket</th>
+<th data-quarto-table-cell-role="th">Fare</th>
+<th data-quarto-table-cell-role="th">Cabin</th>
+<th data-quarto-table-cell-role="th">Embarked</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>Braund, Mr. Owen Harris</td>
+<td>male</td>
+<td>22.0</td>
+<td>1</td>
+<td>0</td>
+<td>A/5 21171</td>
+<td>7.2500</td>
+<td>NaN</td>
+<td>S</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>Cumings, Mrs. John Bradley (Florence Briggs Thayer)</td>
+<td>female</td>
+<td>38.0</td>
+<td>1</td>
+<td>0</td>
+<td>PC 17599</td>
+<td>71.2833</td>
+<td>C85</td>
+<td>C</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+<td>Heikkinen, Miss. Laina</td>
+<td>female</td>
+<td>26.0</td>
+<td>0</td>
+<td>0</td>
+<td>STON/O2. 3101282</td>
+<td>7.9250</td>
+<td>NaN</td>
+<td>S</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>Futrelle, Mrs. Jacques Heath (Lily May Peel)</td>
+<td>female</td>
+<td>35.0</td>
+<td>1</td>
+<td>0</td>
+<td>113803</td>
+<td>53.1000</td>
+<td>C123</td>
+<td>S</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5</td>
+<td>0</td>
+<td>3</td>
+<td>Allen, Mr. William Henry</td>
+<td>male</td>
+<td>35.0</td>
+<td>0</td>
+<td>0</td>
+<td>373450</td>
+<td>8.0500</td>
+<td>NaN</td>
+<td>S</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong>2) Predictor 생성</strong></p>
+<div class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(<span class="st">"Survived"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No path specified. Models will be saved in: "AutogluonModels\ag-20231017_132447"</code></pre>
+</div>
+</div>
+<p><strong>3) 적합(fit)</strong></p>
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:true}" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>predictr.fit(tr.assign(Fsize <span class="op">=</span> tr.SibSp <span class="op">+</span> tr.Parch))  <span class="co">## 새로운 데이터셋을 추가하여 학습</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Beginning AutoGluon training ...
+AutoGluon will save models to "AutogluonModels\ag-20231017_132447"
+AutoGluon Version:  0.8.2
+Python Version:     3.10.13
+Operating System:   Windows
+Platform Machine:   AMD64
+Platform Version:   10.0.19045
+Disk Space Avail:   57.59 GB / 255.01 GB (22.6%)
+Train Data Rows:    891
+Train Data Columns: 12
+Label Column: Survived
+Preprocessing data ...
+AutoGluon infers your prediction problem is: 'binary' (because only two unique label-values observed).
+    2 unique label values:  [0, 1]
+    If 'binary' is not the correct problem_type, please manually specify the problem_type parameter during predictor init (You may specify problem_type as one of: ['binary', 'multiclass', 'regression'])
+Selected class &lt;--&gt; label mapping:  class 1 = 1, class 0 = 0
+Using Feature Generators to preprocess the data ...
+Fitting AutoMLPipelineFeatureGenerator...
+    Available Memory:                    1923.41 MB
+    Train Data (Original)  Memory Usage: 0.32 MB (0.0% of available memory)
+    Inferring data type of each feature based on column values. Set feature_metadata_in to manually specify special dtypes of the features.
+    Stage 1 Generators:
+        Fitting AsTypeFeatureGenerator...
+            Note: Converting 1 features to boolean dtype as they only contain 2 unique values.
+    Stage 2 Generators:
+        Fitting FillNaFeatureGenerator...
+    Stage 3 Generators:
+        Fitting IdentityFeatureGenerator...
+        Fitting CategoryFeatureGenerator...
+            Fitting CategoryMemoryMinimizeFeatureGenerator...
+        Fitting TextSpecialFeatureGenerator...
+            Fitting BinnedFeatureGenerator...
+            Fitting DropDuplicatesFeatureGenerator...
+        Fitting TextNgramFeatureGenerator...
+            Fitting CountVectorizer for text features: ['Name']
+            CountVectorizer fit with vocabulary size = 8
+        Warning: Due to memory constraints, ngram feature count is being reduced. Allocate more memory to maximize model quality.
+        Reducing Vectorizer vocab size from 8 to 4 to avoid OOM error
+    Stage 4 Generators:
+        Fitting DropUniqueFeatureGenerator...
+    Stage 5 Generators:
+        Fitting DropDuplicatesFeatureGenerator...
+    Types of features in original data (raw dtype, special dtypes):
+        ('float', [])        : 2 | ['Age', 'Fare']
+        ('int', [])          : 5 | ['PassengerId', 'Pclass', 'SibSp', 'Parch', 'Fsize']
+        ('object', [])       : 4 | ['Sex', 'Ticket', 'Cabin', 'Embarked']
+        ('object', ['text']) : 1 | ['Name']
+    Types of features in processed data (raw dtype, special dtypes):
+        ('category', [])                    : 3 | ['Ticket', 'Cabin', 'Embarked']
+        ('float', [])                       : 2 | ['Age', 'Fare']
+        ('int', [])                         : 5 | ['PassengerId', 'Pclass', 'SibSp', 'Parch', 'Fsize']
+        ('int', ['binned', 'text_special']) : 9 | ['Name.char_count', 'Name.word_count', 'Name.capital_ratio', 'Name.lower_ratio', 'Name.special_ratio', ...]
+        ('int', ['bool'])                   : 1 | ['Sex']
+        ('int', ['text_ngram'])             : 5 | ['__nlp__.miss', '__nlp__.mr', '__nlp__.mrs', '__nlp__.william', '__nlp__._total_']
+    0.3s = Fit runtime
+    12 features in original data used to generate 25 features in processed data.
+    Train Data (Processed) Memory Usage: 0.07 MB (0.0% of available memory)
+Data preprocessing and feature engineering runtime = 0.37s ...
+AutoGluon will gauge predictive performance using evaluation metric: 'accuracy'
+    To change this, specify the eval_metric parameter of Predictor()
+Automatically generating train/validation split with holdout_frac=0.2, Train Rows: 712, Val Rows: 179
+User-specified model hyperparameters to be fit:
+{
+    'NN_TORCH': {},
+    'GBM': [{'extra_trees': True, 'ag_args': {'name_suffix': 'XT'}}, {}, 'GBMLarge'],
+    'CAT': {},
+    'XGB': {},
+    'FASTAI': {},
+    'RF': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'XT': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'KNN': [{'weights': 'uniform', 'ag_args': {'name_suffix': 'Unif'}}, {'weights': 'distance', 'ag_args': {'name_suffix': 'Dist'}}],
+}
+Fitting 13 L1 models ...
+Fitting model: KNeighborsUnif ...
+    0.648    = Validation score   (accuracy)
+    0.01s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: KNeighborsDist ...
+    0.6425   = Validation score   (accuracy)
+    0.01s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: LightGBMXT ...
+    0.8268   = Validation score   (accuracy)
+    0.43s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: LightGBM ...
+    0.8492   = Validation score   (accuracy)
+    0.55s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: RandomForestGini ...
+    0.7989   = Validation score   (accuracy)
+    0.51s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: RandomForestEntr ...
+    0.8156   = Validation score   (accuracy)
+    0.5s     = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: CatBoost ...
+    0.8268   = Validation score   (accuracy)
+    6.8s     = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: ExtraTreesGini ...
+    0.8045   = Validation score   (accuracy)
+    0.45s    = Training   runtime
+    0.07s    = Validation runtime
+Fitting model: ExtraTreesEntr ...
+    0.8045   = Validation score   (accuracy)
+    0.44s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: NeuralNetFastAI ...
+    0.8324   = Validation score   (accuracy)
+    2.76s    = Training   runtime
+    0.02s    = Validation runtime
+Fitting model: XGBoost ...
+    0.8212   = Validation score   (accuracy)
+    0.68s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: NeuralNetTorch ...
+    0.8324   = Validation score   (accuracy)
+    9.58s    = Training   runtime
+    0.03s    = Validation runtime
+Fitting model: LightGBMLarge ...
+    0.838    = Validation score   (accuracy)
+    0.83s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: WeightedEnsemble_L2 ...
+    0.8492   = Validation score   (accuracy)
+    0.65s    = Training   runtime
+    0.0s     = Validation runtime
+AutoGluon training complete, total runtime = 25.25s ... Best model: "WeightedEnsemble_L2"
+TabularPredictor saved. To load, use: predictor = TabularPredictor.load("AutogluonModels\ag-20231017_132447")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="43">
+<pre><code>&lt;autogluon.tabular.predictor.predictor.TabularPredictor at 0x20d8e852770&gt;</code></pre>
+</div>
+</div>
+<p><code>-</code>리더보드 확인</p>
+<div class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>predictr.leaderboard()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  model  score_val  pred_time_val  fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0              LightGBM   0.849162       0.010999  0.554687                0.010999           0.554687            1       True          4
+1   WeightedEnsemble_L2   0.849162       0.012000  1.201853                0.001000           0.647166            2       True         14
+2         LightGBMLarge   0.837989       0.005001  0.827996                0.005001           0.827996            1       True         13
+3       NeuralNetFastAI   0.832402       0.024005  2.761039                0.024005           2.761039            1       True         10
+4        NeuralNetTorch   0.832402       0.034000  9.577353                0.034000           9.577353            1       True         12
+5            LightGBMXT   0.826816       0.004981  0.426716                0.004981           0.426716            1       True          3
+6              CatBoost   0.826816       0.005996  6.798872                0.005996           6.798872            1       True          7
+7               XGBoost   0.821229       0.008010  0.680577                0.008010           0.680577            1       True         11
+8      RandomForestEntr   0.815642       0.063459  0.504724                0.063459           0.504724            1       True          6
+9        ExtraTreesEntr   0.804469       0.062692  0.443597                0.062692           0.443597            1       True          9
+10       ExtraTreesGini   0.804469       0.065061  0.448723                0.065061           0.448723            1       True          8
+11     RandomForestGini   0.798883       0.064575  0.510397                0.064575           0.510397            1       True          5
+12       KNeighborsUnif   0.648045       0.007998  0.008998                0.007998           0.008998            1       True          1
+13       KNeighborsDist   0.642458       0.007999  0.011001                0.007999           0.011001            1       True          2</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>LightGBM</td>
+<td>0.849162</td>
+<td>0.010999</td>
+<td>0.554687</td>
+<td>0.010999</td>
+<td>0.554687</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>WeightedEnsemble_L2</td>
+<td>0.849162</td>
+<td>0.012000</td>
+<td>1.201853</td>
+<td>0.001000</td>
+<td>0.647166</td>
+<td>2</td>
+<td>True</td>
+<td>14</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>LightGBMLarge</td>
+<td>0.837989</td>
+<td>0.005001</td>
+<td>0.827996</td>
+<td>0.005001</td>
+<td>0.827996</td>
+<td>1</td>
+<td>True</td>
+<td>13</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>NeuralNetFastAI</td>
+<td>0.832402</td>
+<td>0.024005</td>
+<td>2.761039</td>
+<td>0.024005</td>
+<td>2.761039</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>NeuralNetTorch</td>
+<td>0.832402</td>
+<td>0.034000</td>
+<td>9.577353</td>
+<td>0.034000</td>
+<td>9.577353</td>
+<td>1</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>LightGBMXT</td>
+<td>0.826816</td>
+<td>0.004981</td>
+<td>0.426716</td>
+<td>0.004981</td>
+<td>0.426716</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>CatBoost</td>
+<td>0.826816</td>
+<td>0.005996</td>
+<td>6.798872</td>
+<td>0.005996</td>
+<td>6.798872</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>XGBoost</td>
+<td>0.821229</td>
+<td>0.008010</td>
+<td>0.680577</td>
+<td>0.008010</td>
+<td>0.680577</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>RandomForestEntr</td>
+<td>0.815642</td>
+<td>0.063459</td>
+<td>0.504724</td>
+<td>0.063459</td>
+<td>0.504724</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>ExtraTreesEntr</td>
+<td>0.804469</td>
+<td>0.062692</td>
+<td>0.443597</td>
+<td>0.062692</td>
+<td>0.443597</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>ExtraTreesGini</td>
+<td>0.804469</td>
+<td>0.065061</td>
+<td>0.448723</td>
+<td>0.065061</td>
+<td>0.448723</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>RandomForestGini</td>
+<td>0.798883</td>
+<td>0.064575</td>
+<td>0.510397</td>
+<td>0.064575</td>
+<td>0.510397</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>KNeighborsUnif</td>
+<td>0.648045</td>
+<td>0.007998</td>
+<td>0.008998</td>
+<td>0.007998</td>
+<td>0.008998</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>KNeighborsDist</td>
+<td>0.642458</td>
+<td>0.007999</td>
+<td>0.011001</td>
+<td>0.007999</td>
+<td>0.011001</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong>4) 예측(predict)</strong></p>
+<div class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(tr.Survived <span class="op">==</span> predictr.predict(tr.assign(Fsize <span class="op">=</span> tr.SibSp <span class="op">+</span> tr.Parch))).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<pre><code>0.9696969696969697</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>tst.assign(Survived <span class="op">=</span> predictr.predict(tst.assign(Fsize <span class="op">=</span> tst.SibSp <span class="op">+</span> tst.Parch))).loc[:,[<span class="st">'PassengerId'</span>,<span class="st">'Survived'</span>]]<span class="op">\</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>.to_csv(<span class="st">"autogluon(Fsize)_submission.csv"</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>제출 결과 : 점수가 오히려 더 낮아졌음</p>
+</blockquote>
+<p><strong>더 개선해보자</strong></p>
+</section>
+</section>
+<section id="b.-fsize-drop" class="level2">
+<h2 class="anchored" data-anchor-id="b.-fsize-drop">### <strong>B. <code>Fsize</code> + <code>drop</code></strong></h2>
+<p><strong>1) data</strong></p>
+<p><code>-</code>피처 엔지니어링 (데이터 불러오는 건 위에서 했으니 일단 생략</p>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>_tr <span class="op">=</span> tr.assign(Fsize <span class="op">=</span> <span class="kw">lambda</span> _df : _df.SibSp <span class="op">+</span> _df.Parch).drop([<span class="st">'SibSp'</span>,<span class="st">'Parch'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>_tst <span class="op">=</span> tst.assign(Fsize <span class="op">=</span> tst.SibSp <span class="op">+</span> tst.Parch).drop([<span class="st">'SibSp'</span>,<span class="st">'Parch'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>_tr.head()</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co">## df.drop(columns = [])</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co">## df.drop([], axis = 1) columns라고 지정해주지 않으면 디폴트로 행을 삭제하기 때문에</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="48">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">PassengerId</th>
+<th data-quarto-table-cell-role="th">Survived</th>
+<th data-quarto-table-cell-role="th">Pclass</th>
+<th data-quarto-table-cell-role="th">Name</th>
+<th data-quarto-table-cell-role="th">Sex</th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">Ticket</th>
+<th data-quarto-table-cell-role="th">Fare</th>
+<th data-quarto-table-cell-role="th">Cabin</th>
+<th data-quarto-table-cell-role="th">Embarked</th>
+<th data-quarto-table-cell-role="th">Fsize</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>Braund, Mr. Owen Harris</td>
+<td>male</td>
+<td>22.0</td>
+<td>A/5 21171</td>
+<td>7.2500</td>
+<td>NaN</td>
+<td>S</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>Cumings, Mrs. John Bradley (Florence Briggs Thayer)</td>
+<td>female</td>
+<td>38.0</td>
+<td>PC 17599</td>
+<td>71.2833</td>
+<td>C85</td>
+<td>C</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+<td>Heikkinen, Miss. Laina</td>
+<td>female</td>
+<td>26.0</td>
+<td>STON/O2. 3101282</td>
+<td>7.9250</td>
+<td>NaN</td>
+<td>S</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>Futrelle, Mrs. Jacques Heath (Lily May Peel)</td>
+<td>female</td>
+<td>35.0</td>
+<td>113803</td>
+<td>53.1000</td>
+<td>C123</td>
+<td>S</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5</td>
+<td>0</td>
+<td>3</td>
+<td>Allen, Mr. William Henry</td>
+<td>male</td>
+<td>35.0</td>
+<td>373450</td>
+<td>8.0500</td>
+<td>NaN</td>
+<td>S</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong>2) Predictor 생성</strong></p>
+<div class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(<span class="st">'Survived'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No path specified. Models will be saved in: "AutogluonModels\ag-20231017_132627"</code></pre>
+</div>
+</div>
+<p><strong>3) 적합(fit)</strong></p>
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:true}" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>predictr.fit(_tr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Beginning AutoGluon training ...
+AutoGluon will save models to "AutogluonModels\ag-20231017_132627"
+AutoGluon Version:  0.8.2
+Python Version:     3.10.13
+Operating System:   Windows
+Platform Machine:   AMD64
+Platform Version:   10.0.19045
+Disk Space Avail:   57.56 GB / 255.01 GB (22.6%)
+Train Data Rows:    891
+Train Data Columns: 10
+Label Column: Survived
+Preprocessing data ...
+AutoGluon infers your prediction problem is: 'binary' (because only two unique label-values observed).
+    2 unique label values:  [0, 1]
+    If 'binary' is not the correct problem_type, please manually specify the problem_type parameter during predictor init (You may specify problem_type as one of: ['binary', 'multiclass', 'regression'])
+Selected class &lt;--&gt; label mapping:  class 1 = 1, class 0 = 0
+Using Feature Generators to preprocess the data ...
+Fitting AutoMLPipelineFeatureGenerator...
+    Available Memory:                    1899.15 MB
+    Train Data (Original)  Memory Usage: 0.31 MB (0.0% of available memory)
+    Inferring data type of each feature based on column values. Set feature_metadata_in to manually specify special dtypes of the features.
+    Stage 1 Generators:
+        Fitting AsTypeFeatureGenerator...
+            Note: Converting 1 features to boolean dtype as they only contain 2 unique values.
+    Stage 2 Generators:
+        Fitting FillNaFeatureGenerator...
+    Stage 3 Generators:
+        Fitting IdentityFeatureGenerator...
+        Fitting CategoryFeatureGenerator...
+            Fitting CategoryMemoryMinimizeFeatureGenerator...
+        Fitting TextSpecialFeatureGenerator...
+            Fitting BinnedFeatureGenerator...
+            Fitting DropDuplicatesFeatureGenerator...
+        Fitting TextNgramFeatureGenerator...
+            Fitting CountVectorizer for text features: ['Name']
+            CountVectorizer fit with vocabulary size = 8
+        Warning: Due to memory constraints, ngram feature count is being reduced. Allocate more memory to maximize model quality.
+        Reducing Vectorizer vocab size from 8 to 4 to avoid OOM error
+    Stage 4 Generators:
+        Fitting DropUniqueFeatureGenerator...
+    Stage 5 Generators:
+        Fitting DropDuplicatesFeatureGenerator...
+    Types of features in original data (raw dtype, special dtypes):
+        ('float', [])        : 2 | ['Age', 'Fare']
+        ('int', [])          : 3 | ['PassengerId', 'Pclass', 'Fsize']
+        ('object', [])       : 4 | ['Sex', 'Ticket', 'Cabin', 'Embarked']
+        ('object', ['text']) : 1 | ['Name']
+    Types of features in processed data (raw dtype, special dtypes):
+        ('category', [])                    : 3 | ['Ticket', 'Cabin', 'Embarked']
+        ('float', [])                       : 2 | ['Age', 'Fare']
+        ('int', [])                         : 3 | ['PassengerId', 'Pclass', 'Fsize']
+        ('int', ['binned', 'text_special']) : 9 | ['Name.char_count', 'Name.word_count', 'Name.capital_ratio', 'Name.lower_ratio', 'Name.special_ratio', ...]
+        ('int', ['bool'])                   : 1 | ['Sex']
+        ('int', ['text_ngram'])             : 5 | ['__nlp__.miss', '__nlp__.mr', '__nlp__.mrs', '__nlp__.william', '__nlp__._total_']
+    0.3s = Fit runtime
+    10 features in original data used to generate 23 features in processed data.
+    Train Data (Processed) Memory Usage: 0.06 MB (0.0% of available memory)
+Data preprocessing and feature engineering runtime = 0.36s ...
+AutoGluon will gauge predictive performance using evaluation metric: 'accuracy'
+    To change this, specify the eval_metric parameter of Predictor()
+Automatically generating train/validation split with holdout_frac=0.2, Train Rows: 712, Val Rows: 179
+User-specified model hyperparameters to be fit:
+{
+    'NN_TORCH': {},
+    'GBM': [{'extra_trees': True, 'ag_args': {'name_suffix': 'XT'}}, {}, 'GBMLarge'],
+    'CAT': {},
+    'XGB': {},
+    'FASTAI': {},
+    'RF': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'XT': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'KNN': [{'weights': 'uniform', 'ag_args': {'name_suffix': 'Unif'}}, {'weights': 'distance', 'ag_args': {'name_suffix': 'Dist'}}],
+}
+Fitting 13 L1 models ...
+Fitting model: KNeighborsUnif ...
+    0.6536   = Validation score   (accuracy)
+    0.01s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: KNeighborsDist ...
+    0.648    = Validation score   (accuracy)
+    0.02s    = Training   runtime
+    0.03s    = Validation runtime
+Fitting model: LightGBMXT ...
+    0.8212   = Validation score   (accuracy)
+    0.47s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: LightGBM ...
+    0.838    = Validation score   (accuracy)
+    0.64s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: RandomForestGini ...
+    0.8045   = Validation score   (accuracy)
+    0.54s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: RandomForestEntr ...
+    0.8101   = Validation score   (accuracy)
+    0.53s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: CatBoost ...
+    0.8324   = Validation score   (accuracy)
+    7.6s     = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: ExtraTreesGini ...
+    0.7989   = Validation score   (accuracy)
+    0.53s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: ExtraTreesEntr ...
+    0.8045   = Validation score   (accuracy)
+    0.52s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: NeuralNetFastAI ...
+No improvement since epoch 9: early stopping
+    0.8268   = Validation score   (accuracy)
+    1.95s    = Training   runtime
+    0.02s    = Validation runtime
+Fitting model: XGBoost ...
+    0.8268   = Validation score   (accuracy)
+    0.45s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: NeuralNetTorch ...
+    0.8436   = Validation score   (accuracy)
+    10.87s   = Training   runtime
+    0.03s    = Validation runtime
+Fitting model: LightGBMLarge ...
+    0.8324   = Validation score   (accuracy)
+    0.82s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: WeightedEnsemble_L2 ...
+    0.8492   = Validation score   (accuracy)
+    0.65s    = Training   runtime
+    0.0s     = Validation runtime
+AutoGluon training complete, total runtime = 26.66s ... Best model: "WeightedEnsemble_L2"
+TabularPredictor saved. To load, use: predictor = TabularPredictor.load("AutogluonModels\ag-20231017_132627")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<pre><code>&lt;autogluon.tabular.predictor.predictor.TabularPredictor at 0x20d858cd060&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>predictr.leaderboard()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  model  score_val  pred_time_val   fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0   WeightedEnsemble_L2   0.849162       0.043977  12.163954                0.000984           0.653803            2       True         14
+1        NeuralNetTorch   0.843575       0.032010  10.867509                0.032010          10.867509            1       True         12
+2              LightGBM   0.837989       0.010982   0.642641                0.010982           0.642641            1       True          4
+3         LightGBMLarge   0.832402       0.006009   0.821788                0.006009           0.821788            1       True         13
+4              CatBoost   0.832402       0.006051   7.597862                0.006051           7.597862            1       True          7
+5               XGBoost   0.826816       0.013022   0.450137                0.013022           0.450137            1       True         11
+6       NeuralNetFastAI   0.826816       0.017003   1.949074                0.017003           1.949074            1       True         10
+7            LightGBMXT   0.821229       0.006997   0.471555                0.006997           0.471555            1       True          3
+8      RandomForestEntr   0.810056       0.063482   0.526611                0.063482           0.526611            1       True          6
+9      RandomForestGini   0.804469       0.061717   0.544051                0.061717           0.544051            1       True          5
+10       ExtraTreesEntr   0.804469       0.064033   0.519959                0.064033           0.519959            1       True          9
+11       ExtraTreesGini   0.798883       0.064803   0.533057                0.064803           0.533057            1       True          8
+12       KNeighborsUnif   0.653631       0.006997   0.011003                0.006997           0.011003            1       True          1
+13       KNeighborsDist   0.648045       0.031997   0.016009                0.031997           0.016009            1       True          2</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="51">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>WeightedEnsemble_L2</td>
+<td>0.849162</td>
+<td>0.043977</td>
+<td>12.163954</td>
+<td>0.000984</td>
+<td>0.653803</td>
+<td>2</td>
+<td>True</td>
+<td>14</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NeuralNetTorch</td>
+<td>0.843575</td>
+<td>0.032010</td>
+<td>10.867509</td>
+<td>0.032010</td>
+<td>10.867509</td>
+<td>1</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>LightGBM</td>
+<td>0.837989</td>
+<td>0.010982</td>
+<td>0.642641</td>
+<td>0.010982</td>
+<td>0.642641</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>LightGBMLarge</td>
+<td>0.832402</td>
+<td>0.006009</td>
+<td>0.821788</td>
+<td>0.006009</td>
+<td>0.821788</td>
+<td>1</td>
+<td>True</td>
+<td>13</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>CatBoost</td>
+<td>0.832402</td>
+<td>0.006051</td>
+<td>7.597862</td>
+<td>0.006051</td>
+<td>7.597862</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>XGBoost</td>
+<td>0.826816</td>
+<td>0.013022</td>
+<td>0.450137</td>
+<td>0.013022</td>
+<td>0.450137</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>NeuralNetFastAI</td>
+<td>0.826816</td>
+<td>0.017003</td>
+<td>1.949074</td>
+<td>0.017003</td>
+<td>1.949074</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>LightGBMXT</td>
+<td>0.821229</td>
+<td>0.006997</td>
+<td>0.471555</td>
+<td>0.006997</td>
+<td>0.471555</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>RandomForestEntr</td>
+<td>0.810056</td>
+<td>0.063482</td>
+<td>0.526611</td>
+<td>0.063482</td>
+<td>0.526611</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>RandomForestGini</td>
+<td>0.804469</td>
+<td>0.061717</td>
+<td>0.544051</td>
+<td>0.061717</td>
+<td>0.544051</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>ExtraTreesEntr</td>
+<td>0.804469</td>
+<td>0.064033</td>
+<td>0.519959</td>
+<td>0.064033</td>
+<td>0.519959</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>ExtraTreesGini</td>
+<td>0.798883</td>
+<td>0.064803</td>
+<td>0.533057</td>
+<td>0.064803</td>
+<td>0.533057</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>KNeighborsUnif</td>
+<td>0.653631</td>
+<td>0.006997</td>
+<td>0.011003</td>
+<td>0.006997</td>
+<td>0.011003</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>KNeighborsDist</td>
+<td>0.648045</td>
+<td>0.031997</td>
+<td>0.016009</td>
+<td>0.031997</td>
+<td>0.016009</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong>4) 예측(predict)</strong></p>
+<div class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(_tr.Survived <span class="op">==</span> predictr.predict(_tr)).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<pre><code>0.9472502805836139</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>predictr.predict(_tr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<pre><code>0      0
+1      1
+2      1
+3      1
+4      0
+      ..
+886    0
+887    1
+888    0
+889    1
+890    0
+Name: Survived, Length: 891, dtype: int64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>_tst.assign(Survived <span class="op">=</span> predictr.predict(_tst)).loc[:, [<span class="st">'PassengerId'</span>, <span class="st">'Survived'</span>]]<span class="op">\</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>.to_csv(<span class="st">'autogluon(Fsize,Drop)_submission.csv'</span>, index <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>지금껏 가장 높은 결과가 나왔다!</p>
+</blockquote>
+<ul>
+<li>다중 공선성 문제를 개선한 결과라고 볼 수 있지… 음음.</li>
+</ul>
+<p><strong>아니, 모자라. 더 개선해!!!</strong></p>
+</section>
+<section id="c.-best_quality" class="level2">
+<h2 class="anchored" data-anchor-id="c.-best_quality">### <strong>C. <code>best_quality</code></strong></h2>
+<p><strong>1) data</strong></p>
+<div class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>tr <span class="op">=</span> TabularDataset(<span class="st">"./data/train.csv"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>tst <span class="op">=</span> TabularDataset(<span class="st">"./data/test.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loaded data from: ./data/train.csv | Columns = 12 / 12 | Rows = 891 -&gt; 891
+Loaded data from: ./data/test.csv | Columns = 11 / 11 | Rows = 418 -&gt; 418</code></pre>
+</div>
+</div>
+<p><strong>2) predictor 생성</strong></p>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(<span class="st">"Survived"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No path specified. Models will be saved in: "AutogluonModels\ag-20231017_132948"</code></pre>
+</div>
+</div>
+<p><strong>3) 적합(fit)</strong></p>
+<blockquote class="blockquote">
+<p>어떤 자원이 들어가든, 전부 지원해줄 테니 가장 좋은 퀄리티로 산출해!!</p>
+</blockquote>
+<div class="cell" data-jupyter="{&quot;outputs_hidden&quot;:true}" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>predictr.fit(tr, presets <span class="op">=</span> <span class="st">'best_quality'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Presets specified: ['best_quality']
+Stack configuration (auto_stack=True): num_stack_levels=0, num_bag_folds=8, num_bag_sets=1
+Beginning AutoGluon training ...
+AutoGluon will save models to "AutogluonModels\ag-20231017_132948"
+AutoGluon Version:  0.8.2
+Python Version:     3.10.13
+Operating System:   Windows
+Platform Machine:   AMD64
+Platform Version:   10.0.19045
+Disk Space Avail:   57.53 GB / 255.01 GB (22.6%)
+Train Data Rows:    891
+Train Data Columns: 11
+Label Column: Survived
+Preprocessing data ...
+AutoGluon infers your prediction problem is: 'binary' (because only two unique label-values observed).
+    2 unique label values:  [0, 1]
+    If 'binary' is not the correct problem_type, please manually specify the problem_type parameter during predictor init (You may specify problem_type as one of: ['binary', 'multiclass', 'regression'])
+Selected class &lt;--&gt; label mapping:  class 1 = 1, class 0 = 0
+Using Feature Generators to preprocess the data ...
+Fitting AutoMLPipelineFeatureGenerator...
+    Available Memory:                    1996.57 MB
+    Train Data (Original)  Memory Usage: 0.31 MB (0.0% of available memory)
+    Inferring data type of each feature based on column values. Set feature_metadata_in to manually specify special dtypes of the features.
+    Stage 1 Generators:
+        Fitting AsTypeFeatureGenerator...
+            Note: Converting 1 features to boolean dtype as they only contain 2 unique values.
+    Stage 2 Generators:
+        Fitting FillNaFeatureGenerator...
+    Stage 3 Generators:
+        Fitting IdentityFeatureGenerator...
+        Fitting CategoryFeatureGenerator...
+            Fitting CategoryMemoryMinimizeFeatureGenerator...
+        Fitting TextSpecialFeatureGenerator...
+            Fitting BinnedFeatureGenerator...
+            Fitting DropDuplicatesFeatureGenerator...
+        Fitting TextNgramFeatureGenerator...
+            Fitting CountVectorizer for text features: ['Name']
+            CountVectorizer fit with vocabulary size = 8
+        Warning: Due to memory constraints, ngram feature count is being reduced. Allocate more memory to maximize model quality.
+        Reducing Vectorizer vocab size from 8 to 4 to avoid OOM error
+    Stage 4 Generators:
+        Fitting DropUniqueFeatureGenerator...
+    Stage 5 Generators:
+        Fitting DropDuplicatesFeatureGenerator...
+    Types of features in original data (raw dtype, special dtypes):
+        ('float', [])        : 2 | ['Age', 'Fare']
+        ('int', [])          : 4 | ['PassengerId', 'Pclass', 'SibSp', 'Parch']
+        ('object', [])       : 4 | ['Sex', 'Ticket', 'Cabin', 'Embarked']
+        ('object', ['text']) : 1 | ['Name']
+    Types of features in processed data (raw dtype, special dtypes):
+        ('category', [])                    : 3 | ['Ticket', 'Cabin', 'Embarked']
+        ('float', [])                       : 2 | ['Age', 'Fare']
+        ('int', [])                         : 4 | ['PassengerId', 'Pclass', 'SibSp', 'Parch']
+        ('int', ['binned', 'text_special']) : 9 | ['Name.char_count', 'Name.word_count', 'Name.capital_ratio', 'Name.lower_ratio', 'Name.special_ratio', ...]
+        ('int', ['bool'])                   : 1 | ['Sex']
+        ('int', ['text_ngram'])             : 5 | ['__nlp__.miss', '__nlp__.mr', '__nlp__.mrs', '__nlp__.william', '__nlp__._total_']
+    0.4s = Fit runtime
+    11 features in original data used to generate 24 features in processed data.
+    Train Data (Processed) Memory Usage: 0.07 MB (0.0% of available memory)
+Data preprocessing and feature engineering runtime = 0.39s ...
+AutoGluon will gauge predictive performance using evaluation metric: 'accuracy'
+    To change this, specify the eval_metric parameter of Predictor()
+User-specified model hyperparameters to be fit:
+{
+    'NN_TORCH': {},
+    'GBM': [{'extra_trees': True, 'ag_args': {'name_suffix': 'XT'}}, {}, 'GBMLarge'],
+    'CAT': {},
+    'XGB': {},
+    'FASTAI': {},
+    'RF': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'XT': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'KNN': [{'weights': 'uniform', 'ag_args': {'name_suffix': 'Unif'}}, {'weights': 'distance', 'ag_args': {'name_suffix': 'Dist'}}],
+}
+Fitting 13 L1 models ...
+Fitting model: KNeighborsUnif_BAG_L1 ...
+    0.6296   = Validation score   (accuracy)
+    0.01s    = Training   runtime
+    0.02s    = Validation runtime
+Fitting model: KNeighborsDist_BAG_L1 ...
+    0.6352   = Validation score   (accuracy)
+    0.01s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: LightGBMXT_BAG_L1 ...
+Will use sequential fold fitting strategy because import of ray failed. Reason: ray is required to train folds in parallel for TabularPredictor or HPO for MultiModalPredictor. A quick tip is to install via `pip install ray==2.6.3`
+    Fitting 8 child models (S1F1 - S1F8) | Fitting with SequentialLocalFoldFittingStrategy
+    0.835    = Validation score   (accuracy)
+    3.82s    = Training   runtime
+    0.05s    = Validation runtime
+Fitting model: LightGBM_BAG_L1 ...
+    Fitting 8 child models (S1F1 - S1F8) | Fitting with SequentialLocalFoldFittingStrategy
+    0.8373   = Validation score   (accuracy)
+    5.36s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: RandomForestGini_BAG_L1 ...
+    0.8339   = Validation score   (accuracy)
+    0.55s    = Training   runtime
+    0.1s     = Validation runtime
+Fitting model: RandomForestEntr_BAG_L1 ...
+    0.8305   = Validation score   (accuracy)
+    0.54s    = Training   runtime
+    0.1s     = Validation runtime
+Fitting model: CatBoost_BAG_L1 ...
+    Fitting 8 child models (S1F1 - S1F8) | Fitting with SequentialLocalFoldFittingStrategy
+    0.8552   = Validation score   (accuracy)
+    72.17s   = Training   runtime
+    0.04s    = Validation runtime
+Fitting model: ExtraTreesGini_BAG_L1 ...
+    0.8238   = Validation score   (accuracy)
+    0.51s    = Training   runtime
+    0.11s    = Validation runtime
+Fitting model: ExtraTreesEntr_BAG_L1 ...
+    0.8316   = Validation score   (accuracy)
+    0.49s    = Training   runtime
+    0.1s     = Validation runtime
+Fitting model: NeuralNetFastAI_BAG_L1 ...
+    Fitting 8 child models (S1F1 - S1F8) | Fitting with SequentialLocalFoldFittingStrategy
+No improvement since epoch 7: early stopping
+No improvement since epoch 6: early stopping
+No improvement since epoch 7: early stopping
+    0.853    = Validation score   (accuracy)
+    20.42s   = Training   runtime
+    0.13s    = Validation runtime
+Fitting model: XGBoost_BAG_L1 ...
+    Fitting 8 child models (S1F1 - S1F8) | Fitting with SequentialLocalFoldFittingStrategy
+    0.8373   = Validation score   (accuracy)
+    3.6s     = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: NeuralNetTorch_BAG_L1 ...
+    Fitting 8 child models (S1F1 - S1F8) | Fitting with SequentialLocalFoldFittingStrategy
+    0.8462   = Validation score   (accuracy)
+    68.5s    = Training   runtime
+    0.19s    = Validation runtime
+Fitting model: LightGBMLarge_BAG_L1 ...
+    Fitting 8 child models (S1F1 - S1F8) | Fitting with SequentialLocalFoldFittingStrategy
+    0.8429   = Validation score   (accuracy)
+    8.68s    = Training   runtime
+    0.06s    = Validation runtime
+Fitting model: WeightedEnsemble_L2 ...
+    0.8552   = Validation score   (accuracy)
+    0.84s    = Training   runtime
+    0.0s     = Validation runtime
+AutoGluon training complete, total runtime = 188.35s ... Best model: "WeightedEnsemble_L2"
+TabularPredictor saved. To load, use: predictor = TabularPredictor.load("AutogluonModels\ag-20231017_132948")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<pre><code>&lt;autogluon.tabular.predictor.predictor.TabularPredictor at 0x20d90435000&gt;</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>대신 시간이 상당히 오래 걸린다…</p>
+</blockquote>
+<p>- 리더보드 확인</p>
+<div class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>predictr.leaderboard()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      model  score_val  pred_time_val   fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0           CatBoost_BAG_L1   0.855219       0.036927  72.167391                0.036927          72.167391            1       True          7
+1       WeightedEnsemble_L2   0.855219       0.038929  73.009209                0.002002           0.841818            2       True         14
+2    NeuralNetFastAI_BAG_L1   0.852974       0.130997  20.415231                0.130997          20.415231            1       True         10
+3     NeuralNetTorch_BAG_L1   0.846240       0.194014  68.497755                0.194014          68.497755            1       True         12
+4      LightGBMLarge_BAG_L1   0.842873       0.056998   8.680638                0.056998           8.680638            1       True         13
+5            XGBoost_BAG_L1   0.837262       0.055978   3.598592                0.055978           3.598592            1       True         11
+6           LightGBM_BAG_L1   0.837262       0.061885   5.357185                0.061885           5.357185            1       True          4
+7         LightGBMXT_BAG_L1   0.835017       0.049997   3.816595                0.049997           3.816595            1       True          3
+8   RandomForestGini_BAG_L1   0.833895       0.096996   0.553528                0.096996           0.553528            1       True          5
+9     ExtraTreesEntr_BAG_L1   0.831650       0.095051   0.494969                0.095051           0.494969            1       True          9
+10  RandomForestEntr_BAG_L1   0.830527       0.101071   0.535026                0.101071           0.535026            1       True          6
+11    ExtraTreesGini_BAG_L1   0.823793       0.111044   0.513969                0.111044           0.513969            1       True          8
+12    KNeighborsDist_BAG_L1   0.635241       0.004996   0.006006                0.004996           0.006006            1       True          2
+13    KNeighborsUnif_BAG_L1   0.629630       0.015998   0.005992                0.015998           0.005992            1       True          1</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>CatBoost_BAG_L1</td>
+<td>0.855219</td>
+<td>0.036927</td>
+<td>72.167391</td>
+<td>0.036927</td>
+<td>72.167391</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>WeightedEnsemble_L2</td>
+<td>0.855219</td>
+<td>0.038929</td>
+<td>73.009209</td>
+<td>0.002002</td>
+<td>0.841818</td>
+<td>2</td>
+<td>True</td>
+<td>14</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>NeuralNetFastAI_BAG_L1</td>
+<td>0.852974</td>
+<td>0.130997</td>
+<td>20.415231</td>
+<td>0.130997</td>
+<td>20.415231</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>NeuralNetTorch_BAG_L1</td>
+<td>0.846240</td>
+<td>0.194014</td>
+<td>68.497755</td>
+<td>0.194014</td>
+<td>68.497755</td>
+<td>1</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>LightGBMLarge_BAG_L1</td>
+<td>0.842873</td>
+<td>0.056998</td>
+<td>8.680638</td>
+<td>0.056998</td>
+<td>8.680638</td>
+<td>1</td>
+<td>True</td>
+<td>13</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>XGBoost_BAG_L1</td>
+<td>0.837262</td>
+<td>0.055978</td>
+<td>3.598592</td>
+<td>0.055978</td>
+<td>3.598592</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>LightGBM_BAG_L1</td>
+<td>0.837262</td>
+<td>0.061885</td>
+<td>5.357185</td>
+<td>0.061885</td>
+<td>5.357185</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>LightGBMXT_BAG_L1</td>
+<td>0.835017</td>
+<td>0.049997</td>
+<td>3.816595</td>
+<td>0.049997</td>
+<td>3.816595</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>RandomForestGini_BAG_L1</td>
+<td>0.833895</td>
+<td>0.096996</td>
+<td>0.553528</td>
+<td>0.096996</td>
+<td>0.553528</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>ExtraTreesEntr_BAG_L1</td>
+<td>0.831650</td>
+<td>0.095051</td>
+<td>0.494969</td>
+<td>0.095051</td>
+<td>0.494969</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>RandomForestEntr_BAG_L1</td>
+<td>0.830527</td>
+<td>0.101071</td>
+<td>0.535026</td>
+<td>0.101071</td>
+<td>0.535026</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>ExtraTreesGini_BAG_L1</td>
+<td>0.823793</td>
+<td>0.111044</td>
+<td>0.513969</td>
+<td>0.111044</td>
+<td>0.513969</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>KNeighborsDist_BAG_L1</td>
+<td>0.635241</td>
+<td>0.004996</td>
+<td>0.006006</td>
+<td>0.004996</td>
+<td>0.006006</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>KNeighborsUnif_BAG_L1</td>
+<td>0.629630</td>
+<td>0.015998</td>
+<td>0.005992</td>
+<td>0.015998</td>
+<td>0.005992</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong>4) 예측(predict)</strong></p>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>(tr.Survived <span class="op">==</span> predictr.predict(tr)).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="60">
+<pre><code>0.9158249158249159</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>tst[[<span class="st">'PassengerId'</span>]].assign(Survived <span class="op">=</span> predictr.predict(tst))<span class="op">\</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>.to_csv(<span class="st">"autogluon(best_quality)_submission.csv"</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>하지만 결과는 확실하다. 무려 0.813…</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

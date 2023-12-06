@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="강신성">
+<meta name="dcterms.date" content="2023-10-29">
+
+<title>RiverFlow - 선형모형의 적</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">RiverFlow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_MP.html" rel="" target="">
+ <span class="menu-text">2023 MP</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../2023_DV.html" rel="" target="">
+ <span class="menu-text">2023 DV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HollyRiver?tab=repositories" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://blog.naver.com/hc_ssk2800" rel="" target=""><i class="bi bi-book" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">선형모형의 적</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">linear_model</div>
+    <div class="quarto-category">preprocessing</div>
+    <div class="quarto-category">impute</div>
+    <div class="quarto-category">tree</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>강신성 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2023-10-29</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p>우리의 주적은 북한인데, 선형모형의 적은?</p>
+</blockquote>
+<section id="해당-자료는-전북대학교-통계학과-최규빈-교수님의-강의-내용을-토대로-재구성되었음을-밝힙니다." class="level6">
+<h6 class="anchored" data-anchor-id="해당-자료는-전북대학교-통계학과-최규빈-교수님의-강의-내용을-토대로-재구성되었음을-밝힙니다.">해당 자료는 전북대학교 통계학과 최규빈 교수님의 강의 내용을 토대로 재구성되었음을 밝힙니다.</h6>
+</section>
+<section id="라이브러리-imports" class="level2">
+<h2 class="anchored" data-anchor-id="라이브러리-imports">1. 라이브러리 imports</h2>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.linear_model</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.preprocessing</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.impute</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.tree</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="선형모형의-적" class="level2">
+<h2 class="anchored" data-anchor-id="선형모형의-적">2. 선형모형의 적</h2>
+<section id="a.-결측치의-존재" class="level3">
+<h3 class="anchored" data-anchor-id="a.-결측치의-존재"><strong>A. 결측치의 존재</strong></h3>
+<hr>
+<p><span style="color:red">문제</span> : 데이터에서 누락된 값이 있는 경우, 선형모델이 돌아가지 않는다.</p>
+<p>- 해결방안</p>
+<p>1 : 결측치를 제거</p>
+<blockquote class="blockquote">
+<ul>
+<li><p>결측치가 포함된 열을 제거</p></li>
+<li><p>결측치가 포함된 행을 제거</p></li>
+<li><p>둘을 혼합</p></li>
+</ul>
+</blockquote>
+<ol start="2" type="1">
+<li>결측치를 impute</li>
+</ol>
+<blockquote class="blockquote">
+<ul>
+<li><p>train에서는 fit_transform, test에서는 transform</p></li>
+<li><p>train, test에서 모두 fit_transform</p></li>
+<li><p>임의의 값으로 일괄 impute</p></li>
+<li><p>interploation(이미지 또는 시계열, 근처의 값과 자연스럽게 연동되도록 만들 수 있음)</p></li>
+<li><p>~train, test data를 합쳐서 fit_transform~ <span style="color:red">이건 정보누수로 실격사유가 된다</span></p></li>
+</ul>
+</blockquote>
+<p>- 사용 가능한 코드나 모듈</p>
+<blockquote class="blockquote">
+<p><code>isna()</code>, <code>dropna()</code>, <code>sklearn.inpute</code>의 하위 모듈 등.</p>
+</blockquote>
+</section>
+</section>
+<section id="b.-다중공선성의-존재" class="level2">
+<h2 class="anchored" data-anchor-id="b.-다중공선성의-존재">### <strong>B. 다중공선성의 존재</strong></h2>
+<p><span style="color:red">문제</span> : 데이터의 설명변수가 역할이 겹칠 경우, 선형모형의 일반화 성능이 좋지 않음.</p>
+<p>- 해결방안</p>
+<blockquote class="blockquote">
+<ul>
+<li><p>변수 제거 &gt; 설명변수 간 corr을 파악하고, 느낌적으로 제거 &gt; &gt; PCA 등 차원축소기법을 이용한 제거</p></li>
+<li><p>공선성을 가지는 변수를 모아 새로운 변수로 변환 &gt; 느낌적으로 변환 &gt; &gt; PCA를 이용한 변환</p></li>
+<li><p>Lasso, Ridge 등 패널티 계열을 사용 &gt; Lasso : l1 / liblinear &gt; &gt; Ridge : l2 &gt; &gt; Elastic net</p></li>
+</ul>
+</blockquote>
+<p>- corr파악 후 느낌적으로 제거의 예시</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"https://raw.githubusercontent.com/guebin/MP2023/main/posts/employment_multicollinearity.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.loc[:,<span class="st">'gpa'</span>:<span class="st">'toeic2'</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">gpa</th>
+<th data-quarto-table-cell-role="th">toeic</th>
+<th data-quarto-table-cell-role="th">toeic0</th>
+<th data-quarto-table-cell-role="th">toeic1</th>
+<th data-quarto-table-cell-role="th">toeic2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.051535</td>
+<td>135</td>
+<td>129.566309</td>
+<td>133.078481</td>
+<td>121.678398</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.355496</td>
+<td>935</td>
+<td>940.563187</td>
+<td>935.723570</td>
+<td>939.190519</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2.228435</td>
+<td>485</td>
+<td>493.671390</td>
+<td>493.909118</td>
+<td>475.500970</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.179701</td>
+<td>65</td>
+<td>62.272565</td>
+<td>55.957257</td>
+<td>68.521468</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>3.962356</td>
+<td>445</td>
+<td>449.280637</td>
+<td>438.895582</td>
+<td>433.598274</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">495</td>
+<td>4.288465</td>
+<td>280</td>
+<td>276.680902</td>
+<td>274.502675</td>
+<td>277.868536</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">496</td>
+<td>2.601212</td>
+<td>310</td>
+<td>296.940263</td>
+<td>301.545000</td>
+<td>306.725610</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">497</td>
+<td>0.042323</td>
+<td>225</td>
+<td>206.793217</td>
+<td>228.335345</td>
+<td>222.115146</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">498</td>
+<td>1.041416</td>
+<td>320</td>
+<td>327.461442</td>
+<td>323.019899</td>
+<td>329.589337</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">499</td>
+<td>3.626883</td>
+<td>375</td>
+<td>370.966595</td>
+<td>364.668477</td>
+<td>371.853566</td>
+</tr>
+</tbody>
+</table>
+
+<p>500 rows × 5 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>X.corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">gpa</th>
+<th data-quarto-table-cell-role="th">toeic</th>
+<th data-quarto-table-cell-role="th">toeic0</th>
+<th data-quarto-table-cell-role="th">toeic1</th>
+<th data-quarto-table-cell-role="th">toeic2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">gpa</td>
+<td>1.000000</td>
+<td>-0.033983</td>
+<td>-0.035722</td>
+<td>-0.037734</td>
+<td>-0.034828</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">toeic</td>
+<td>-0.033983</td>
+<td>1.000000</td>
+<td>0.999435</td>
+<td>0.999322</td>
+<td>0.999341</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">toeic0</td>
+<td>-0.035722</td>
+<td>0.999435</td>
+<td>1.000000</td>
+<td>0.998746</td>
+<td>0.998828</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">toeic1</td>
+<td>-0.037734</td>
+<td>0.999322</td>
+<td>0.998746</td>
+<td>1.000000</td>
+<td>0.998721</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">toeic2</td>
+<td>-0.034828</td>
+<td>0.999341</td>
+<td>0.998828</td>
+<td>0.998721</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>pandas의 데이터프레임에는 자체적으로 해당 메소드를 지원한다.</p>
+</blockquote>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sns.heatmap(X.corr(), annot <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>&lt;Axes: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="A7. 선형모형의 적_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>- toeic과 유사 toeic끼리 상관성이 짙네?</p>
+<blockquote class="blockquote">
+<p>제거한다.</p>
+</blockquote>
+<section id="c.-관련이-없는-변수의-존재" class="level3">
+<h3 class="anchored" data-anchor-id="c.-관련이-없는-변수의-존재"><strong>C. 관련이 없는 변수의 존재</strong></h3>
+<hr>
+<p><span style="color:red">문제</span> : 데이터에서 불필요한 설명변수가 너무 많을 경우, 선형모형의 일반화 성능이 좋지 않음.(overfitting)</p>
+<blockquote class="blockquote">
+<p>예시 : 고객이름, ID, Index 관련 변수(물론 얘네들도 어딘가 쓸모가 있을 수도 있다…)</p>
+</blockquote>
+<p>- 해결방법</p>
+<blockquote class="blockquote">
+<ul>
+<li><p>변수 제거 &gt; (y, X)의 corr을 파악하고 느낌적으로 제거(위에서와 달리 관련이 있어야 한다.) &gt; &gt; PCA를 이용한 제거 &gt; &gt; Lasso를 이용한 제거(여기서 Ridge는 사용하면 안된다. 해당 모듈은 유사한 것들의 계수 합이 일정하도록 조정하는 거니까…)</p></li>
+<li><p>더 많은 데이터를 확보 &gt; 하지만 이는 어렵다… 어떤 변수가 관련이 없다는 것을 파악하기 위해선 데이터를 많이 가져와야 하는데, Feature의 수가 많아질 때 필요한 데이터의 수는 지수적으로 증가한다.</p></li>
+</ul>
+</blockquote>
+<p>- 느낌적으로 제거 예시</p>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_train.corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">toeic</th>
+<th data-quarto-table-cell-role="th">gpa</th>
+<th data-quarto-table-cell-role="th">employment</th>
+<th data-quarto-table-cell-role="th">balance0</th>
+<th data-quarto-table-cell-role="th">balance1</th>
+<th data-quarto-table-cell-role="th">balance2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">toeic</td>
+<td>1.000000</td>
+<td>-0.033983</td>
+<td>0.260183</td>
+<td>0.002682</td>
+<td>0.110530</td>
+<td>0.024664</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">gpa</td>
+<td>-0.033983</td>
+<td>1.000000</td>
+<td>0.711022</td>
+<td>-0.025197</td>
+<td>0.005272</td>
+<td>0.020794</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">employment</td>
+<td>0.260183</td>
+<td>0.711022</td>
+<td>1.000000</td>
+<td>-0.007348</td>
+<td>0.036706</td>
+<td>0.032284</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">balance0</td>
+<td>0.002682</td>
+<td>-0.025197</td>
+<td>-0.007348</td>
+<td>1.000000</td>
+<td>-0.059167</td>
+<td>0.040035</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">balance1</td>
+<td>0.110530</td>
+<td>0.005272</td>
+<td>0.036706</td>
+<td>-0.059167</td>
+<td>1.000000</td>
+<td>-0.030215</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">balance2</td>
+<td>0.024664</td>
+<td>0.020794</td>
+<td>0.032284</td>
+<td>0.040035</td>
+<td>-0.030215</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sns.heatmap(df_train.corr(), annot <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>&lt;Axes: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="A7. 선형모형의 적_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><code>balance0 ~ 2</code>는 <code>employment</code>와의 상관성이 낮다. 따라서 제거하고 분석한다.</p>
+</blockquote>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.loc[:, :<span class="st">'gpa'</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.employment</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.LogisticRegression()</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">## 4</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>0.882</code></pre>
+</div>
+</div>
+<p>- Lasso를 이용한 제거 예시</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">1</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/MP2023/main/posts/employment.csv'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>df_balance <span class="op">=</span> pd.DataFrame((np.random.randn(<span class="dv">500</span>,<span class="dv">3</span>)).reshape(<span class="dv">500</span>,<span class="dv">3</span>)<span class="op">*</span><span class="dv">1</span>,columns <span class="op">=</span> [<span class="st">'balance'</span><span class="op">+</span><span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>)])</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.concat([df,df_balance],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">toeic</th>
+<th data-quarto-table-cell-role="th">gpa</th>
+<th data-quarto-table-cell-role="th">employment</th>
+<th data-quarto-table-cell-role="th">balance0</th>
+<th data-quarto-table-cell-role="th">balance1</th>
+<th data-quarto-table-cell-role="th">balance2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>135</td>
+<td>0.051535</td>
+<td>0</td>
+<td>1.624345</td>
+<td>-0.611756</td>
+<td>-0.528172</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>935</td>
+<td>0.355496</td>
+<td>0</td>
+<td>-1.072969</td>
+<td>0.865408</td>
+<td>-2.301539</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>485</td>
+<td>2.228435</td>
+<td>0</td>
+<td>1.744812</td>
+<td>-0.761207</td>
+<td>0.319039</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>65</td>
+<td>1.179701</td>
+<td>0</td>
+<td>-0.249370</td>
+<td>1.462108</td>
+<td>-2.060141</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>445</td>
+<td>3.962356</td>
+<td>1</td>
+<td>-0.322417</td>
+<td>-0.384054</td>
+<td>1.133769</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">495</td>
+<td>280</td>
+<td>4.288465</td>
+<td>1</td>
+<td>-1.326490</td>
+<td>0.308204</td>
+<td>1.115489</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">496</td>
+<td>310</td>
+<td>2.601212</td>
+<td>1</td>
+<td>1.008196</td>
+<td>-3.016032</td>
+<td>-1.619646</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">497</td>
+<td>225</td>
+<td>0.042323</td>
+<td>0</td>
+<td>2.005141</td>
+<td>-0.187626</td>
+<td>-0.148941</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">498</td>
+<td>320</td>
+<td>1.041416</td>
+<td>0</td>
+<td>1.165335</td>
+<td>0.196645</td>
+<td>-0.632590</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">499</td>
+<td>375</td>
+<td>3.626883</td>
+<td>1</td>
+<td>-0.209847</td>
+<td>1.897161</td>
+<td>-1.381391</td>
+</tr>
+</tbody>
+</table>
+
+<p>500 rows × 6 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>로지스틱 선형 회귀가 필요한 경우이다. 로지스틱 또한 penalty 계열 분석을 할 수 있다.</p>
+</blockquote>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.drop(<span class="st">'employment'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.employment</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.LogisticRegressionCV(Cs <span class="op">=</span> [<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>], penalty <span class="op">=</span> <span class="st">'l1'</span>, solver <span class="op">=</span> <span class="st">'liblinear'</span>, random_state <span class="op">=</span> <span class="dv">42</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">## 4</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>0.876</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>predictr.coef_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>array([[0.00260249, 1.41401358, 0.        , 0.        , 0.        ]])</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(predictr.coef_.reshape(<span class="op">-</span><span class="dv">1</span>))  <span class="co">## 시리즈의 경우 1차원의 입력값만 받는다.</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>s.index <span class="op">=</span> X.columns</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>toeic       0.002602
+gpa         1.414014
+balance0    0.000000
+balance1    0.000000
+balance2    0.000000
+dtype: float64</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>위에서 쓸모없는 것을 제거하고 분석한 것에 비해 점수가 낮지만, 쓸모없는 것이라는 사실을 모르는 상황에서는 Lasso가 상당히 괜찮다.</p>
+</blockquote>
+</section>
+</section>
+<section id="d.-이상치의-존재" class="level2">
+<h2 class="anchored" data-anchor-id="d.-이상치의-존재">### <strong>D. 이상치의 존재</strong></h2>
+<p><span style="color:red">문제</span> : 이상치가 존재할 경우 전체 모형이 무너질 수 있음</p>
+<p>- 해결방법</p>
+<blockquote class="blockquote">
+<ul>
+<li><p>이상치를 제거하고 분석 &gt; 느낌적으로 제거 &gt; &gt; 이상치를 감지하는 지표를 사용하여 제거 &gt; &gt; 이상치를 자동으로 감지하는 모형 사용하여 이상치 제거 후 분석</p></li>
+<li><p>로버스트 선형회귀 계열을 이용 &gt; 이상치에 큰 영향을 받지 않음 &gt; <code>sklearn.linear_model.HuberRegressor</code> 등</p></li>
+<li><p>이상치를 완화시키는 변환을 사용 &gt; <code>sklearn.preprocessing.PowerTransformer</code>를 이용</p></li>
+</ul>
+</blockquote>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">43052</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/DV2022/master/posts/temp.csv'</span>).iloc[:<span class="dv">100</span>,<span class="dv">3</span>].to_numpy()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>temp.sort()</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>ice_sales <span class="op">=</span> <span class="dv">10</span> <span class="op">+</span> temp <span class="op">*</span> <span class="fl">0.5</span> <span class="op">+</span> np.random.randn(<span class="dv">100</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>ice_sales[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.DataFrame({<span class="st">'temp'</span>:temp,<span class="st">'ice_sales'</span>:ice_sales})[:<span class="dv">10</span>]</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">ice_sales</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-4.1</td>
+<td>50.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-3.7</td>
+<td>9.234175</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-3.0</td>
+<td>9.642778</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-1.3</td>
+<td>9.657894</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.5</td>
+<td>9.987787</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>-0.3</td>
+<td>10.205951</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0.3</td>
+<td>8.486925</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.4</td>
+<td>8.817227</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.4</td>
+<td>8.273155</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>0.7</td>
+<td>8.863784</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>transformr <span class="op">=</span> sklearn.preprocessing.PowerTransformer()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>transformr.fit_transform(df_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<pre><code>array([[-1.40729341,  2.42405408],
+       [-1.31406689, -0.18677452],
+       [-1.13030154,  0.16485704],
+       [-0.50278108,  0.17667635],
+       [-0.02130412,  0.41617603],
+       [ 0.13926015,  0.55696978],
+       [ 0.81742569, -1.03040835],
+       [ 0.96759638, -0.62032873],
+       [ 0.96759638, -1.33362249],
+       [ 1.48386844, -0.56759919]])</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>x, y <span class="op">=</span> transformr.fit_transform(df_train).T</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>x, y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="42">
+<pre><code>(array([-1.40729341, -1.31406689, -1.13030154, -0.50278108, -0.02130412,
+         0.13926015,  0.81742569,  0.96759638,  0.96759638,  1.48386844]),
+ array([ 2.42405408, -0.18677452,  0.16485704,  0.17667635,  0.41617603,
+         0.55696978, -1.03040835, -0.62032873, -1.33362249, -0.56759919]))</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.temp, df_train.ice_sales, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'before'</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'after'</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'temp'</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'ice sales'</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A7. 선형모형의 적_files/figure-html/cell-16-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>강제로 정규화한 모습이다.</p>
+</blockquote>
+<div class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>transformr.inverse_transform(transformr.fit_transform(df_train))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\hollyriver\anaconda3\envs\py\lib\site-packages\sklearn\base.py:464: UserWarning: X does not have valid feature names, but PowerTransformer was fitted with feature names
+  warnings.warn(</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<pre><code>array([[-4.1       , 50.        ],
+       [-3.7       ,  9.2341745 ],
+       [-3.        ,  9.64277825],
+       [-1.3       ,  9.65789368],
+       [-0.5       ,  9.98778744],
+       [-0.3       , 10.20595116],
+       [ 0.3       ,  8.48692458],
+       [ 0.4       ,  8.81722682],
+       [ 0.4       ,  8.27315516],
+       [ 0.7       ,  8.8637837 ]])</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="56">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">ice_sales</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-4.1</td>
+<td>50.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-3.7</td>
+<td>9.234175</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-3.0</td>
+<td>9.642778</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-1.3</td>
+<td>9.657894</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.5</td>
+<td>9.987787</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>-0.3</td>
+<td>10.205951</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0.3</td>
+<td>8.486925</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.4</td>
+<td>8.817227</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.4</td>
+<td>8.273155</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>0.7</td>
+<td>8.863784</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>어차피 역변환 할 수 있는 것은 상관이 없다.</p>
+</blockquote>
+<section id="e.-교호작용의-존재" class="level3">
+<h3 class="anchored" data-anchor-id="e.-교호작용의-존재"><strong>E. 교호작용의 존재</strong></h3>
+<hr>
+<p><span style="color:red">문제</span> : 설명 변수 간의 상호작용이 있는 경우, 이를 고려하지 않으면 데이터를 잘 설명하지 못할 수 있음.</p>
+<p>- 해결방안</p>
+<blockquote class="blockquote">
+<ul>
+<li>교호작용이 있는 열들의 값끼리 곱함</li>
+<li>교호작용에 영향을 받지 않는 모델 사용 &gt; <code>sklearn.tree.DecisionTreeRegressor()</code></li>
+</ul>
+</blockquote>
+<p>- 교호작용이 있는 열을 곱함</p>
+<div class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/MP2023/main/posts/weightloss.csv'</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="61">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Supplement</th>
+<th data-quarto-table-cell-role="th">Exercise</th>
+<th data-quarto-table-cell-role="th">Weight_Loss</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>False</td>
+<td>False</td>
+<td>-0.877103</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>True</td>
+<td>False</td>
+<td>1.604542</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>True</td>
+<td>True</td>
+<td>13.824148</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>True</td>
+<td>True</td>
+<td>13.004505</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>True</td>
+<td>True</td>
+<td>13.701128</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9995</td>
+<td>True</td>
+<td>False</td>
+<td>1.558841</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9996</td>
+<td>False</td>
+<td>False</td>
+<td>-0.217816</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9997</td>
+<td>False</td>
+<td>True</td>
+<td>4.072701</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9998</td>
+<td>True</td>
+<td>False</td>
+<td>-0.253796</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9999</td>
+<td>False</td>
+<td>False</td>
+<td>-1.399092</td>
+</tr>
+</tbody>
+</table>
+
+<p>10000 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df_train.pivot_table(index <span class="op">=</span> <span class="st">'Supplement'</span>, columns <span class="op">=</span> <span class="st">'Exercise'</span>, values <span class="op">=</span> <span class="st">'Weight_Loss'</span>, aggfunc <span class="op">=</span> <span class="st">'mean'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="63">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Exercise</th>
+<th data-quarto-table-cell-role="th">False</th>
+<th data-quarto-table-cell-role="th">True</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Supplement</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">False</td>
+<td>0.021673</td>
+<td>4.991314</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">True</td>
+<td>0.497573</td>
+<td>14.966363</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>둘 다 했을 때 가장 평균이 높고, 각각 하는 것만으로는 그렇게 큰 영향은 없는 것 같다.</p>
+</blockquote>
+<p><strong>교호작용을 고려하지 않은 분석</strong></p>
+<div class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_train.drop(<span class="st">'Weight_Loss'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.Weight_Loss</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.LinearRegression()</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co">## 4</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="62">
+<pre><code>0.8208414124769222</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>predictr.coef_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="64">
+<pre><code>array([5.21904037, 9.74766346])</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>보충제는 5kg, 운동은 10kg의 감량효과가 있다고 추정하고 있다.</p>
+</blockquote>
+<div class="cell" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>df_train.assign(Weight_Loss_hat <span class="op">=</span> predictr.predict(X)).drop(<span class="st">'Weight_Loss'</span>, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> <span class="st">'Supplement'</span>, columns <span class="op">=</span> <span class="st">'Exercise'</span>, values <span class="op">=</span> <span class="st">'Weight_Loss_hat'</span>, aggfunc <span class="op">=</span> <span class="st">'mean'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="67">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Exercise</th>
+<th data-quarto-table-cell-role="th">False</th>
+<th data-quarto-table-cell-role="th">True</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Supplement</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">False</td>
+<td>-2.373106</td>
+<td>7.374557</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">True</td>
+<td>2.845934</td>
+<td>12.593598</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>예측값과 실제 값의 차이가 크다.</p>
+</blockquote>
+<p><strong>교호작용을 고려한 분석</strong></p>
+<div class="cell" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df_train.assign(Interaction <span class="op">=</span> df_train.Supplement <span class="op">*</span> df_train.Exercise)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="68">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Supplement</th>
+<th data-quarto-table-cell-role="th">Exercise</th>
+<th data-quarto-table-cell-role="th">Weight_Loss</th>
+<th data-quarto-table-cell-role="th">Interaction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>False</td>
+<td>False</td>
+<td>-0.877103</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>True</td>
+<td>False</td>
+<td>1.604542</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>True</td>
+<td>True</td>
+<td>13.824148</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>True</td>
+<td>True</td>
+<td>13.004505</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>True</td>
+<td>True</td>
+<td>13.701128</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9995</td>
+<td>True</td>
+<td>False</td>
+<td>1.558841</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9996</td>
+<td>False</td>
+<td>False</td>
+<td>-0.217816</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9997</td>
+<td>False</td>
+<td>True</td>
+<td>4.072701</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9998</td>
+<td>True</td>
+<td>False</td>
+<td>-0.253796</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9999</td>
+<td>False</td>
+<td>False</td>
+<td>-1.399092</td>
+<td>False</td>
+</tr>
+</tbody>
+</table>
+
+<p>10000 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>_df <span class="op">=</span> df_train.assign(Interaction <span class="op">=</span> df_train.Supplement <span class="op">*</span> df_train.Exercise)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> _df.drop(<span class="st">'Weight_Loss'</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> _df.Weight_Loss</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.LinearRegression()</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co">## 4</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="70">
+<pre><code>0.9727754257714795</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>정확도가 개선되었다.</p>
+</blockquote>
+<div class="cell" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>df_train.assign(Weight_Loss_hat <span class="op">=</span> predictr.predict(X)).drop(<span class="st">'Weight_Loss'</span>, axis <span class="op">=</span> <span class="dv">1</span>)<span class="op">\</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>.pivot_table(index <span class="op">=</span> <span class="st">'Supplement'</span>, columns <span class="op">=</span> <span class="st">'Exercise'</span>, values <span class="op">=</span> <span class="st">'Weight_Loss_hat'</span>, aggfunc <span class="op">=</span> <span class="st">'mean'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="73">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Exercise</th>
+<th data-quarto-table-cell-role="th">False</th>
+<th data-quarto-table-cell-role="th">True</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Supplement</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">False</td>
+<td>0.021673</td>
+<td>4.991314</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">True</td>
+<td>0.497573</td>
+<td>14.966363</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>평균을 보면(오차를 제거함) 표본과 동일한 것을 볼 수 있다.</p>
+</blockquote>
+</section>
+</section>
+<section id="교호작용" class="level2">
+<h2 class="anchored" data-anchor-id="교호작용">3. 교호작용</h2>
+</section>
+<section id="a.-아이스크림-타입-별-판매량" class="level2">
+<h2 class="anchored" data-anchor-id="a.-아이스크림-타입-별-판매량">### <strong>A. 아이스크림 타입 별 판매량</strong></h2>
+<p>- 왠지 익숙한 데이터</p>
+<div class="cell" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">43052</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/DV2022/master/posts/temp.csv'</span>).iloc[:,<span class="dv">3</span>].to_numpy()[:<span class="dv">100</span>]</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>temp.sort()</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>choco <span class="op">=</span> <span class="dv">40</span> <span class="op">+</span> temp <span class="op">*</span> <span class="fl">2.0</span> <span class="op">+</span> np.random.randn(<span class="dv">100</span>)<span class="op">*</span><span class="dv">3</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>vanilla <span class="op">=</span> <span class="dv">60</span> <span class="op">+</span> temp <span class="op">*</span> <span class="fl">5.0</span> <span class="op">+</span> np.random.randn(<span class="dv">100</span>)<span class="op">*</span><span class="dv">3</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> pd.DataFrame({<span class="st">'temp'</span>:temp,<span class="st">'sales'</span>:choco}).assign(<span class="bu">type</span><span class="op">=</span><span class="st">'choco'</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({<span class="st">'temp'</span>:temp,<span class="st">'sales'</span>:vanilla}).assign(<span class="bu">type</span><span class="op">=</span><span class="st">'vanilla'</span>)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.concat([df1,df2])</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="75">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">sales</th>
+<th data-quarto-table-cell-role="th">type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-4.1</td>
+<td>32.950261</td>
+<td>choco</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-3.7</td>
+<td>35.852524</td>
+<td>choco</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-3.0</td>
+<td>37.428335</td>
+<td>choco</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-1.3</td>
+<td>38.323681</td>
+<td>choco</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.5</td>
+<td>39.713362</td>
+<td>choco</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>12.4</td>
+<td>119.708075</td>
+<td>vanilla</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>13.4</td>
+<td>129.300464</td>
+<td>vanilla</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>14.7</td>
+<td>136.596568</td>
+<td>vanilla</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>15.0</td>
+<td>136.213140</td>
+<td>vanilla</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>15.2</td>
+<td>135.595252</td>
+<td>vanilla</td>
+</tr>
+</tbody>
+</table>
+
+<p>200 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span>(df_train.<span class="bu">type</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="76">
+<pre><code>{'choco', 'vanilla'}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].temp, df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].sales, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'choco'</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].temp, df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].sales, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'vanilla'</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A7. 선형모형의 적_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>- 아이스크림의 종류에 따라 온도가 판매량에 미치는 정도가 다를 것으로 예상된다.</p>
+<blockquote class="blockquote">
+<p>아이스크림 종류와 온도간에 교호작용이 있다.</p>
+</blockquote>
+<p><strong>교호작용을 고려하지 않은 경우</strong></p>
+<div class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.get_dummies(df_train.drop(<span class="st">'sales'</span>, axis <span class="op">=</span> <span class="dv">1</span>))</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.sales</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.LinearRegression()</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="co">## 4</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="83">
+<pre><code>0.9249530603100549</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>이것만으로도 나름 높은 점수가 나오긴 했지만… 언제나 개선할 수 있는 건 개선해야 한다.</p>
+</blockquote>
+<div class="cell" data-execution_count="85">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>_df <span class="op">=</span> df_train.assign(sales_hat <span class="op">=</span> predictr.predict(X))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="87">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].temp, df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].sales, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'choco'</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].temp, df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].sales, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'vanilla'</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].temp, _df.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].sales_hat, <span class="st">'--'</span>, color <span class="op">=</span> <span class="st">'C0'</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].temp, _df.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].sales_hat, <span class="st">'--'</span>, color <span class="op">=</span> <span class="st">'C1'</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A7. 선형모형의 적_files/figure-html/cell-32-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>마음속의 언더라잉과 맞지 않는다 : 언더피팅된 상황이다.</p>
+</blockquote>
+<p><strong>교호작용을 고려</strong></p>
+<div class="cell" data-execution_count="101">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>van <span class="op">=</span> pd.get_dummies(df_train.<span class="bu">type</span>, drop_first <span class="op">=</span> <span class="va">True</span>)<span class="op">*</span><span class="dv">1</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>van</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="101">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">vanilla</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<p>200 rows × 1 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="104">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>_df <span class="op">=</span> df_train.assign(Interaction <span class="op">=</span> df_train.temp <span class="op">*</span> van.vanilla)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="104">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">sales</th>
+<th data-quarto-table-cell-role="th">type</th>
+<th data-quarto-table-cell-role="th">Interaction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-4.1</td>
+<td>32.950261</td>
+<td>choco</td>
+<td>-0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-3.7</td>
+<td>35.852524</td>
+<td>choco</td>
+<td>-0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-3.0</td>
+<td>37.428335</td>
+<td>choco</td>
+<td>-0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-1.3</td>
+<td>38.323681</td>
+<td>choco</td>
+<td>-0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.5</td>
+<td>39.713362</td>
+<td>choco</td>
+<td>-0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>12.4</td>
+<td>119.708075</td>
+<td>vanilla</td>
+<td>12.4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>13.4</td>
+<td>129.300464</td>
+<td>vanilla</td>
+<td>13.4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>14.7</td>
+<td>136.596568</td>
+<td>vanilla</td>
+<td>14.7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>15.0</td>
+<td>136.213140</td>
+<td>vanilla</td>
+<td>15.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>15.2</td>
+<td>135.595252</td>
+<td>vanilla</td>
+<td>15.2</td>
+</tr>
+</tbody>
+</table>
+
+<p>200 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="106">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.get_dummies(_df.drop(<span class="st">'sales'</span>, axis <span class="op">=</span> <span class="dv">1</span>), drop_first <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> _df.sales</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.linear_model.LinearRegression()</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="co">## 4</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="106">
+<pre><code>0.9865793819066231</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>점수가 훨씬 높게 나왔다.</p>
+</blockquote>
+<div class="cell" data-execution_count="107">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>__df <span class="op">=</span> _df.assign(sales_hat <span class="op">=</span> predictr.predict(X))</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>__df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="107">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">sales</th>
+<th data-quarto-table-cell-role="th">type</th>
+<th data-quarto-table-cell-role="th">Interaction</th>
+<th data-quarto-table-cell-role="th">sales_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-4.1</td>
+<td>32.950261</td>
+<td>choco</td>
+<td>-0.0</td>
+<td>31.403121</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-3.7</td>
+<td>35.852524</td>
+<td>choco</td>
+<td>-0.0</td>
+<td>32.209366</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-3.0</td>
+<td>37.428335</td>
+<td>choco</td>
+<td>-0.0</td>
+<td>33.620295</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-1.3</td>
+<td>38.323681</td>
+<td>choco</td>
+<td>-0.0</td>
+<td>37.046835</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.5</td>
+<td>39.713362</td>
+<td>choco</td>
+<td>-0.0</td>
+<td>38.659325</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>12.4</td>
+<td>119.708075</td>
+<td>vanilla</td>
+<td>12.4</td>
+<td>122.492017</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>13.4</td>
+<td>129.300464</td>
+<td>vanilla</td>
+<td>13.4</td>
+<td>127.521196</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>14.7</td>
+<td>136.596568</td>
+<td>vanilla</td>
+<td>14.7</td>
+<td>134.059129</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>15.0</td>
+<td>136.213140</td>
+<td>vanilla</td>
+<td>15.0</td>
+<td>135.567883</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>15.2</td>
+<td>135.595252</td>
+<td>vanilla</td>
+<td>15.2</td>
+<td>136.573719</td>
+</tr>
+</tbody>
+</table>
+
+<p>200 rows × 5 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="108">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].temp, df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].sales, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'choco'</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].temp, df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].sales, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'vanilla'</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].temp, __df.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].sales_hat, <span class="st">'--'</span>, color <span class="op">=</span> <span class="st">'C0'</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].temp, __df.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].sales_hat, <span class="st">'--'</span>, color <span class="op">=</span> <span class="st">'C1'</span>)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A7. 선형모형의 적_files/figure-html/cell-37-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="109">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>predictr.coef_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="109">
+<pre><code>array([ 2.01561216,  3.01356716, 20.46306209])</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>모델이 언더라잉을 잘 따라가는 것을 볼 수 있다.(애초에 계수가 세개가 됨…)</p>
+</blockquote>
+<section id="b.-교호작용-tree" class="level3">
+<h3 class="anchored" data-anchor-id="b.-교호작용-tree"><strong>B. 교호작용, tree</strong></h3>
+<hr>
+<p><code>sklearn.tree.DecisionTreeRegressor()</code>를 사용하면 교호작용을 손쉽게 적합할 수 있다.</p>
+<div class="cell" data-execution_count="117">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">43052</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/DV2022/master/posts/temp.csv'</span>).iloc[:,<span class="dv">3</span>].to_numpy()[:<span class="dv">100</span>]</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>temp.sort()</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>choco <span class="op">=</span> <span class="dv">40</span> <span class="op">+</span> temp <span class="op">*</span> <span class="fl">2.0</span> <span class="op">+</span> np.random.randn(<span class="dv">100</span>)<span class="op">*</span><span class="dv">3</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>vanilla <span class="op">=</span> <span class="dv">60</span> <span class="op">+</span> temp <span class="op">*</span> <span class="fl">5.0</span> <span class="op">+</span> np.random.randn(<span class="dv">100</span>)<span class="op">*</span><span class="dv">3</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> pd.DataFrame({<span class="st">'temp'</span>:temp,<span class="st">'sales'</span>:choco}).assign(<span class="bu">type</span><span class="op">=</span><span class="st">'choco'</span>)</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({<span class="st">'temp'</span>:temp,<span class="st">'sales'</span>:vanilla}).assign(<span class="bu">type</span><span class="op">=</span><span class="st">'vanilla'</span>)</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.concat([df1,df2])</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="117">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">sales</th>
+<th data-quarto-table-cell-role="th">type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-4.1</td>
+<td>32.950261</td>
+<td>choco</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-3.7</td>
+<td>35.852524</td>
+<td>choco</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-3.0</td>
+<td>37.428335</td>
+<td>choco</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-1.3</td>
+<td>38.323681</td>
+<td>choco</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.5</td>
+<td>39.713362</td>
+<td>choco</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>12.4</td>
+<td>119.708075</td>
+<td>vanilla</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>13.4</td>
+<td>129.300464</td>
+<td>vanilla</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>14.7</td>
+<td>136.596568</td>
+<td>vanilla</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>15.0</td>
+<td>136.213140</td>
+<td>vanilla</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>15.2</td>
+<td>135.595252</td>
+<td>vanilla</td>
+</tr>
+</tbody>
+</table>
+
+<p>200 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>아까와 동일한 자료를 tree로 분석해보자…</p>
+</blockquote>
+<div class="cell" data-execution_count="118">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">## 1</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.get_dummies(df_train.drop(<span class="st">'sales'</span>, axis <span class="op">=</span> <span class="dv">1</span>), drop_first <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_train.sales</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="co">## 2</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.tree.DecisionTreeRegressor()</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a><span class="co">## 3</span></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>predictr.fit(X, y)</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="co">## 4</span></span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>predictr.score(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="118">
+<pre><code>0.9963887702553287</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>높은 스코어가 나온다.(오버피팅된 것은 아닐까?)</p>
+</blockquote>
+<div class="cell" data-execution_count="119">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>_df <span class="op">=</span> df_train.assign(sales_hat <span class="op">=</span> predictr.predict(X))</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="119">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">sales</th>
+<th data-quarto-table-cell-role="th">type</th>
+<th data-quarto-table-cell-role="th">sales_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-4.1</td>
+<td>32.950261</td>
+<td>choco</td>
+<td>32.950261</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-3.7</td>
+<td>35.852524</td>
+<td>choco</td>
+<td>35.852524</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-3.0</td>
+<td>37.428335</td>
+<td>choco</td>
+<td>37.428335</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-1.3</td>
+<td>38.323681</td>
+<td>choco</td>
+<td>38.323681</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.5</td>
+<td>39.713362</td>
+<td>choco</td>
+<td>39.713362</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>12.4</td>
+<td>119.708075</td>
+<td>vanilla</td>
+<td>119.708075</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>13.4</td>
+<td>129.300464</td>
+<td>vanilla</td>
+<td>129.300464</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>14.7</td>
+<td>136.596568</td>
+<td>vanilla</td>
+<td>136.596568</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>15.0</td>
+<td>136.213140</td>
+<td>vanilla</td>
+<td>136.213140</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>15.2</td>
+<td>135.595252</td>
+<td>vanilla</td>
+<td>135.595252</td>
+</tr>
+</tbody>
+</table>
+
+<p>200 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="121">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].temp, df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].sales, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'choco'</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].temp, df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].sales, <span class="st">'o'</span>, label <span class="op">=</span> <span class="st">'vanilla'</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].temp, _df.loc[df_train.<span class="bu">type</span> <span class="op">==</span> <span class="st">'choco'</span>].sales_hat, <span class="st">'--'</span>, color <span class="op">=</span> <span class="st">'C0'</span>)</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].temp, _df.loc[df_train.<span class="bu">type</span> <span class="op">!=</span> <span class="st">'choco'</span>].sales_hat, <span class="st">'--'</span>, color <span class="op">=</span> <span class="st">'C1'</span>)</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="A7. 선형모형의 적_files/figure-html/cell-42-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>오차항까지 적합하고는 있으나… 처음 교호작용을 고려하지 않은 모델보다 성능은 좋은 것 같다. 따라서 이는 상당히 유용하다.</p>
+</blockquote>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
