@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-# GitHub HomePage
-
-* kaggle competitions : https://hollyriver.github.io/RiverFlow/
-
 > This repository made for uploading homepage, contents, or, something.
 >
 > 아무거나 막 올립니다. 홈페이지라던가, 작업했던 자료들이라던가, 아무튼 올립니다.
@@ -35,4 +30,5 @@
 <a href="https://hollyriver.github.io/RiverFlow/" target="_blank"><img src="https://img.shields.io/badge/GitHub_pages-5f5a63?style=for-the-badge&logo=github&logoColor=white"></a>  <a href="https://blog.naver.com/hc_ssk2800" target="_blank"><img src="https://img.shields.io/badge/NAVER_blog-1dde30?style=for-the-badge&logo=Naver&logoColor=white"></a>  <a href="https://blog.munpia.com/hc_dealer" target="_blank"><img src="https://img.shields.io/badge/Munpia_Library-4287f5?style=for-the-badge&logo=GitBook&logoColor=white"></a>
 
 ![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=HollyRiver&show_icons=true&theme=radical)
->>>>>>> 713b67aed4dac063376665fc8bf80a198a1b3e85
+
+
