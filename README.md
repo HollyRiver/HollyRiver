@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # GitHub HomePage
 
 * kaggle competitions : https://hollyriver.github.io/RiverFlow/
@@ -7,3 +8,27 @@
 > 아무거나 막 올립니다. 홈페이지라던가, 작업했던 자료들이라던가, 아무튼 올립니다.
 >
 > 홈페이지의 경우 위에 링크를 올려 둡니다.
+=======
+### **Status**
+
+**강신성(Shinsung Kang)**
+> 전북대학교에서 경제학 전공 및 통계학 부전공 중
+>
+> *Majoring in Economics and Minoring in Statistics at Jeonbuk-National-University*
+> 
+> 문피아에서 글을 쓰는 중
+>
+> *Write some novels in Munpia*
+>
+> ...
+>
+> *e.t.c.*
+
+*더 많은 정보를 확인하고 싶다면 아래의 뱃지를 통해 해당하는 링크로 접속하세요.*
+
+*If you want to see more information, please click badge below.*
+
+<a href="https://hollyriver.github.io/RiverFlow/" target="_blank"><img src="https://img.shields.io/badge/GitHub_pages-5f5a63?style=for-the-badge&logo=github&logoColor=white"></a>  <a href="https://blog.naver.com/hc_ssk2800" target="_blank"><img src="https://img.shields.io/badge/NAVER_blog-1dde30?style=for-the-badge&logo=Naver&logoColor=white"></a>  <a href="https://blog.munpia.com/hc_dealer" target="_blank"><img src="https://img.shields.io/badge/Munpia_Library-4287f5?style=for-the-badge&logo=GitBook&logoColor=white"></a>
+
+![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=HollyRiver&show_icons=true&theme=radical)
+>>>>>>> 713b67aed4dac063376665fc8bf80a198a1b3e85
