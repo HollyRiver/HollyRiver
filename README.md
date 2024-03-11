@@ -1,9 +1,13 @@
 ### **Status**
 
 **강신성(Shinsung Kang)**
-> 전북대학교에서 통계학 전공중
+> 전북대학교에서 통계학 전공 중
 >
 > *Majoring in Statistics at Jeonbuk-National-University*
+>
+> Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 중
+>
+> *Developing an indie game and creating art based on Unity and Aseprite.*
 > 
 > 문피아에서 글을 쓰는 중
 >
@@ -12,6 +16,13 @@
 > ...
 >
 > *e.t.c.*
+
+### Base Languages
+
+* R
+* Python
+* Julia
+* C# and LUA
 
 *더 많은 정보를 확인하고 싶다면 아래의 뱃지를 통해 해당하는 링크로 접속하세요.*
 
