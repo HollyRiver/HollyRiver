@@ -1,9 +1,9 @@
 ### **Status**
 
 **강신성(Shinsung Kang)**
-> 전북대학교에서 경제학 전공 및 통계학 부전공 중
+> 전북대학교에서 통계학 전공중
 >
-> *Majoring in Economics and Minoring in Statistics at Jeonbuk-National-University*
+> *Majoring in Statistics at Jeonbuk-National-University*
 > 
 > 문피아에서 글을 쓰는 중
 >
