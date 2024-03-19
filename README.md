@@ -19,8 +19,8 @@
 
 ### Using Languages
 
+* Python; Pytorch
 * R
-* Python
 * Julia
 * C#
 
