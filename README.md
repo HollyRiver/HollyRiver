@@ -19,10 +19,12 @@
 
 ### Using Languages
 
-* Python; Pytorch
+* Python
+> Pytorch
 * R
 * Julia
 * C#
+* SQL(ANSI, Oracle)
 
 ### Certification
 
