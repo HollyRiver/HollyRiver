@@ -27,7 +27,7 @@
 
 ### Certification
 
-* ...not yet
+* SQLD(Structured Query Language Developer)
 
 
 *더 많은 정보를 확인하고 싶다면 아래의 뱃지를 통해 해당하는 링크로 접속하세요.*
