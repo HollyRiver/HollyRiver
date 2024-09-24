@@ -17,13 +17,14 @@
 >
 > *e.t.c.*
 
-### Using Languages
+### Using Languages(Tools)
 
-* Python; Pytorch
+* Python
 * R
 * Julia
-* C#
+* C#(Unity)
 * SQL(ANSI, Oracle)
+* SAS
 
 ### Certification
 
