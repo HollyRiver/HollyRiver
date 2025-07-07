@@ -4,6 +4,8 @@
 
 전북대학교에서 통계학 전공 중 <br> <font color="red">Majoring in Statistics at Jeonbuk-National-University</font>
 
+<font color="red">teest</font>
+
 Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 <br> *Developing an indie game and creating art based on Unity and Aseprite.*
 
 
