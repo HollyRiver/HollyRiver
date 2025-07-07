@@ -1,7 +1,7 @@
 ### **Status**
 
 ![GitHub stats](https://github-readme-stats.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt) <a href="https://solved.ac/hcssk2800" target="_blank">
-<img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" width="800" height="800"/> </a>
+<img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" width="500" height="300"/> </a>
 
 **강신성(Shinsung Kang)**
 > 전북대학교에서 통계학 전공 중
