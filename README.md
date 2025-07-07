@@ -1,15 +1,9 @@
-### **Status**
+### **Status | 강신성 Shinsung Kang**
 
 <a target="_blank"> <img src="https://github-readme-stats.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt" alt="GitHub Stats" width=430> </a> <a href="https://solved.ac/hcssk2800" target="_blank"> <img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" alt="Solved.ac Profile" width=370> </a> 
 
-**강신성(Shinsung Kang)**
-> 전북대학교에서 통계학 전공 중
->
-> *Majoring in Statistics at Jeonbuk-National-University*
->
-> Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 중
->
-> *Developing an indie game and creating art based on Unity and Aseprite.*
+* 전북대학교에서 통계학 전공 중 *Majoring in Statistics at Jeonbuk-National-University*
+* Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 *Developing an indie game and creating art based on Unity and Aseprite.*
 
 
 ### Using Languages(Tools)
