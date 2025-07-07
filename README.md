@@ -4,7 +4,7 @@
 
 전북대학교에서 통계학 전공 중 <br> *Majoring in Statistics at Jeonbuk-National-University*
 
-Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작(진행중...) <br> *Developing an indie game and creating art based on Unity and Aseprite. (in progress...)*
+Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 (진행중...) <br> *Developing an indie game and creating art based on Unity and Aseprite (in progress...)*
 
 ---
 
