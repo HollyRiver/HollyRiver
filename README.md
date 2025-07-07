@@ -1,5 +1,7 @@
 ### **Status**
 
+![Solved.ac Profile](http://mazassumnida.wtf/api/generate_badge?boj=hcssk2800)](https://solved.ac/hcssk2800)
+
 **강신성(Shinsung Kang)**
 > 전북대학교에서 통계학 전공 중
 >
