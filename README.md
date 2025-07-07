@@ -21,7 +21,7 @@ Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 (진행중...) <br>
 
 ---
 
-### Certification
+### Certificates
 
 * SQLD(Structured Query Language Developer)
 
