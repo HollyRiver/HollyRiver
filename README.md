@@ -2,7 +2,7 @@
 
 <a target="_blank"> <img src="https://github-readme-stats.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt" alt="GitHub Stats" width=430> </a> <a href="https://solved.ac/hcssk2800" target="_blank"> <img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" alt="Solved.ac Profile" width=370> </a> 
 
-전북대학교에서 통계학 전공 중 <br> <font color="grey">*Majoring in Statistics at Jeonbuk-National-University* </font>
+전북대학교에서 통계학 전공 중 <br> <font color="grey">Majoring in Statistics at Jeonbuk-National-University</font>
 
 Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 <br> *Developing an indie game and creating art based on Unity and Aseprite.*
 
