@@ -10,7 +10,6 @@ Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작(진행중...) <br> 
 
 ### Using Languages(Tools)
 
-<img src="https://simpleicons.org/icons/pytorch.svg">
 
 <img src="https://img.shields.io/badge/Velog-5f5a63?style=for-the-badge&logo=pytorch&logoColor=#EE4C2C&color=snow">
 
