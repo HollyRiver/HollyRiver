@@ -1,8 +1,6 @@
 ### **Status**
 
-![GitHub stats](https://github-readme-stats.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt) [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=HollyRiver&layout=donut)](https://github.com/HollyRiver/github-readme-stats)
-
-[![Solved.ac
+![GitHub stats](https://github-readme-stats.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt) [![Solved.ac
 프로필](http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800)](https://solved.ac/hcssk2800)
 
 **강신성(Shinsung Kang)**
