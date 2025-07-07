@@ -3,7 +3,7 @@
 ![GitHub stats](https://github-readme-stats.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt) [![Solved.ac
 프로필](http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800)](https://solved.ac/hcssk2800)
 
-<img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" width="50" height="50"/>
+<img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" width="800" height="800"/>
 
 **강신성(Shinsung Kang)**
 > 전북대학교에서 통계학 전공 중
