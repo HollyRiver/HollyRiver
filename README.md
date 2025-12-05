@@ -1,6 +1,6 @@
 ## **강신성 Shinsung Kang**
 
-[![GitHub stats](https://github-readme-stats.vercel.app/api?username=HollyRiver)](https://github.com/anuraghazra/github-readme-stats)
+[![GitHub stats](https://github-readme-stats.vercel.app/api?username=HollyRiver)](https://github.com/HollyRiver/github-readme-stats)
 
 <a target="_blank"> <img src="https://github-readme-stats.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt" alt="GitHub Stats" width=430> </a> <a href="https://solved.ac/hcssk2800" target="_blank"> <img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" alt="Solved.ac Profile" width=370> </a> 
 
