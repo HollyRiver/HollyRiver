@@ -11,8 +11,7 @@ Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 (진행중...) <br>
 ### Works
 
 * M Lee et al. (2026). Transfer Learning Based on N-BEATS in Forecasting Univariate Time Series. *IEEE Access*, **14**, 45191-45212.
-  > [My Task](https://github.com/HollyRiver/TSTF)
-  > [Paper Link](https://ieeexplore.ieee.org/abstract/document/11443264)
+  > [My Task (Acknowledgement)](https://github.com/HollyRiver/TSTF), [Paper Link](https://ieeexplore.ieee.org/abstract/document/11443264)
 
 ---
 
