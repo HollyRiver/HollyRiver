@@ -2,7 +2,7 @@
 
 <a target="_blank"> <img src="https://github-readme-stats-five-delta-79.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt" alt="GitHub Stats" width=430> </a> <a href="https://solved.ac/hcssk2800" target="_blank"> <img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" alt="Solved.ac Profile" width=370> </a> 
 
-전북대학교에서 통계학 전공 중 <br> *Majoring in Statistics at Jeonbuk-National-University*
+전북대학교 통계학 학사 졸업 <br> *Bachelor of Science in Statistics, Jeonbuk-National-University*
 
 Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 (진행중...) <br> *Developing an indie game and creating art based on Unity and Aseprite (in progress...)*
 
@@ -11,7 +11,6 @@ Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 (진행중...) <br>
 ### Works
 
 * M Lee et al. (2026). Transfer Learning Based on N-BEATS in Forecasting Univariate Time Series. *IEEE Access*, **14**, 45191-45212.
-> Acknowledgement
 
 ---
 
