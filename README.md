@@ -12,7 +12,7 @@ Unity 및 Aseprite 기반 인디 게임개발ㆍ아트제작 (진행중...) <br>
 
 * Hyungbin Park, Shinsung Kang, Kihoon Lee, Gwangsu Kim. (2026). Study on comparative and discriminatory methodology of human and machine-generated languages. *Korean Journal of Applied Statistics*, **39(3)**, 235-255.
   > [My Task (co-1st)](https://github.com/HollyRiver/LLMdetector), [Paper Link](https://doi.org/10.5351/KJAS.2026.39.3.235)
-* M Lee et al. (2026). Transfer Learning Based on N-BEATS in Forecasting Univariate Time Series. *IEEE Access*, **14**, 45191-45212.
+* Minwoo Lee, Youngmi Lee, Gwangsu Kim. (2026). Transfer Learning Based on N-BEATS in Forecasting Univariate Time Series. *IEEE Access*, **14**, 45191-45212.
   > [My Task (Acknowledgement)](https://github.com/HollyRiver/TSTF), [Paper Link](https://ieeexplore.ieee.org/abstract/document/11443264)
 * (진행중) LLM 파인튜닝 + 선호도 조정 및 SurvLIFT를 이용한 Two-Track Medical Survival Analysis
   > [My Task](https://github.com/HollyRiver/HFRL/tree/main/SurvLLM)
