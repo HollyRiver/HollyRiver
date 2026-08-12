@@ -1,10 +1,8 @@
 ## 강신성 · Shinsung Kang
 
-통계적 엄밀함으로 LLM을 다루는 데이터 사이언티스트
-
 <a href="https://hollyriver.github.io/" target="_blank"><img src="https://img.shields.io/badge/📄_Portfolio-hollyriver.github.io-345995?style=for-the-badge" alt="Portfolio"></a>
 
-전북대학교 통계학 학사 (2026.08). LLM 파인튜닝·선호도 최적화(RLHF/RLAIF)와 통계 모델링을 함께 다룹니다.
+전북대학교 통계학 학사 졸업 예정 (2027.02). LLM 파인튜닝(SFT)·선호도 최적화(RLHF/RLAIF)와 통계 모델링을 함께 다룹니다.
 
 ### Highlights
 
