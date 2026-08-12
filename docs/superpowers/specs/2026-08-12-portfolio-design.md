@@ -41,7 +41,8 @@
 3. **Featured Projects** — 4개 클릭 확장 카드
    - 접힌 상태: 제목 + 한 줄 요약 + 성과 뱃지(게재·진행중 등)
    - 펼친 상태: **문제 → 접근 → 성과(수치) → 본인 기여도** + 기술 태그 + GitHub/논문 링크
-   - 대상: LLMdetector(KJAS 공동 1저자), HFRL/SurvLLM(진행중), TSTF(IEEE Access 기여), dash(대시보드)
+   - 대상 및 노출 순서: **① HFRL/SurvLLM(진행중, 최상위 노출 컨셉) ② LLMdetector(KJAS 공동 1저자) ③ TSTF(IEEE Access 기여) ④ dash(대시보드)**
+   - 순서 근거: 사용자 판단으로 HFRL/SurvLLM(LLM 파인튜닝·선호도 최적화·생존분석 결합)이 가장 강한 대표작. LLMdetector는 게재 실적이지만 최상위로 내세울 정도는 아니라는 자체 평가
 4. **Publications** — 논문 2편 정식 인용, 본인 이름 강조
 5. **Skills** — 언어(Python·R·Julia·SQL·SAS·C#) / ML·DL(PyTorch·Transformers·vLLM 등) / 도구, 분류형 표기
 6. **Education & Certificates** — 전북대 통계학 학사(2026.08), BAE, SQLD
