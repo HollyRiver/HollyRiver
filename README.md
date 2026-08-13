@@ -5,7 +5,10 @@
 * 전북대학교 통계학 학사 졸업 예정 (2027.02)
 * LLM 파인튜닝(SFT)·선호도 최적화(RLHF/RLAIF), 시계열 자료분석, 통계적 모델링 등을 수행
 
-<a href="https://hollyriver.github.io/" target="_blank"><img src="https://img.shields.io/badge/📄_Portfolio-hollyriver.github.io-345995?style=for-the-badge" alt="Portfolio"></a>
+<a href="https://hollyriver.github.io/" target="_blank"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/portfolio-banner-dark.svg">
+  <img src="assets/portfolio-banner-light.svg" alt="포트폴리오 — 프로젝트 상세, 스킬, 자격 등 포함" width="780">
+</picture></a>
 
 ---
 
