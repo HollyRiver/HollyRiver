@@ -9,7 +9,7 @@
 
 ---
 
-### Works (Repo)
+### Works
 
 * LLM 기반 생존분석 연구, MIMIC-IV 퇴원요약지에서 생존분석용 임상 변수 및 주요 진단 문장을 추출하는 LLM 사후학습 파이프라인 (진행중) — [Repo](https://github.com/HollyRiver/HFRL/tree/main/SurvLLM)
 * 인간/LLM 생성 텍스트 판별 연구, *Korean Journal of Applied Statistics* · 공동 1저자 · [Paper(Ko)](https://doi.org/10.5351/KJAS.2026.39.3.235) — [Repo](https://github.com/HollyRiver/LLMdetector)
