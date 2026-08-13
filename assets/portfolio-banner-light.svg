@@ -1,7 +1,7 @@
-<svg width="780" height="68" viewBox="0 0 780 68" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="포트폴리오 — 프로젝트 상세, 스킬, 자격 등 포함">
+<svg width="805" height="52" viewBox="0 0 805 52" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="포트폴리오 — 프로젝트 상세, 스킬, 자격 등 포함">
   <style>
-    .line { animation: slide 3.4s linear infinite; }
-    @keyframes slide { 0% { transform: translateX(-780px); } 100% { transform: translateX(780px); } }
+    .line { animation: slide 5s linear infinite; opacity: 0.75; }
+    @keyframes slide { 0% { transform: translateX(-805px); } 55%, 100% { transform: translateX(805px); } }
     text { font-family: 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; }
   </style>
   <defs>
@@ -10,14 +10,13 @@
       <stop offset="0.5" stop-color="#5b86c4"/>
       <stop offset="1" stop-color="#345995" stop-opacity="0"/>
     </linearGradient>
-    <clipPath id="clip"><rect width="780" height="68" rx="12"/></clipPath>
+    <clipPath id="clip"><rect width="805" height="52" rx="10"/></clipPath>
   </defs>
   <g clip-path="url(#clip)">
-    <rect width="780" height="68" rx="12" fill="#fafbfd" stroke="#d4dbe8" stroke-width="1.5"/>
-    <rect width="780" height="3" fill="#e6ebf4"/>
-    <rect class="line" width="780" height="3" fill="url(#top)"/>
-    <text x="28" y="43" font-size="19" font-weight="700" fill="#1c1c1e">포트폴리오</text>
-    <text x="132" y="43" font-size="13.5" fill="#66707f">프로젝트 상세, 스킬, 자격 등 포함</text>
-    <text x="728" y="44" font-size="20" font-weight="700" fill="#345995">→</text>
+    <rect x="0.5" y="0.5" width="804" height="51" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+    <rect class="line" width="805" height="2.5" fill="url(#top)"/>
+    <text x="26" y="33" font-size="17" font-weight="700" fill="#24292f">포트폴리오</text>
+    <text x="122" y="33" font-size="13" fill="#57606a">프로젝트 상세, 스킬, 자격 등 포함</text>
+    <text x="756" y="34" font-size="18" font-weight="700" fill="#345995">→</text>
   </g>
 </svg>
