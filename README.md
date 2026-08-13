@@ -1,5 +1,7 @@
 ## 강신성 · Shinsung Kang
 
+<a target="_blank"> <img src="https://github-readme-stats-five-delta-79.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt" alt="GitHub Stats" width=430> </a> <a href="https://solved.ac/hcssk2800" target="_blank"> <img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" alt="Solved.ac Profile" width=370> </a>
+
 <a href="https://hollyriver.github.io/" target="_blank"><img src="https://img.shields.io/badge/📄_Portfolio-hollyriver.github.io-345995?style=for-the-badge" alt="Portfolio"></a>
 
 * 전북대학교 통계학 학사 졸업 예정 (2027.02)
@@ -13,8 +15,6 @@
 * **[LLMdetector](https://github.com/HollyRiver/LLMdetector)** — 인간/LLM 생성 텍스트 판별 연구, *Korean Journal of Applied Statistics* · 공동 1저자 · [Paper(Ko)](https://doi.org/10.5351/KJAS.2026.39.3.235)
 * **[TSTF](https://github.com/HollyRiver/TSTF)** — 시계열 전이학습 논문 베이스라인 실험, *IEEE Access* · Acknowledgement · [Paper(En)](https://ieeexplore.ieee.org/abstract/document/11443264)
 * **[dash](https://github.com/HollyRiver/dash)** — NYC 택시 인터랙티브 대시보드 · [Live Demo](https://hollyriver.github.io/dash/NYCTaxi.html)
-
-<a target="_blank"><img src="https://github-readme-stats-five-delta-79.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt" alt="GitHub Stats" width=430></a>
 
 ---
 
