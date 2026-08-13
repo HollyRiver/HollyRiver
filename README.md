@@ -29,4 +29,4 @@
 
 <a href="mailto:hcssk2800@gmail.com"><img src="https://img.shields.io/badge/Gmail-hcssk2800-EA4335?style=for-the-badge&logo=gmail&logoColor=white"></a> <a href="https://scholar.google.com/citations?user=KfeETKAAAAAJ&hl=ko" target="_blank"><img src="https://img.shields.io/badge/Google_Scholar-f2f2f2?style=for-the-badge&logo=googlescholar"></a> <a href="https://velog.io/@hollyriver/posts" target="_blank"><img src="https://img.shields.io/badge/Velog-5f5a63?style=for-the-badge&logo=velog&logoColor=black&color=snow"></a> <a href="https://blog.naver.com/hc_ssk2800" target="_blank"><img src="https://img.shields.io/badge/NAVER_blog-1dde30?style=for-the-badge&logo=Naver&logoColor=white"></a>
 
-<sub>🎮 Unity·Aseprite 기반 인디게임 개발 중...</sub>
+<sub>🎮 Unity·Aseprite 기반 인디게임도 개발 중...</sub>
