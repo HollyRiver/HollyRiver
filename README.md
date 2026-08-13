@@ -1,9 +1,11 @@
-## 강신성 · Shinsung Kang <a href="https://hollyriver.github.io/" target="_blank"><img src="https://img.shields.io/badge/📄_Portfolio-hollyriver.github.io-345995?style=for-the-badge" alt="Portfolio"></a>
+## 강신성 · Shinsung Kang
 
 <a target="_blank"> <img src="https://github-readme-stats-five-delta-79.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt" alt="GitHub Stats" width=430> </a> <a href="https://solved.ac/hcssk2800" target="_blank"> <img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" alt="Solved.ac Profile" width=370> </a>
 
 * 전북대학교 통계학 학사 졸업 예정 (2027.02)
 * LLM 파인튜닝(SFT)·선호도 최적화(RLHF/RLAIF), 시계열 자료분석, 통계적 모델링 등을 수행
+
+<a href="https://hollyriver.github.io/" target="_blank"><img src="https://img.shields.io/badge/📄_Portfolio-hollyriver.github.io-345995?style=for-the-badge" alt="Portfolio"></a>
 
 ---
 
