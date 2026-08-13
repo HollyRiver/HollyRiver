@@ -16,13 +16,13 @@
       <stop offset="1" stop-color="#8b949e" stop-opacity="0"/>
     </linearGradient>
     <mask id="rim">
-      <rect x="8" y="0" width="797" height="46" rx="10" fill="#ffffff"/>
+      <rect x="0.5" y="0.5" width="804" height="51" rx="14" fill="#ffffff"/>
       <rect x="0.5" y="5.5" width="796" height="46" rx="10" fill="#000000"/>
     </mask>
   </defs>
   <g mask="url(#rim)">
-    <rect x="8" y="0" width="797" height="46" rx="10" fill="#8b949e" fill-opacity="0.22"/>
-    <rect class="sheen" x="-150" y="0" width="150" height="46" fill="url(#metal)"/>
+    <rect x="0.5" y="0.5" width="804" height="51" rx="14" fill="#8b949e" fill-opacity="0.22" stroke="#8b949e" stroke-opacity="0.45"/>
+    <rect class="sheen" x="-150" y="0" width="150" height="52" fill="url(#metal)"/>
   </g>
   <rect x="0.5" y="5.5" width="796" height="46" rx="10" fill="#8b949e" fill-opacity="0.07" stroke="#8b949e" stroke-opacity="0.45"/>
   <text x="26" y="35" font-size="17" font-weight="700" fill="#5b86c4">포트폴리오</text>
