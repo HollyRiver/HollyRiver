@@ -9,12 +9,12 @@
 
 ---
 
-### Highlights (Repo)
+### Works (Repo)
 
-* **[SurvLLM](https://github.com/HollyRiver/HFRL/tree/main/SurvLLM)** — LLM 기반 생존분석 연구, MIMIC-IV 퇴원요약지에서 생존분석용 임상 변수를 추출하는 LLM 사후학습 파이프라인 (진행중)
-* **[LLMdetector](https://github.com/HollyRiver/LLMdetector)** — 인간/LLM 생성 텍스트 판별 연구, *Korean Journal of Applied Statistics* · 공동 1저자 · [Paper(Ko)](https://doi.org/10.5351/KJAS.2026.39.3.235)
-* **[TSTF](https://github.com/HollyRiver/TSTF)** — 시계열 전이학습 논문 베이스라인 실험, *IEEE Access* · Acknowledgement · [Paper(En)](https://ieeexplore.ieee.org/abstract/document/11443264)
-* **[dash](https://github.com/HollyRiver/dash)** — NYC 택시 인터랙티브 대시보드 · [Live Demo](https://hollyriver.github.io/dash/NYCTaxi.html)
+* LLM 기반 생존분석 연구, MIMIC-IV 퇴원요약지에서 생존분석용 임상 변수 및 주요 진단 문장을 추출하는 LLM 사후학습 파이프라인 (진행중) — **[[Repo] SurvLLM](https://github.com/HollyRiver/HFRL/tree/main/SurvLLM)**
+* 인간/LLM 생성 텍스트 판별 연구, *Korean Journal of Applied Statistics* · 공동 1저자 · [Paper(Ko)](https://doi.org/10.5351/KJAS.2026.39.3.235) — **[[Repo] LLMdetector](https://github.com/HollyRiver/LLMdetector)**
+* 시계열 전이학습 논문 베이스라인 실험, *IEEE Access* · Acknowledgement · [Paper(En)](https://ieeexplore.ieee.org/abstract/document/11443264) — **[[Repo] TSTF](https://github.com/HollyRiver/TSTF)**
+* NYC 택시 인터랙티브 대시보드 · [Live Demo](https://hollyriver.github.io/dash/NYCTaxi.html) — **[[Repo] dash](https://github.com/HollyRiver/dash)**
 
 ---
 
