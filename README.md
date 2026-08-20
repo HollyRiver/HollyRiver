@@ -17,7 +17,7 @@
 
 ---
 
-### Certificates
+### Certificates and Language Skill
 
 * 빅데이터분석기사 (Bigdata Analysis Engineer)
 * SQL 개발자 (SQL Developer)
