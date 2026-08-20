@@ -21,7 +21,7 @@
 
 * 빅데이터분석기사 (Bigdata Analysis Engineer)
 * SQL 개발자 (SQL Developer)
-* TOEIC 830 <span class="muted">(2025.04 취득)</span>
+* TOEIC 830 (2025.04 취득)
 
 ---
 
