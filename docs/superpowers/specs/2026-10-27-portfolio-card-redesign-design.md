@@ -1,6 +1,6 @@
 # 포트폴리오 프로젝트 카드 재구성 디자인 스펙
 
-날짜: 2026-10-27 · 상태: 사용자 승인 완료 (구현 전)
+날짜: 2026-10-27 · 상태: 구현 완료 (hollyriver.github.io `c36fbc3`, `9b2b9d6`)
 대상 리포: `hollyriver.github.io`
 상위 스펙: [2026-08-12-portfolio-design.md](2026-08-12-portfolio-design.md)
 
