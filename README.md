@@ -1,6 +1,6 @@
 ## 강신성 · Shinsung Kang
 
-<a href="https://hollyriver.github.io/" target="_blank"><img src="assets/portfolio-banner.svg" alt="포트폴리오 — 프로젝트 상세, 스킬, 자격 등" width="805"></a><br>
+<a href="https://hollyriver.github.io/" target="_blank"><picture><source media="(max-width: 500px)" srcset="https://github.com/HollyRiver/HollyRiver/raw/main/assets/portfolio-banner-mobile.svg"><img src="assets/portfolio-banner.svg" alt="포트폴리오 — 프로젝트 상세, 스킬, 자격 등" width="805"></picture></a><br>
 <a target="_blank"> <img src="https://github-readme-stats-five-delta-79.vercel.app/api?username=HollyRiver&show_icons=true&theme=cobalt" alt="GitHub Stats" width=430> </a> <a href="https://solved.ac/hcssk2800" target="_blank"> <img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=hcssk2800" alt="Solved.ac Profile" width=370> </a>
 
 * 전북대학교 통계학 학사 졸업 예정 (2027.02)
