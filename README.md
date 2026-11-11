@@ -11,6 +11,7 @@
 ### Works (Repositories)
 
 * [LLM 기반 생존분석 연구](https://github.com/HollyRiver/SurvLLM) ― MIMIC-IV 퇴원요약지에서 생존분석용 임상 변수 및 주진단 문장을 추출하는 LLM 사후학습 파이프라인 (진행중)
+* [디퓨전 기반 한반도 일대 일사량 예측 연구](https://github.com/HollyRiver/DiffusionRefiner) ― 위성 일사량 맵 예측 디퓨전 모델의 과소산포를 교정하는 Refiner 모듈 · 논문 투고 중 · 제2저자
 * [인간/LLM 생성 텍스트 판별 연구](https://github.com/HollyRiver/LLMdetector) ― *Korean Journal of Applied Statistics* · 공동 1저자 · [Paper(Ko)](https://doi.org/10.5351/KJAS.2026.39.3.235)
 * [시계열 전이학습 논문 베이스라인 실험 지원](https://github.com/HollyRiver/TSTF) ― *IEEE Access* · Acknowledgement · [Paper(En)](https://ieeexplore.ieee.org/abstract/document/11443264)
 * [NYC 택시 트래픽 대시보드](https://github.com/HollyRiver/NYCTaxiDash) ― 도로망 플로우·헥스빈 히트맵 2종 레이어의 인터랙티브 대시보드 (정적 배포) · [Live Demo](https://hollyriver.github.io/NYCTaxiDash/)
